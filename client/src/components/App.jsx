@@ -48,9 +48,11 @@ const App = () => {
   };
 
   return (
+    <>
     <UserContext.Provider value={authContextValue}>
       <Outlet />
     </UserContext.Provider>
+    </>
   );
 };
 
