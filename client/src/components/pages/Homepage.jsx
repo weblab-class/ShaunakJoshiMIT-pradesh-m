@@ -3,12 +3,13 @@ import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { Link } from "react-router-dom";
 import "../../utilities.css";
 import { UserContext } from "../App";
+import "./HomePage.css";
 
 const HomePage = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
   return (
-    <>
-      {userId ? (
+  <div className="homepage">
+  {userId ? (
         <button
           onClick={() => {
             googleLogout();
@@ -26,11 +27,9 @@ const HomePage = () => {
         <p>Navigate through the maze, solve trivia, and find the FBI imposter!</p>
         <button>Create Game</button>
         <button>Join Game</button>
-        <div>
         <Link to="/profile">Go to Profile</Link>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 
