@@ -19,7 +19,7 @@ const NewTerminalInput = (props) => {
     //     event.preventDefault();
     //     props.onSubmit && props.onSubmit(value)
     //     setValue("")
-    };
+    // };
 
     return (
         <div>
@@ -40,6 +40,7 @@ const NewTerminalInput = (props) => {
 
 
     )
+}
 
 
 export default NewTerminalInput;

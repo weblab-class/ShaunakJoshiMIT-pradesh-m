@@ -33,3 +33,5 @@ const Terminal = (props) => {
     )
 
 }
+
+export default Terminal;
