@@ -1,37 +1,68 @@
-import React, { useState } from "react";
-import NewTerminalResponse from "./NewTerminalResponse";
-import NewTerminalInput from "./NewTerminalInput";
+import react, { useState } from "react";
+import TerminalHeader from "./TerminalHeader";
+import TerminalDisplay from "./TerminalDisplay";
+import TerminalInput from "./TerminalInput";
+import './Terminal.css';
 
-
-/**
- * Terminal is a component for displaying the terminal
- * for user interaction
- * Proptypes
- * @param {string} content of the command
- * @param {string} profileID
- */
+function tokenizeCommand(command) {
+    const tokens = [];
+    let currToken = "";
+    for (let i = 0; i < command.length ; i++) {
+        if (command[i] != " ") {
+            currToken = currToken + command[i];
+        } else {
+            tokens.push(currToken);
+            currToken = "";
+        }
+    }
+    if (currToken.length > 0) {
+        tokens.push(currToken);
+    }
+    return tokens;
+}
 
 
 const Terminal = (props) => {
-    const [terminalText, setTerminalText] = useState([]);
+    const [history, setHistory] = useState([])
 
-    const updateTerminal = (command) => {
-        setTerminalText(terminalText.concat([["props.profileID" + props.content, NewTerminalResponse(command)]]));
+    const executeCommand = (command) => {
+        const tokens = tokenizeCommand(command)
+
+        switch (tokens[0]) {
+            case "cd":
+                switch (tokens[1]) {
+                    case "profile":
+                        return "navigating to the profile page";
+                    case "home":
+                        return "navigating to the home page";
+                    case "friends":
+                        return "What Friends?";
+                    default:
+                        return "Command does not exist";
+                }
+            case "help":
+                return "here is a list of commands: help, cd home, cd profile, cd friends, clear";
+            case "clear":
+                setHistory([]);
+                return "";
+            default:
+                return "Command does not exist";
+        }
+    }
+    const handleCommand = (command) => {
+        const output = executeCommand(command);
+        if (output.length != 0) {
+        setHistory([...history, { command, output}]);
+        }
     }
 
-    let terminalHistory = terminalText.map((arr) => {
-        <div>{arr[0]}</div>
-        arr[1]
-    })
-
     return (
-        <div>
-        {terminalHistory}
-        <NewTerminalInput onSubmit = {updateTerminal}/>
+        <div className = "terminal">
+            <TerminalHeader />
+            <TerminalDisplay username = {props.username} history = {history} />
+            <TerminalInput username = {props.username} onCommand = {handleCommand} />
         </div>
-
     )
-
 }
 
 export default Terminal;

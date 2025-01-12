@@ -5,7 +5,7 @@ import "../../utilities.css";
 import { UserContext } from "../App";
 import "./HomePage.css";
 import Layout from '../layout.jsx';
-
+import Terminal from "../modules/terminal.jsx";
 const HomePage = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
   return (
@@ -31,6 +31,10 @@ const HomePage = () => {
         <button>Join Game</button>
         <Link to="/profile">Go to Profile</Link>
       </div>
+
+
+      <Terminal username = "shaunakj"/>
+
     </div>
     </Layout>
   );

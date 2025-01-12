@@ -1,0 +1,49 @@
+.terminal {
+  position: fixed;
+  bottom: 0;
+  background: black;
+  color: white;
+  font-family: monospace;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  background: #333;
+  padding: 5px;
+}
+
+.terminal-display {
+  height: 100px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  min-height: 50px;
+  max-height: 300px;
+  font-size: 10px;
+}
+
+.terminal-input {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background: black;
+}
+
+.CurrentUser {
+  font-size: 12px;
+  margin-right: 10px;
+  color: white;
+}
+
+.terminal-input input {
+  font-size: 12px;
+  width: 100%;
+  color: white;
+  background: black;
+  border: none;
+  outline: none;
+  padding: 5px;
+}
