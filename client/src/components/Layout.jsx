@@ -1,17 +1,13 @@
-// src/components/Layout.jsx
 import React from 'react';
 import NavBar from './modules/NavBar.jsx';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, currentPage }) => {
     return (
         <div>
-            <NavBar />
-            <main>
-                {children}
-            </main>
+            <NavBar currentPage={currentPage} />
+            <main>{children}</main>
         </div>
     );
 };
-
 
 export default Layout;

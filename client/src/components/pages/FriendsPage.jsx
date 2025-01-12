@@ -1,13 +1,10 @@
-import react from "react";
+import React from "react";
 import Terminal from "../modules/terminal";
+import Layout from '../layout.jsx';
 
 const FriendsPage = (props) => {
-
-    
-
-
-
     return (
+        <Layout currentPage = "Friends">
         <div className = "Friends-Header">
             <table className="Friends-Table">
                 <tr className = "Friends-Table-Labels">
@@ -15,18 +12,10 @@ const FriendsPage = (props) => {
                     <th>Online</th>
                     <th>Server ID</th>
                 </tr>
-
-
-
             </table>
-
-
-
-
-
             <Terminal username = "shaunakj" />
         </div>
-
+        </Layout>
     )
 
 }
