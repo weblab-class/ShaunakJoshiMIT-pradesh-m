@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import NewTerminalResponse from "./NewTerminalResponse";
+import NewTerminalInput from "./NewTerminalInput";
 
 
 /**
@@ -6,35 +8,28 @@ import React, { useState } from "react";
  * for user interaction
  * Proptypes
  * @param {string} content of the command
-
+ * @param {string} profileID
  */
-function tokenizeCommand(command) {
-    const tokens = [];
-    let currToken = "";
-    for (let i = 0; i < command.length ; i++) {
-        if (command[i] != " ") {
-            currToken = currToken + command[i];
-        } else {
-            tokens.push(currToken);
-            currToken = "";
-        }
-    }
-    if (currToken.length > 0) {
-        tokens.push(currToken);
-    }
-    return tokens;
-}
 
 
 const Terminal = (props) => {
-    const [inputs, setInputs] = useState([]);
-    const [state, setState] = useState([]);
+    const [terminalText, setTerminalText] = useState([]);
 
-    const submitCommand = (command) => {
-        // let tokens = tokenizeCommand(command);
-        setInputs(inputs.concat([command, "this will be added"]))
+    const updateTerminal = (command) => {
+        setTerminalText(terminalText.concat([["props.profileID" + props.content, NewTerminalResponse(command)]]));
     }
-    
 
+    let terminalHistory = terminalText.map((arr) => {
+        <div>{arr[0]}</div>
+        arr[1]
+    })
+
+    return (
+        <div>
+        {terminalHistory}
+        <NewTerminalInput onSubmit = {updateTerminal}/>
+        </div>
+
+    )
 
 }
