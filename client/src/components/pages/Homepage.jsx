@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import "../../utilities.css";
 import { UserContext } from "../App";
 import "./HomePage.css";
+import Layout from '../layout.jsx';
 
 const HomePage = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
   return (
+  <Layout>
   <div className="homepage">
   {userId ? (
         <button
@@ -30,6 +32,7 @@ const HomePage = () => {
         <Link to="/profile">Go to Profile</Link>
       </div>
     </div>
+    </Layout>
   );
 };
 
