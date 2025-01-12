@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { Link } from "react-router-dom";
 import "../../utilities.css";
 import { UserContext } from "../App.jsx";
 import "../styles/HomePage.css"; 

@@ -4,7 +4,7 @@ import Layout from '../layout.jsx';
 
 const FriendsPage = (props) => {
     return (
-        <Layout currentPage = "Friends">
+        <Layout currentPage = "friends">
         <div className = "Friends-Header">
             <table className="Friends-Table">
                 <tr className = "Friends-Table-Labels">

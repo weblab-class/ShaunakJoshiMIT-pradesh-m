@@ -1,12 +1,14 @@
-import react from "react";
-import Terminal from "../modules/terminal";
+import React, { useContext } from "react";
+import Layout from '../layout.jsx';
+import Terminal from "../modules/terminal.jsx";
+
 
 const HelpPage = () =>{
     return (
-        <div>
+        <Layout currentPage="help">
             Welcome to the help page!
             <Terminal username = "shaunakj" />
-        </div>
+        </Layout>
     );
 }
 

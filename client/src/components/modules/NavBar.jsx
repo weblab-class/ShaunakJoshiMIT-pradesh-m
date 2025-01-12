@@ -1,7 +1,7 @@
 import React from 'react';
 
 const NavBar = ({ currentPage }) => {
-  const pages = ['home', 'settings', 'profile'];
+  const pages = ['home', 'settings', 'friends', 'profile'];
 
   return (
     <div style={{
