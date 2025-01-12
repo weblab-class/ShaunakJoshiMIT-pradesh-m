@@ -6,6 +6,8 @@ import { UserContext } from "../App";
 import "./HomePage.css";
 import Layout from '../layout.jsx';
 import Terminal from "../modules/terminal.jsx";
+
+
 const HomePage = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
   return (

@@ -7,7 +7,7 @@ const TerminalDisplay = (props) => {
         return(
         <div key = {index}>
             <div className = "command">{`<${props.username}> ` + entry.command}</div>
-            <div className = "output">{entry.output}</div>
+            <div className = "output">{entry.output.split("\n").map((line, i) => (<pre key = {i}> {line} </pre>))}</div>
         </div>
     )})
 

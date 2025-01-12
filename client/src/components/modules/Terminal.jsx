@@ -1,4 +1,8 @@
 import react, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
+
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
@@ -24,7 +28,7 @@ function tokenizeCommand(command) {
 
 const Terminal = (props) => {
     const [history, setHistory] = useState([])
-
+    const navigate = useNavigate()
     const executeCommand = (command) => {
         const tokens = tokenizeCommand(command)
 
@@ -32,16 +36,26 @@ const Terminal = (props) => {
             case "cd":
                 switch (tokens[1]) {
                     case "profile":
+                        navigate("/profile");
                         return "navigating to the profile page";
                     case "home":
+                        navigate("/");
                         return "navigating to the home page";
                     case "friends":
-                        return "What Friends?";
+                        navigate("/friends")
+                        return "navigating to the friends page?";
                     default:
                         return "Command does not exist";
                 }
             case "help":
-                return "here is a list of commands: help, cd home, cd profile, cd friends, clear";
+                // navigate("/help")
+                return "\nAvailable commands:\n\n" +
+                    "  clear         - Clears the terminal screen\n" +
+                    "  cd home       - Navigate to the home page\n" +
+                    "  cd profile    - Navigate to your profile page\n" +
+                    "  cd friends    - Navigate to the friends page\n" +
+                    "  help          - Display this list of commands\n";
+
             case "clear":
                 setHistory([]);
                 return "";
