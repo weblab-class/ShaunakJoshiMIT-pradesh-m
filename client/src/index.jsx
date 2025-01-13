@@ -8,7 +8,6 @@ import HomePage from "./components/pages/Homepage";
 import ProfilePage from "./components/pages/ProfilePage"
 import SettingsPage from "./components/pages/SettingsPage";
 import FriendsPage from "./components/pages/FriendsPage";
-import HelpPage from "./components/pages/HelpPage";
 
 
 import {
@@ -28,7 +27,6 @@ const router = createBrowserRouter(
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path = "/friends" element = {<FriendsPage />} />
-        <Route path = "/help" element = {<HelpPage />} />
         <Route path = "/settings" element = {<SettingsPage />} />
 
       </Route>

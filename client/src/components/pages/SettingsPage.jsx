@@ -1,5 +1,6 @@
 import React from "react";
 import Terminal from "../modules/terminal";
+import Layout from '../layout.jsx';
 
 const SettingsPage = () =>{
     return (
