@@ -1,58 +1,45 @@
-import React, { useState, useEffect, createContext } from "react";
+// src/components/App.jsx
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-
-import jwt_decode from "jwt-decode";
-
-import "../utilities.css";
-
-import { socket } from "../client-socket";
-
 import { get, post } from "../utilities";
+import { UserContext } from "./contexts/UserContext";
 
-export const UserContext = createContext(null);
-
-/**
- * Define the "App" component
- */
 const App = () => {
-  const [userId, setUserId] = useState(undefined);
+  const [userId, setUserId] = useState(null);
 
+  // Check login status on mount
   useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) {
-        // they are registed in the database, and currently logged in.
         setUserId(user._id);
       }
     });
   }, []);
 
-  const handleLogin = (credentialResponse) => {
-    const userToken = credentialResponse.credential;
-    const decodedCredential = jwt_decode(userToken);
-    console.log(`Logged in as ${decodedCredential.name}`);
+  // Called on GoogleLogin success
+  const handleLogin = (googleResponse) => {
+    console.log("Google login credential response:", googleResponse);
+
+    // The server only needs the 'credential' field:
+    const userToken = googleResponse.credential;
     post("/api/login", { token: userToken }).then((user) => {
+      console.log("Server returned user:", user);
       setUserId(user._id);
-      post("/api/initsocket", { socketid: socket.id });
     });
   };
 
+  // Called when user logs out
   const handleLogout = () => {
-    setUserId(undefined);
+    console.log("Logging out...");
     post("/api/logout");
-  };
-
-  const authContextValue = {
-    userId,
-    handleLogin,
-    handleLogout,
+    setUserId(null);
   };
 
   return (
-    <>
-    <UserContext.Provider value={authContextValue}>
-      <Outlet />
+    <UserContext.Provider value={userId}>
+      {/* The Outlet renders whichever route is active */}
+      <Outlet context={{ handleLogin, handleLogout }} />
     </UserContext.Provider>
-    </>
   );
 };
 
