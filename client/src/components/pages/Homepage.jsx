@@ -4,7 +4,6 @@ import "../../utilities.css";
 import { UserContext } from "../App.jsx";
 import "../styles/HomePage.css"; 
 import Layout from '../layout.jsx';
-import Terminal from "../modules/terminal.jsx";
 
 
 const HomePage = () => {
