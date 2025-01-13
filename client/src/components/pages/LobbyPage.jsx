@@ -2,12 +2,13 @@ import React from "react";
 import Terminal from "../modules/terminal";
 import Layout from '../layout.jsx';
 
-const SettingsPage = () =>{
+const LobbyPage = (props) => {
     return (
-        <Layout currentPage="settings">
-            Welcome to the help page!
+        <Layout currentPage = "lobby">
+        <div>
+        </div>
         </Layout>
-    );
+    )
 }
 
-export default SettingsPage;
+export default LobbyPage

@@ -29,10 +29,6 @@ const HomePage = () => {
         <h1>Welcome to the Maze Game!</h1>
         <p>Navigate through the maze, solve trivia, and find the FBI imposter!</p>
       </div>
-
-
-      <Terminal username = "shaunakj"/>
-
     </div>
     </Layout>
   );

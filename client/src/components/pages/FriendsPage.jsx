@@ -1,5 +1,4 @@
 import React from "react";
-import Terminal from "../modules/terminal";
 import Layout from '../layout.jsx';
 
 const FriendsPage = (props) => {
@@ -13,7 +12,6 @@ const FriendsPage = (props) => {
                     <th>Server ID</th>
                 </tr>
             </table>
-            <Terminal username = "shaunakj" />
         </div>
         </Layout>
     )

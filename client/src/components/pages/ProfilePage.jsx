@@ -7,7 +7,6 @@ const ProfilePage = () => {
     <Layout currentPage="profile">
       <h1>Profile Page</h1>
       <p>Welcome to your profile!</p>
-      <Terminal username="shaunakj" />
     </Layout>
   );
 };
