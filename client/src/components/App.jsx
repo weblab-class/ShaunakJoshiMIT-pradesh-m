@@ -30,10 +30,16 @@ const App = () => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);
     console.log(`Logged in as ${decodedCredential.name}`);
-    post("/api/login", { token: userToken }).then((user) => {
+    post("/api/login", { token: userToken })
+    .then((user) => {
+      console.log("Server responded with user:", user._id);
       setUserId(user._id);
       post("/api/initsocket", { socketid: socket.id });
+    })
+    .catch((error) => {
+      console.error("Error during /api/login:", error);
     });
+  
   };
 
   const handleLogout = () => {
