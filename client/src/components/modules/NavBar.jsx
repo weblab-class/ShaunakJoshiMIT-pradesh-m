@@ -2,7 +2,7 @@ import React from 'react';
 
 const NavBar = ({ currentPage }) => {
   const pages = ['home', 'settings', 'friends', 'profile'];
-
+  
   return (
     <div style={{
       display: 'flex',
