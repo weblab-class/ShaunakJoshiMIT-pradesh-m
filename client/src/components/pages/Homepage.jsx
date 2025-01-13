@@ -25,7 +25,7 @@ const HomePage = () => {
       )}
 
       <div>
-        <h1>Welcome to the Maze Game!</h1>
+        <h1>Welcome to the Traitor Maze!</h1>
         <p>Navigate through the maze, solve trivia, and find the FBI imposter!</p>
       </div>
     </div>
