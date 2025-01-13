@@ -6,7 +6,9 @@ const TerminalContext = createContext();
 const UserContext = () => {
     const[history, setHistory] = useState([]);
 
-    const addHistory = ()
+    const addHistory = () => {
+        return None;
+    }
 
 
 }
