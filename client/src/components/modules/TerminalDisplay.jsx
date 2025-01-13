@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const TerminalDisplay = (props) => {
     const history = props.history
     const terminalHistory = history.map((entry, index) => {
