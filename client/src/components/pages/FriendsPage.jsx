@@ -17,7 +17,6 @@ const FriendsPage = (props) => {
         </div>
         </Layout>
     )
-
 }
 
 export default FriendsPage
