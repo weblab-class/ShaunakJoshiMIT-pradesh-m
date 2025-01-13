@@ -56,5 +56,5 @@
   color: white;
   margin: 0;
   padding: 0;
-  white-space: pre-wrap; /* Wrap text if it’s too long */
+  white-space: pre-wrap;
 }
