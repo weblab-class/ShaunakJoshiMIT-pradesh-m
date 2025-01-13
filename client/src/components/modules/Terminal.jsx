@@ -1,4 +1,4 @@
-import react, { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
