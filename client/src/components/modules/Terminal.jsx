@@ -46,7 +46,10 @@ const Terminal = (props) => {
                         return "navigating to the home page";
                     case "friends":
                         navigate("/friends")
-                        return "navigating to the friends page?";
+                        return "navigating to the friends page";
+                    case "settings":
+                        navigate("/settings")
+                        return "navigating to the settings page";
                     default:
                         return "Command does not exist";
                 }
