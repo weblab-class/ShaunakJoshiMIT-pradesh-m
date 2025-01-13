@@ -8,6 +8,7 @@ import HomePage from "./components/pages/Homepage";
 import ProfilePage from "./components/pages/ProfilePage"
 import SettingsPage from "./components/pages/SettingsPage";
 import FriendsPage from "./components/pages/FriendsPage";
+import { TerminalProvider } from "./components/modules/TerminalContext";
 
 
 import {
@@ -36,6 +37,8 @@ const router = createBrowserRouter(
 // renders React Component "Root" into the DOM element with ID "root"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-    <RouterProvider router={router} />
+    <TerminalProvider>
+      <RouterProvider router={router} />
+    </TerminalProvider>
   </GoogleOAuthProvider>
 );
