@@ -1,6 +1,7 @@
-import react, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import react, { useContext, useState } from "react";
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { TerminalContext } from "./TerminalContext";
 
 
 import TerminalHeader from "./TerminalHeader";
@@ -27,7 +28,9 @@ function tokenizeCommand(command) {
 
 
 const Terminal = (props) => {
-    const [history, setHistory] = useState([])
+    const { history, addHistory, clearHistory} = useContext(TerminalContext);
+
+
     const navigate = useNavigate()
     const executeCommand = (command) => {
         const tokens = tokenizeCommand(command)
@@ -48,7 +51,6 @@ const Terminal = (props) => {
                         return "Command does not exist";
                 }
             case "help":
-                // navigate("/help")
                 return "\nAvailable commands:\n\n" +
                     "  clear         - Clears the terminal screen\n" +
                     "  cd home       - Navigate to the home page\n" +
@@ -57,7 +59,8 @@ const Terminal = (props) => {
                     "  help          - Display this list of commands\n";
 
             case "clear":
-                setHistory([]);
+                // setHistory([]);
+                clearHistory()
                 return "";
             default:
                 return "Command does not exist";
@@ -66,7 +69,8 @@ const Terminal = (props) => {
     const handleCommand = (command) => {
         const output = executeCommand(command);
         if (output.length != 0) {
-        setHistory([...history, { command, output}]);
+        // setHistory([...history, { command, output}]);
+        addHistory({ command, output })
         }
     }
 
