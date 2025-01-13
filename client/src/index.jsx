@@ -8,6 +8,7 @@ import HomePage from "./components/pages/Homepage";
 import ProfilePage from "./components/pages/ProfilePage"
 import SettingsPage from "./components/pages/SettingsPage";
 import FriendsPage from "./components/pages/FriendsPage";
+import { TerminalProvider } from "./components/modules/TerminalContext";
 
 
 import {
@@ -17,10 +18,7 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import FriendsPage from "./components/pages/FriendsPage";
-import HelpPage from "./components/pages/HelpPage";
-import { TerminalProvider } from "./components/modules/TerminalContext";
+
 //TODO: REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "465324171584-jgurca8sfthunf91v7q4agppmuoir1d0.apps.googleusercontent.com";
 
