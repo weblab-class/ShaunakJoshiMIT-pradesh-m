@@ -1,13 +1,13 @@
 import React from "react";
-import Layout from '../layout.jsx';
+import { useParams } from "react-router-dom";
 
-const LobbyPage = (props) => {
-    return (
-        <Layout currentPage = "lobby">
-        <div>
-        </div>
-        </Layout>
-    )
-}
+const LobbyPage = () => {
+  const { lobbyCode } = useParams();
+  return (
+    <div>
+      <h1>Welcome to Lobby: {lobbyCode}</h1>
+    </div>
+  );
+};
 
-export default LobbyPage
+export default LobbyPage;
