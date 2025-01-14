@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
+
+.Friends-Header {
+    text-align: center;
+    font-family: 'Press Start 2P', sans-serif;
+    color: #00ff00;
+    background-color: #0d0d0d;
+    padding: 20px;
+    border-bottom: 2px solid #00ff00; /* Neon green border */
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.Friends-Table {
+    border-collapse: collapse;
+    font-size: 0.8em;
+    font-family: 'Press Start 2P', sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.25);
+    margin: 20px auto;
+    background-color: #0d0d0d;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+}
+
+.Friends-Table thead tr {
+    background-color: #1a1a1a;
+    color: #00ff00;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 2px solid #00ff00;
+}
+
+.Friends-Table thead th {
+    padding: 10px;
+}
+
+.Friends-Table th,
+.Friends-Table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.Friends-Table tbody tr {
+    border-bottom: 1px solid #005500;
+}
+
+.Friends-Table tbody tr:nth-of-type(even) {
+    background-color: #0d0d0d;
+}
+
+.Friends-Table tbody tr:hover {
+    background-color: #003300;
+    color: #00ff00;
+    cursor: pointer;
+}
+
+.Friends-Table tbody tr:last-of-type {
+    border-bottom: 2px solid #00ff00;
+}
+
+.Friends-Table tbody tr.active-row {
+    font-weight: bold;
+    color: #00ff00;
+    background-color: #002200;
+}
+
+.online-offline-logo {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.5)); 
+}
+
+/* Add margin for spacing below the table */
+.Friends-Table-Body {
+    margin-bottom: 20px;
+}
