@@ -1,14 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./components/App";
+
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { TerminalProvider } from "./components/modules/TerminalContext";
 
 import NotFound from "./components/pages/NotFound";
 import HomePage from "./components/pages/Homepage";
 import ProfilePage from "./components/pages/ProfilePage"
 import SettingsPage from "./components/pages/SettingsPage";
 import FriendsPage from "./components/pages/FriendsPage";
-import { TerminalProvider } from "./components/modules/TerminalContext";
+import LobbyPage from "./components/pages/LobbyPage";
 
 
 import {
@@ -27,9 +29,10 @@ const router = createBrowserRouter(
     <Route errorElement={<NotFound />} element={<App />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path = "/friends" element = {<FriendsPage />} />
-        <Route path = "/settings" element = {<SettingsPage />} />
-      </Route>
+        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
+    </Route>
   )
 );
 
