@@ -7,7 +7,6 @@ import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
 import './Terminal.css';
 
-// Helper function to tokenize command
 function tokenizeCommand(command) {
     const tokens = [];
     let currToken = "";
@@ -25,7 +24,6 @@ function tokenizeCommand(command) {
     return tokens;
 }
 
-// Helper function to generate a random lobby code
 function generateLobbyCode(existingCodes) {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code;
