@@ -29,7 +29,6 @@ const router = createBrowserRouter(
         <Route path="/profile" element={<ProfilePage />} />
         <Route path = "/friends" element = {<FriendsPage />} />
         <Route path = "/settings" element = {<SettingsPage />} />
-
       </Route>
   )
 );
