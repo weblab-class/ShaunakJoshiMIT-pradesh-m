@@ -23,3 +23,5 @@ const TerminalProvider = ({children}) => {
 };
 
 export { TerminalProvider, TerminalContext };
+
+
