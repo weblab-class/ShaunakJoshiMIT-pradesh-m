@@ -15,9 +15,6 @@ const HomePage = () => {
         <div>
           <h1>Welcome to Find the Moles!</h1>
           <p>Navigate through the maze, solve trivia, and find the FBI imposter!</p>
-          <h1>Home Page</h1>
-          <Link to="/lobby/12345">Go to Lobby 12345</Link>
-          <Link to="/lobby/67890">Go to Lobby 67890</Link>
         </div>
 
       </div>
