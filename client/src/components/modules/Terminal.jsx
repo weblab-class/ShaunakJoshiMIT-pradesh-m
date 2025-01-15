@@ -7,6 +7,8 @@ import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
 import './Terminal.css';
 
+import { UserContext } from "../App";
+
 function tokenizeCommand(command) {
     const tokens = [];
     let currToken = "";
@@ -37,8 +39,12 @@ function generateLobbyCode(existingCodes) {
 
 const Terminal = (props) => {
     const { history, addHistory, clearHistory } = useContext(TerminalContext);
+    const { userId, handleLogin, handleLogout} = useContext(UserContext);
+
+
     const [lobbyCodes, setLobbyCodes] = useState(new Set());
     const navigate = useNavigate();
+
 
     const executeCommand = (command) => {
         const tokens = tokenizeCommand(command);
@@ -60,6 +66,8 @@ const Terminal = (props) => {
                         return "navigating to the settings page";
                     case "login":
                         navigate("/login");
+                        return "navigating to the login page";
+
                     default:
                         return "Command does not exist";
                 }
@@ -86,6 +94,12 @@ const Terminal = (props) => {
                     }
                 }
                 return "Invalid join command. Did you mean 'join lobby <lobbyCode>'?";
+
+            case "logout":
+                handleLogout()
+                return "logging out"
+
+
             case "help":
                 return "\nAvailable commands:\n\n" +
                     "  clear         - Clears the terminal screen\n" +

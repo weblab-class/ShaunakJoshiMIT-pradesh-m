@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import Layout from '../layout.jsx';
 import onlinelogo from "../../assets/onlinelogo.png";
 import offlinelogo from "../../assets/offlinelogo.png";
 import "./FriendsPage.css";
+import { UserContext } from "../App.jsx";
 
 
 
 const FriendsPage = (props) => {
+
+    const { userID, handleLogin, handleLogout} = useContext(UserContext);
     const hardcodedFriends = [
         {name: "shaunak", online: false, server_id: 19149},
         {name: "pradesh", online: true, server_id: 19249},
