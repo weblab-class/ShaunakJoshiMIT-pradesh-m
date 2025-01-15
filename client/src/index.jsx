@@ -19,6 +19,7 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom'
+import LoginPage from "./components/pages/LoginPage";
 
 
 //TODO: REPLACE WITH YOUR OWN CLIENT_ID
@@ -29,10 +30,12 @@ const router = createBrowserRouter(
     <Route errorElement={<NotFound />} element={<App />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/friends" element={<FriendsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path = "/friends" element = {<FriendsPage />} />
+        <Route path = "/settings" element = {<SettingsPage />} />
+        <Route path = "/login" element = {<LoginPage />} />
         <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
-    </Route>
+
+      </Route>
   )
 );
 
