@@ -9,7 +9,6 @@ const HomePage = () => {
     <Layout currentPage="home">
       <div className="homepage">
         <div>
-          <LoginLogoutButton/>
           <h1>Welcome to Find the Moles!</h1>
           <p>Navigate through the maze, solve trivia, and find the FBI imposter!</p>
         </div>

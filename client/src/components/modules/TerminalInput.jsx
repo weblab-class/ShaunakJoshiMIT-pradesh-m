@@ -30,6 +30,7 @@ const TerminalInput = (props) => {
                         type = "text"
                         value = {input}
                         onChange = {(e) => setInput(e.target.value)}
+                        autoFocus
                 />
         </form>
     )

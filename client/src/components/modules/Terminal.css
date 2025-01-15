@@ -39,6 +39,7 @@
   font-size: 12px;
   margin-right: 10px;
   color: white;
+  white-space: nowrap;
 }
 
 .terminal-input input {
@@ -49,6 +50,8 @@
   border: none;
   outline: none;
   padding: 5px;
+  flex-grow: 1;
+  min-width: 0;
 }
 
 .terminal-display pre {
