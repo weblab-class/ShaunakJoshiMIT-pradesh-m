@@ -6,5 +6,4 @@ const UserSchema = new mongoose.Schema({
   friends: Array
 });
 
-// compile model from schema
 module.exports = mongoose.model("user", UserSchema);
