@@ -50,7 +50,7 @@ const Terminal = (props) => {
                         navigate("/profile");
                         return "navigating to the profile page";
                     case "home":
-                        navigate("/");
+                        navigate("/home");
                         return "navigating to the home page";
                     case "friends":
                         navigate("/friends");
@@ -59,7 +59,7 @@ const Terminal = (props) => {
                         navigate("/settings");
                         return "navigating to the settings page";
                     case "login":
-                        navigate("/login");
+                        navigate("/");
                     default:
                         return "Command does not exist";
                 }
