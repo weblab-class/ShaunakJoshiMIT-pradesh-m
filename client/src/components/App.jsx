@@ -15,6 +15,7 @@ export const UserContext = createContext(null);
  */
 const App = () => {
   const [userId, setUserId] = useState(undefined);
+  const navigate = useNavigate()
 
   useEffect(() => {
     get("/api/whoami").then((user) => {
@@ -27,7 +28,7 @@ const App = () => {
 
   const addNewUser = () => {
     return null
-    
+
   }
 
 
@@ -37,6 +38,7 @@ const App = () => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);
 
+    navigate("/home")
     console.log(`Logged in as ${decodedCredential.name}`);
 
     post("/api/login", { token: userToken })
@@ -53,6 +55,7 @@ const App = () => {
   const handleLogout = () => {
     setUserId(undefined);
     post("/api/logout");
+    navigate("/")
   };
 
   const authContextValue = {
