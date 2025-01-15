@@ -7,7 +7,7 @@ const Layout = ({ children, currentPage }) => {
         <div style={{ overflow: 'hidden', height: '100vh' }}>
             <NavBar currentPage={currentPage} />
             <main style={{ overflow: 'hidden' }}>{children}</main>
-            <Terminal username="shaunakj" />
+            <Terminal />
         </div>
     );
 };

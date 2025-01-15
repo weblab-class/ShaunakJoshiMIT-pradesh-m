@@ -37,10 +37,10 @@ function generateLobbyCode(existingCodes) {
     return code;
 }
 
-const Terminal = (props) => {
+const Terminal = () => {
     const { history, addHistory, clearHistory } = useContext(TerminalContext);
-    const { userId, handleLogin, handleLogout} = useContext(UserContext);
-
+    const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
+    console.log(userId)
 
     const [lobbyCodes, setLobbyCodes] = useState(new Set());
     const navigate = useNavigate();
@@ -127,8 +127,8 @@ const Terminal = (props) => {
     return (
         <div className="terminal">
             <TerminalHeader />
-            <TerminalDisplay username={props.username} history={history} />
-            <TerminalInput username={props.username} onCommand={handleCommand} />
+            <TerminalDisplay username={(userId && decoded) ? decoded.name: "anonymous"} history={history} />
+            <TerminalInput username={(userId && decoded) ? decoded.name: "anonymous"} onCommand={handleCommand} />
         </div>
     );
 };

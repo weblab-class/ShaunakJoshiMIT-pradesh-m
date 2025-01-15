@@ -15,13 +15,21 @@ export const UserContext = createContext(null);
  */
 const App = () => {
   const [userId, setUserId] = useState(undefined);
-  const navigate = useNavigate()
+  const [decoded, setDecoded] = useState(() => {
+
+    const tokenSaved = localStorage.getItem("decodedToken");
+    return (tokenSaved) ? JSON.parse(tokenSaved) : null;
+
+
+  })
+  const navigate = useNavigate();
 
   useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) {
         // they are registed in the database, and currently logged in.
         setUserId(user._id);
+
       }
     });
   }, []);
@@ -37,8 +45,9 @@ const App = () => {
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);
+    // setDecoded(decodedCredential);
+    localStorage.setItem("decodedToken", JSON.stringify(decodedCredential));
 
-    navigate("/home")
     console.log(`Logged in as ${decodedCredential.name}`);
 
     post("/api/login", { token: userToken })
@@ -46,6 +55,7 @@ const App = () => {
       console.log("Server responded with user:", user._id);
       setUserId(user._id);
       post("/api/initsocket", { socketid: socket.id });
+      navigate("/home")
     })
     .catch((error) => {
       console.error("Error during /api/login:", error);
@@ -62,6 +72,7 @@ const App = () => {
     userId,
     handleLogin,
     handleLogout,
+    decoded,
   };
 
   return (
