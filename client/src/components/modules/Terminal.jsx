@@ -67,9 +67,6 @@ const Terminal = (props) => {
                     case "login":
                         navigate("/");
                         return "navigating to the login page";
-
-
-                        navigate("/");
                     default:
                         return "Command does not exist";
                 }
