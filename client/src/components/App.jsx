@@ -1,8 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { Outlet } from "react-router-dom";
-
 import jwt_decode from "jwt-decode";
-
+import { useNavigate } from "react-router-dom";
 import "../utilities.css";
 
 import { socket } from "../client-socket";
@@ -39,7 +38,11 @@ const App = () => {
     .catch((error) => {
       console.error("Error during /api/login:", error);
     });
-  
+
+    
+
+
+
   };
 
   const handleLogout = () => {
