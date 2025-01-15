@@ -31,9 +31,6 @@ const App = () => {
 
   }
 
-
-
-
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);

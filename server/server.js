@@ -28,8 +28,9 @@ const session = require("express-session"); // library that stores info about ea
 const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
 
-const api = require("./api");
+const api = require("./routes/api.js");
 const auth = require("./auth");
+const lobbyRoutes = require("./routes/lobbyRoutes.js");
 
 // socket stuff
 const socketManager = require("./server-socket");
@@ -72,9 +73,13 @@ app.use(
 
 // this checks if the user is logged in, and populates "req.user"
 app.use(auth.populateCurrentUser);
-
 // connect user-defined routes
+app.use("/api/lobby", lobbyRoutes);
 app.use("/api", api);
+
+app.get("/debug", (req, res) => {
+  res.send("Server is working!");
+});
 
 // load the compiled react files, which will serve /index.html and /bundle.js
 const reactPath = path.resolve(__dirname, "..", "client", "dist");
