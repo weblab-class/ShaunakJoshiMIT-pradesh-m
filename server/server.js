@@ -27,6 +27,7 @@ const express = require("express"); // backend framework for our node server.
 const session = require("express-session"); // library that stores info about each connected user
 const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
+const cors = require("cors");
 
 const api = require("./routes/api.js");
 const auth = require("./auth");
@@ -56,6 +57,8 @@ mongoose
 
 // create a new express server
 const app = express();
+app.use(cors());
+
 app.use(validator.checkRoutes);
 
 // allow us to process POST requests
