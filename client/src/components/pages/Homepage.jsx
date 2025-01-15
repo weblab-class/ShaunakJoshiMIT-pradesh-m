@@ -1,7 +1,7 @@
 import React from "react";
 import "../../utilities.css";
 import "../styles/HomePage.css";
-import Layout from "../layout.jsx";
+import Layout from "../Layout.jsx";
 import LoginLogoutButton from "../modules/LoginLogoutButton.jsx";
 import { UserContext } from "../App";
 
