@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from './modules/NavBar.jsx';
-import Terminal from '../modules/Terminal.jsx';
+import Terminal from './modules/Terminal.jsx';
 
 const Layout = ({ children, currentPage }) => {
     return (
