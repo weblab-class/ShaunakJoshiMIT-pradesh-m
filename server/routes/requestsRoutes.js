@@ -1,5 +1,9 @@
 
 
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const auth = require("../auth");
 
 const User = require("../models/user")
 const Request = require("../models/friendrequests");
@@ -78,3 +82,6 @@ router.post("/Friend-Requests", async (req, res) => {
     res.json(pendingRequests)
 
   })
+
+
+  module.exports = router;

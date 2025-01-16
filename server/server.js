@@ -30,9 +30,9 @@ const path = require("path"); // provide utilities for working with file and dir
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 
-const api = require("./routes/routes/api.js");
+const api = require("./routes/api.js");
 const auth = require("./auth");
-const requestRoutes = require("./routes/requestsRoutes");const lobbyRoutes = require("./routes/lobbyRoutes.js");
+const requestRoutes = require("./routes/requestsRoutes");
 const lobbyRoutes = require("./routes/lobbyRoutes.js");
 
 // socket stuff
