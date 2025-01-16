@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
+import { get, post } from "../../utilities";
+
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
@@ -15,10 +17,10 @@ function tokenizeCommand(command) {
 
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
-  const { userId, handleLogout, decoded } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
 
-  const defaultUsername = (decoded && decoded.name) ? decoded.name : userId || "anonymous";
+  const navigate = useNavigate();
+  const defaultUsername = decoded?.name || userId || "anonymous";
 
   const getNickname = () => localStorage.getItem("nickname");
 
@@ -31,32 +33,22 @@ const Terminal = () => {
         switch (tokens[1]?.toLowerCase()) {
           case "profile":
             navigate("/profile");
-            return "Navigating to profile page";
+            return "Navigating to the profile page";
           case "home":
             navigate("/home");
-            return "Navigating to home page";
+            return "Navigating to the home page";
           case "friends":
             navigate("/friends");
-            return "Navigating to friends page";
+            return "Navigating to the friends page";
           case "settings":
             navigate("/settings");
-            return "Navigating to settings page";
+            return "Navigating to the settings page";
           case "login":
             navigate("/");
-            return "Navigating to login page";
+            return "Navigating to the login page";
           default:
             return "Command does not exist";
         }
-
-      //command to set a nickname: "nickname <your nickname>"
-      case "nickname": {
-        const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 12) {
-          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
-        }
-        localStorage.setItem("nickname", newNick);
-        return `Nickname set to: ${newNick}`;
-      }
 
       case "create":
         if (tokens[1]?.toLowerCase() === "lobby") {
@@ -100,6 +92,15 @@ const Terminal = () => {
           }
         }
         return "Invalid leave command. Usage: leave lobby <lobbyCode>";
+
+      case "nickname": {
+        const newNick = tokens.slice(1).join(" ").trim();
+        if (!newNick || newNick.length > 12) {
+          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
+        }
+        localStorage.setItem("nickname", newNick);
+        return `Nickname set to: ${newNick}`;
+      }
 
       case "logout":
         handleLogout();

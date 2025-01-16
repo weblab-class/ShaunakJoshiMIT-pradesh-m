@@ -29,8 +29,9 @@ const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
 const cors = require("cors");
 
-const api = require("./routes/api.js");
+const api = require("./routes/routes/api.js");
 const auth = require("./auth");
+const requestRoutes = require("./routes/requestsRoutes");const lobbyRoutes = require("./routes/lobbyRoutes.js");
 const lobbyRoutes = require("./routes/lobbyRoutes.js");
 
 // socket stuff
@@ -77,6 +78,7 @@ app.use(
 // this checks if the user is logged in, and populates "req.user"
 app.use(auth.populateCurrentUser);
 // connect user-defined routes
+app.use("/api/Friend-Requests", requestRoutes);
 app.use("/api/lobby", lobbyRoutes);
 app.use("/api", api);
 
