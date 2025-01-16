@@ -32,7 +32,7 @@ const userRoutes = require("./routes/userRoutes");
 
 const api = require("./routes/routes/api.js");
 const auth = require("./auth");
-const requestRoutes = require("./routes/requestsRoutes");const lobbyRoutes = require("./routes/lobbyRoutes.js");
+const requestRoutes = require("./routes/requestsRoutes");
 const lobbyRoutes = require("./routes/lobbyRoutes.js");
 
 // socket stuff
