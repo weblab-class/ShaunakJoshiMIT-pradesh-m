@@ -46,8 +46,9 @@ router.post("/leave", async (req, res) => {
   
       lobby.user_ids = lobby.user_ids.filter((id) => id !== user_id);
   
+      //if the lobby is now empty, delete it
       if (lobby.user_ids.length === 0) {
-        await lobby.delete();
+        await Lobby.deleteOne({ lobbyCode }); // Corrected from `lobby.delete()`
         return res.status(200).json({ message: "Lobby deleted as it became empty." });
       }
   
@@ -58,12 +59,12 @@ router.post("/leave", async (req, res) => {
     }
   });
   
+  
 
 router.post("/join", async (req, res) => {
     const { lobbyCode, user_id } = req.body;
   
     try {
-      // Find the lobby by its code
       const lobby = await Lobby.findOne({ lobbyCode });
   
       if (!lobby) {
