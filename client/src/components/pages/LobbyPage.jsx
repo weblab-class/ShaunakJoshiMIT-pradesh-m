@@ -12,7 +12,6 @@ const LobbyPage = () => {
   const [users, setUsers] = useState([]);
   const { decoded } = useContext(UserContext);
 
-  // Display only the nickname
   const nickname = decoded?.nickname || "anonymous";
 
   useEffect(() => {

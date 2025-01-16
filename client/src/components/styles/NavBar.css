@@ -34,11 +34,6 @@
     transition: color 0.3s, text-shadow 0.3s;
   }
   
-  .navbar-page:hover {
-    color: #00ff00;
-    text-shadow: 0 0 5px #00ff00;
-  }
-  
   .navbar-page.active {
     font-weight: bold;
     text-decoration: underline;
