@@ -1,13 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
+import { get, post } from "../../utilities";
+
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
 import "./Terminal.css";
 
 import { UserContext } from "../App";
-import { createLobby, joinLobby, leaveLobby, setNickname } from "../../api.js";
+import { createLobby, joinLobby, leaveLobby } from "../../api.js";
 
 function tokenizeCommand(command) {
   return command.trim().split(/\s+/);
@@ -15,26 +17,12 @@ function tokenizeCommand(command) {
 
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
-  const { userId, googleid, handleLogout, decoded } = useContext(UserContext);
+  const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
+
   const navigate = useNavigate();
+  const defaultUsername = decoded?.name || userId || "anonymous";
 
-  const isLoggedIn = decoded && Object.keys(decoded).length > 0;
-  const defaultUsername = isLoggedIn
-    ? ((decoded && decoded.name) || userId || "Guest")
-    : "Guest";
-
-  //if not logged in, initialize as "Guest".
-  const [currentNickname, setCurrentNickname] = useState(
-    isLoggedIn ? (decoded?.nickname || defaultUsername) : "Guest"
-  );
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      setCurrentNickname(decoded?.nickname || defaultUsername);
-    } else {
-      setCurrentNickname("Guest");
-    }
-  }, [decoded, defaultUsername, isLoggedIn]);
+  const getNickname = () => localStorage.getItem("nickname");
 
   const executeCommand = async (command) => {
     const tokens = tokenizeCommand(command);
@@ -45,47 +33,29 @@ const Terminal = () => {
         switch (tokens[1]?.toLowerCase()) {
           case "profile":
             navigate("/profile");
-            return "Navigating to profile page";
+            return "Navigating to the profile page";
           case "home":
             navigate("/home");
-            return "Navigating to home page";
+            return "Navigating to the home page";
           case "friends":
             navigate("/friends");
-            return "Navigating to friends page";
+            return "Navigating to the friends page";
           case "settings":
             navigate("/settings");
-            return "Navigating to settings page";
+            return "Navigating to the settings page";
           case "login":
             navigate("/");
-            return "Navigating to login page";
+            return "Navigating to the login page";
           default:
             return "Command does not exist";
         }
 
-      case "nickname": {
-        if (!isLoggedIn) {
-          return "Please log in first to set your nickname.";
-        }
-        const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 12) {
-          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
-        }
-        try {
-          const data = await setNickname(googleid, newNick);
-          setCurrentNickname(data.nickname);
-          return `Nickname updated to: ${data.nickname}`;
-        } catch (error) {
-          return `Error: ${error.message}`;
-        }
-      }
-
       case "create":
         if (tokens[1]?.toLowerCase() === "lobby") {
-          if (!isLoggedIn || currentNickname === "Guest") {
-            return "Please log in and set your nickname first with: nickname <your nickname>";
-          }
+          const nickname = getNickname();
+          if (!nickname) return "Please set your nickname first with: nickname <your nickname>";
           try {
-            const lobby = await createLobby(currentNickname);
+            const lobby = await createLobby(nickname);
             navigate(`/lobby/${lobby.lobbyCode}`);
             return `Lobby created: ${lobby.lobbyCode}. Navigating to the lobby.`;
           } catch (error) {
@@ -97,11 +67,10 @@ const Terminal = () => {
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
           const lobbyCode = tokens[2].toUpperCase();
-          if (!isLoggedIn || currentNickname === "Guest") {
-            return "Please log in and set your nickname first with: nickname <your nickname>";
-          }
+          const nickname = getNickname();
+          if (!nickname) return "Please set your nickname first with: nickname <your nickname>";
           try {
-            const lobby = await joinLobby(lobbyCode, currentNickname);
+            const lobby = await joinLobby(lobbyCode, nickname);
             navigate(`/lobby/${lobbyCode}`);
             return `Joined lobby: ${lobbyCode}. Navigating to the lobby.`;
           } catch (error) {
@@ -113,8 +82,9 @@ const Terminal = () => {
       case "leave":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
           const lobbyCode = tokens[2].toUpperCase();
+          const nickname = getNickname() || defaultUsername;
           try {
-            const response = await leaveLobby(lobbyCode, currentNickname);
+            const response = await leaveLobby(lobbyCode, nickname);
             navigate("/home");
             return `Successfully left the lobby: ${lobbyCode}. ${response.message}`;
           } catch (error) {
@@ -122,6 +92,15 @@ const Terminal = () => {
           }
         }
         return "Invalid leave command. Usage: leave lobby <lobbyCode>";
+
+      case "nickname": {
+        const newNick = tokens.slice(1).join(" ").trim();
+        if (!newNick || newNick.length > 12) {
+          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
+        }
+        localStorage.setItem("nickname", newNick);
+        return `Nickname set to: ${newNick}`;
+      }
 
       case "logout":
         handleLogout();
@@ -133,7 +112,7 @@ const Terminal = () => {
                "  cd home                - Navigate to home page\n" +
                "  cd profile             - Navigate to profile page\n" +
                "  cd friends             - Navigate to friends page\n" +
-               "  nickname <your name>   - Set your nickname (1-12 characters; login required)\n" +
+               "  nickname <your name>   - Set your nickname (1-12 characters)\n" +
                "  create lobby           - Create a new lobby (requires nickname set)\n" +
                "  join lobby <lobbyCode> - Join an existing lobby (requires nickname set)\n" +
                "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
@@ -158,8 +137,8 @@ const Terminal = () => {
   return (
     <div className="terminal">
       <TerminalHeader />
-      <TerminalDisplay username={currentNickname || defaultUsername} history={history} />
-      <TerminalInput username={currentNickname || defaultUsername} onCommand={handleCommand} />
+      <TerminalDisplay username={getNickname() || defaultUsername} history={history} />
+      <TerminalInput username={getNickname() || defaultUsername} onCommand={handleCommand} />
     </div>
   );
 };
