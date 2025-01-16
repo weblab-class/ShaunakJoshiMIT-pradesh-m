@@ -1,19 +1,31 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import Layout from '../layout.jsx';
 import onlinelogo from "../../assets/onlinelogo.png";
 import offlinelogo from "../../assets/offlinelogo.png";
 import "./FriendsPage.css";
 import { UserContext } from "../App.jsx";
-
+import { get, post } from "../..//utilities"
 
 
 const FriendsPage = (props) => {
 
     const { userID, handleLogin, handleLogout} = useContext(UserContext);
+    const [user, setUser] = useState(null);
+    const [requests, setRequests] = useState([]);
+
+
     const hardcodedFriends = [
         {name: "shaunak", online: false, server_id: 19149},
         {name: "pradesh", online: true, server_id: 19249},
         {name: "theo", online: true, server_id: 19349}];
+
+    get("/api/user", { userid: userID}).then((userObj) => {
+        setUser(userObj);
+    });
+
+    get(`/api/Friend-Requests/${userID}`).then((requests) => {
+        setRequests(requests)
+    })
 
 
     const rows = hardcodedFriends.map((friendObj) => {
@@ -25,6 +37,8 @@ const FriendsPage = (props) => {
         </tr>)
     })
 
+    // const friends = user.friends;
+    // const rows =
 
     return (
         <Layout currentPage = "friends">

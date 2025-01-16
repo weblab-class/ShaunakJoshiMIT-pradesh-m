@@ -28,9 +28,9 @@ const session = require("express-session"); // library that stores info about ea
 const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
 
-const api = require("./api");
+const api = require("./routes/api");
 const auth = require("./auth");
-
+const requestRoutes = require("./routes/requestsRoutes");
 // socket stuff
 const socketManager = require("./server-socket");
 
@@ -74,6 +74,7 @@ app.use(
 app.use(auth.populateCurrentUser);
 
 // connect user-defined routes
+app.use("/api/Friend-Requests", requestRoutes);
 app.use("/api", api);
 
 // load the compiled react files, which will serve /index.html and /bundle.js

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
+import { get, post } from "../..//utilities"
 
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
@@ -40,7 +41,6 @@ function generateLobbyCode(existingCodes) {
 const Terminal = () => {
     const { history, addHistory, clearHistory } = useContext(TerminalContext);
     const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
-    console.log(userId)
 
     const [lobbyCodes, setLobbyCodes] = useState(new Set());
     const navigate = useNavigate();
@@ -93,6 +93,25 @@ const Terminal = () => {
                     }
                 }
                 return "Invalid join command. Did you mean 'join lobby <lobbyCode>'?";
+            case "friend":
+                // let username = ""
+                // for (let i = 1; i < tokens.length; i++) {
+                //     username += " " + tokens[i]
+                // }
+                // username = username.trim();
+                // console.log(username);
+                // console.log(userId)
+                let username = tokens.slice(1).join(" ");
+                post("/api/Friend-Requests", {
+                    from: userId,
+                    to: username
+                }).then((res) => {
+                    return res
+                }).catch((err) => {
+                    return "Not Found"
+                })
+                return "Sending Request"
+                break;
 
             case "logout":
                 handleLogout()

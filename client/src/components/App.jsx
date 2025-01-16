@@ -3,12 +3,11 @@ import { Outlet } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import "../utilities.css";
-
 import { socket } from "../client-socket";
-
 import { get, post } from "../utilities";
-
 export const UserContext = createContext(null);
+
+
 
 /**
  * Define the "App" component
@@ -45,8 +44,9 @@ const App = () => {
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);
-    // setDecoded(decodedCredential);
+
     localStorage.setItem("decodedToken", JSON.stringify(decodedCredential));
+
 
     console.log(`Logged in as ${decodedCredential.name}`);
 
@@ -54,6 +54,22 @@ const App = () => {
     .then((user) => {
       console.log("Server responded with user:", user._id);
       setUserId(user._id);
+
+      get("/api/user", { userid: user._id }).then((userObj) => {
+        console.log(userObj, " testing userobj")
+        if (userObj === null) {
+          const body = {
+            name: decodedCredential.name,
+            username: decodedCredential.name,
+            googleid: user._id,
+            friends: []
+          }
+          post("/api/addUser", body).then((userObj) => {
+            console.log(`Added user ${userObj.name}`)
+          })
+        }
+      })
+
       post("/api/initsocket", { socketid: socket.id });
       navigate("/home")
     })
