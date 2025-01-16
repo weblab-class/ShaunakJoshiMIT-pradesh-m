@@ -28,6 +28,7 @@ const session = require("express-session"); // library that stores info about ea
 const mongoose = require("mongoose"); // library to connect to MongoDB
 const path = require("path"); // provide utilities for working with file and directory paths
 const cors = require("cors");
+const userRoutes = require("./routes/userRoutes");
 
 const api = require("./routes/routes/api.js");
 const auth = require("./auth");
@@ -80,6 +81,7 @@ app.use(auth.populateCurrentUser);
 // connect user-defined routes
 app.use("/api/Friend-Requests", requestRoutes);
 app.use("/api/lobby", lobbyRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api", api);
 
 app.get("/debug", (req, res) => {
@@ -116,7 +118,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// hardcode port to 3000 for now
 const port = 3000;
 const server = http.Server(app);
 socketManager.init(server);
