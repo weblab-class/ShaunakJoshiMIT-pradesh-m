@@ -1,11 +1,11 @@
 const BASE_URL = "http://localhost:3000/api";
 
-export const createLobby = async (hostId) => {
+export const createLobby = async (hostNickname) => {
   try {
     const response = await fetch(`${BASE_URL}/lobby/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ host_id: hostId }),
+      body: JSON.stringify({ host_id: hostNickname }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -18,14 +18,12 @@ export const createLobby = async (hostId) => {
   }
 };
 
-export const joinLobby = async (lobbyCode, userId) => {
+export const joinLobby = async (lobbyCode, userNickname) => {
   try {
     const response = await fetch(`${BASE_URL}/lobby/join`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ lobbyCode, user_id: userId }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lobbyCode, user_id: userNickname }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -38,14 +36,12 @@ export const joinLobby = async (lobbyCode, userId) => {
   }
 };
 
-export const leaveLobby = async (lobbyCode, userId) => {
+export const leaveLobby = async (lobbyCode, userNickname) => {
   try {
     const response = await fetch(`${BASE_URL}/lobby/leave`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ lobbyCode, user_id: userId }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lobbyCode, user_id: userNickname }),
     });
     const data = await response.json();
     if (!response.ok) {
