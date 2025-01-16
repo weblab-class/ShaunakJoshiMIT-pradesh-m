@@ -49,7 +49,11 @@ router.post("/join", async (req, res) => {
       lobby.user_ids.push(user_id);
       await lobby.save();
     }
-    socketManager.getIo().to(lobbyCode).emit("updateUsers", { action: "join", user: user_id });
+    socketManager.getIo().to(lobbyCode).emit("updateUsers", {
+      action: "join",
+      user: user_id,
+      users: lobby.user_ids,
+    });
 
     res.status(200).json({ lobby });
   } catch (error) {
@@ -71,12 +75,16 @@ router.post("/leave", async (req, res) => {
 
     if (lobby.user_ids.length === 0) {
       await Lobby.deleteOne({ lobbyCode });
-      socketManager.getIo().to(lobbyCode).emit("updateUsers", { action: "empty", user: user_id });
+      socketManager.getIo().to(lobbyCode).emit("updateUsers", { action: "empty", users: [] });
       return res.status(200).json({ message: "Lobby deleted as it became empty." });
     }
 
     await lobby.save();
-    socketManager.getIo().to(lobbyCode).emit("updateUsers", { action: "leave", user: user_id });
+    socketManager.getIo().to(lobbyCode).emit("updateUsers", {
+      action: "leave",
+      user: user_id,
+      users: lobby.user_ids,
+    });
 
     res.status(200).json({ message: "Left lobby successfully", lobby });
   } catch (error) {

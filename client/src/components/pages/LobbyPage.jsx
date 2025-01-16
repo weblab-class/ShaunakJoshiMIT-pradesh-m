@@ -11,8 +11,6 @@ const LobbyPage = () => {
   const [users, setUsers] = useState([]);
   const { userId, decoded } = useContext(UserContext);
 
-  // retrieve the nickname from localStorage.
-  // if none is set, fall back to the default username.
   const nickname = localStorage.getItem("nickname") || ((decoded && decoded.name) ? decoded.name : userId || "anonymous");
 
   useEffect(() => {

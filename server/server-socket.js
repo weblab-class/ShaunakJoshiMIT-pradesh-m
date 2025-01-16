@@ -45,6 +45,7 @@ module.exports = {
               lobby.user_ids.push(user);
               await lobby.save();
             }
+            // Emit the full updated list of users.
             io.to(lobbyCode).emit("updateUsers", {
               action: "join",
               user,
@@ -68,12 +69,8 @@ module.exports = {
           if (lobby) {
             lobby.user_ids = lobby.user_ids.filter((id) => id !== user);
             if (lobby.user_ids.length === 0) {
-              //delete the lobby if there are no users.
               await Lobby.deleteOne({ lobbyCode });
-              io.to(lobbyCode).emit("updateUsers", {
-                action: "empty",
-                users: [],
-              });
+              io.to(lobbyCode).emit("updateUsers", { action: "empty", users: [] });
             } else {
               await lobby.save();
               io.to(lobbyCode).emit("updateUsers", {
