@@ -108,15 +108,15 @@ const Terminal = () => {
 
       case "help":
         return "\nAvailable commands:\n\n" +
-               "  clear                  - Clears the terminal\n" +
-               "  cd home                - Navigate to home page\n" +
-               "  cd profile             - Navigate to profile page\n" +
-               "  cd friends             - Navigate to friends page\n" +
-               "  nickname <your name>   - Set your nickname (1-12 characters)\n" +
-               "  create lobby           - Create a new lobby (requires nickname set)\n" +
-               "  join lobby <lobbyCode> - Join an existing lobby (requires nickname set)\n" +
+               "  clear                   - Clears the terminal\n" +
+               "  cd home                 - Navigate to home page\n" +
+               "  cd profile              - Navigate to profile page\n" +
+               "  cd friends              - Navigate to friends page\n" +
+               "  nickname <your name>    - Set your nickname (1-12 characters)\n" +
+               "  create lobby            - Create a new lobby (requires nickname set)\n" +
+               "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
                "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
-               "  help                   - Display commands\n";
+               "  help                    - Display commands\n";
 
       case "clear":
         clearHistory();
