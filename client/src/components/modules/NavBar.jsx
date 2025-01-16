@@ -1,32 +1,20 @@
 import React from 'react';
+import "../styles/NavBar.css";
 
 const NavBar = ({ currentPage }) => {
   const pages = ['home', 'settings', 'friends', 'profile'];
   
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '10px 20px',
-      backgroundColor: '#f4f4f4',
-      borderBottom: '1px solid #ccc',
-    }}>
-      <div style={{ fontWeight: 'bold' }}>Logo goes here</div>
-
-      <div style={{ fontStyle: 'italic', color: '#555' }}>
+    <div className="navbar">
+      <div className="navbar-logo">Logo goes here</div>
+      <div className="navbar-hint">
         Hint: Type "help" in terminal for instructions on navigating our website
       </div>
-
-      <div style={{ display: 'flex', gap: '15px' }}>
+      <div className="navbar-pages">
         {pages.map((page) => (
           <span
             key={page}
-            style={{
-              fontWeight: currentPage === page ? 'bold' : 'normal',
-              textDecoration: currentPage === page ? 'underline' : 'none',
-              cursor: 'pointer',
-            }}
+            className={`navbar-page ${currentPage === page ? 'active' : ''}`}
           >
             {page.charAt(0).toUpperCase() + page.slice(1)}
           </span>
