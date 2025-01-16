@@ -7,7 +7,8 @@ import TerminalInput from "./TerminalInput";
 import "./Terminal.css";
 
 import { UserContext } from "../App";
-import { createLobby } from "../../api.js";  // Import the API call
+import { createLobby, joinLobby, leaveLobby } from "../../api.js";
+
 
 // Simple tokenizer (or use your own version)
 function tokenizeCommand(command) {
@@ -58,27 +59,47 @@ const Terminal = () => {
         }
         return "Invalid command. Did you mean 'create lobby'?";
 
-      case "join":
-        if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
-          const lobbyCode = tokens[2].toUpperCase();
-          navigate(`/lobby/${lobbyCode}`);
-          return `Joined lobby: ${lobbyCode}. Navigating to the lobby.`;
-        }
-        return "Invalid join command. Usage: join lobby <lobbyCode>";
+        case "join":
+          if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
+            const lobbyCode = tokens[2].toUpperCase();
+            try {
+              const lobby = await joinLobby(lobbyCode, userId); // Call the joinLobby API
+              navigate(`/lobby/${lobbyCode}`);
+              return `Joined lobby: ${lobbyCode}. Navigating to the lobby.`;
+            } catch (error) {
+              return `Failed to join lobby: ${error.message}`;
+            }
+          }
+          return "Invalid join command. Usage: join lobby <lobbyCode>";
+          
+          case "leave":
+            if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
+              const lobbyCode = tokens[2].toUpperCase();
+              try {
+                const response = await leaveLobby(lobbyCode, userId); // Call the leaveLobby API
+                navigate("/home"); // Navigate back to the home page after leaving
+                return `Successfully left the lobby: ${lobbyCode}. ${response.message}`;
+              } catch (error) {
+                return `Failed to leave lobby: ${error.message}`;
+              }
+            }
+            return "Invalid leave command. Usage: leave lobby <lobbyCode>";
+          
 
       case "logout":
         handleLogout();
         return "Logging out";
 
-      case "help":
-        return "\nAvailable commands:\n\n" +
-               "  clear                  - Clears the terminal\n" +
-               "  cd home                - Navigate to home page\n" +
-               "  cd profile             - Navigate to profile page\n" +
-               "  cd friends             - Navigate to friends page\n" +
-               "  create lobby           - Create a new lobby and navigate to it\n" +
-               "  join lobby <lobbyCode> - Join an existing lobby by its code\n" +
-               "  help                   - Display commands\n";
+        case "help":
+          return "\nAvailable commands:\n\n" +
+                 "  clear                  - Clears the terminal\n" +
+                 "  cd home                - Navigate to home page\n" +
+                 "  cd profile             - Navigate to profile page\n" +
+                 "  cd friends             - Navigate to friends page\n" +
+                 "  create lobby           - Create a new lobby and navigate to it\n" +
+                 "  join lobby <lobbyCode> - Join an existing lobby by its code\n" +
+                 "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
+                 "  help                   - Display commands\n";
 
       case "clear":
         clearHistory();

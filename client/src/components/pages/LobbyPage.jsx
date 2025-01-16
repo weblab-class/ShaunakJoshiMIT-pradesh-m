@@ -5,6 +5,7 @@ const LobbyPage = (props) => {
     return (
         <Layout currentPage = "lobby">
         <div>
+            Lobby
         </div>
         </Layout>
     )
