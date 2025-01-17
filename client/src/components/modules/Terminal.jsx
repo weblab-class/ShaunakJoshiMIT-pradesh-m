@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
 import { get, post } from "../../utilities";
@@ -18,11 +18,25 @@ function tokenizeCommand(command) {
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
   const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
+  const[user, setUser] = useState(null);
+
 
   const navigate = useNavigate();
   const defaultUsername = decoded?.name || userId || "anonymous";
 
-  const getNickname = () => localStorage.getItem("nickname");
+  useEffect(() => {
+    if (userId) {
+      get("/api/user", { userid: userId })
+        .then((userObj) => {
+          setUser(userObj);
+        })
+        .catch((err) => {
+          console.error("User Not Found");
+        });
+    }
+  }, [userId]);
+
+  const getNickname = () => (user?.nickname ? user.nickname : "anonymous");
 
   const executeCommand = async (command) => {
     const tokens = tokenizeCommand(command);
@@ -93,14 +107,30 @@ const Terminal = () => {
         }
         return "Invalid leave command. Usage: leave lobby <lobbyCode>";
 
-      case "nickname": {
+    case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 12) {
-          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
+        if (!newNick || newNick.length > 12 || newNick.indexOf(" ") >= 0) {
+            return "Nickname must be between 1 and 12 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
-        localStorage.setItem("nickname", newNick);
-        return `Nickname set to: ${newNick}`;
-      }
+
+        try {
+            const response = await post("/api/user/setNickname", {
+            userid: userId,
+            nickname: newNick,
+            });
+
+            setUser((prevUser) => ({
+                ...prevUser,
+                nickname: newNick,
+              }));
+
+            return `Nickname set to: ${response.nickname}`;
+        } catch (error) {
+            console.error("Error setting nickname:", error.response?.data || error.message);
+            // return error.response?.data || error.message;
+            return "That nickname is already in use, please try again"
+        }
+    }
 
       case "logout":
         handleLogout();
