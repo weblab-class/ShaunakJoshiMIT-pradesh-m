@@ -22,10 +22,19 @@ function getOrCreateUser(user) {
   // the "sub" field means "subject", which is a unique identifier for each user
   return User.findOne({ googleid: user.sub }).then((existingUser) => {
     if (existingUser) return existingUser;
+    const generateUsername = (name) => {
+      const clearName = name.replace(/\s+/g, "");
+      const randomString = Array.from({ length: 4 }, () => {
+        const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join("");
 
+      return clearName+randomString
+    }
     const newUser = new User({
       name: user.name,
       googleid: user.sub,
+      nickname: generateUsername(user.name)
     });
 
     return newUser.save();

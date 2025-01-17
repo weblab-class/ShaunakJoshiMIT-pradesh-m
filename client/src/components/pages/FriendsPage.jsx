@@ -19,11 +19,11 @@ const FriendsPage = (props) => {
         {name: "pradesh", online: true, server_id: 19249},
         {name: "theo", online: true, server_id: 19349}];
 
-    get("/api/user", { userid: userID}).then((userObj) => {
+    get("/routes/userRoutes/user", { userid: userID}).then((userObj) => {
         setUser(userObj);
     });
 
-    get(`/api/Friend-Requests/${userID}`).then((requests) => {
+    get(`/routes/requestsRoutes/Friend-Requests/${userID}`).then((requests) => {
         setRequests(requests)
     })
 

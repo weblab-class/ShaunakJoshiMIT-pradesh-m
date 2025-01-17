@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
 import { get, post } from "../../utilities";
@@ -18,11 +18,25 @@ function tokenizeCommand(command) {
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
   const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
+  const[user, setUser] = useState(null);
+
 
   const navigate = useNavigate();
   const defaultUsername = decoded?.name || userId || "anonymous";
 
-  const getNickname = () => localStorage.getItem("nickname");
+  useEffect(() => {
+    if (userId) {
+      get("/api/user", { userid: userId })
+        .then((userObj) => {
+          setUser(userObj);
+        })
+        .catch((err) => {
+          console.error("User Not Found");
+        });
+    }
+  }, [userId]);
+
+  const getNickname = () => (user?.nickname ? user.nickname : "anonymous");
 
   const executeCommand = async (command) => {
     const tokens = tokenizeCommand(command);
@@ -93,14 +107,73 @@ const Terminal = () => {
         }
         return "Invalid leave command. Usage: leave lobby <lobbyCode>";
 
-      case "nickname": {
+    case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 12) {
-          return "Nickname must be between 1 and 12 characters. Usage: nickname <your nickname>";
+        if (!newNick || newNick.length > 16 || newNick.indexOf(" ") >= 0) {
+            return "Nickname must be between 1 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
-        localStorage.setItem("nickname", newNick);
-        return `Nickname set to: ${newNick}`;
-      }
+
+        try {
+            const response = await post("/api/user/setNickname", {
+            userid: userId,
+            nickname: newNick,
+            });
+
+            setUser((prevUser) => ({
+                ...prevUser,
+                nickname: newNick,
+              }));
+
+            return `Nickname set to: ${response.nickname}`;
+        } catch (error) {
+            console.error("Error setting nickname:", error.response?.data || error.message);
+            // return error.response?.data || error.message;
+            return "That nickname is already in use, please try again"
+        }
+    }
+
+    case "friend":
+        switch (tokens[1]) {
+            case "request":
+                if (tokens.length > 3) {
+                    return "Invalid friend command, usage: friend request <username>"
+                }
+            try {
+                const reqNickName = tokens[2];
+                const request = await post("/api/requests/sendRequest", {from: userId, to: reqNickName});
+                return `Successfully sent a friend request to ${reqNickName}`;
+            } catch (error) {
+                return `Your request returned this error: ${error}`
+            }
+
+            case "accept":
+                if (tokens.length !== 3) {
+                    return "Invalid friend command, usage: friend accept <username>";
+                }
+
+                try {
+                    const reqNickName = tokens[2];
+                    const result = await post("/api/requests/sendRequest/accept", {
+                    from: reqNickName,
+                    to: userId,
+                    });
+
+                    // Ensure you return the success message
+                    return `Successfully accepted ${reqNickName}'s friend request!`;
+                } catch (error) {
+                    // Log the full error for debugging
+                    console.error("Error accepting friend request:", error);
+
+                    // Return server-side error message or fallback
+                    return `Friend request not accepted: ${error.response?.data || "Unknown error occurred"}`;
+                }
+
+            default:
+                "Invalid friend subcommand. Try: friend request <username>"
+        }
+
+
+        break
 
       case "logout":
         handleLogout();
@@ -108,15 +181,15 @@ const Terminal = () => {
 
       case "help":
         return "\nAvailable commands:\n\n" +
-               "  clear                  - Clears the terminal\n" +
-               "  cd home                - Navigate to home page\n" +
-               "  cd profile             - Navigate to profile page\n" +
-               "  cd friends             - Navigate to friends page\n" +
-               "  nickname <your name>   - Set your nickname (1-12 characters)\n" +
-               "  create lobby           - Create a new lobby (requires nickname set)\n" +
-               "  join lobby <lobbyCode> - Join an existing lobby (requires nickname set)\n" +
+               "  clear                   - Clears the terminal\n" +
+               "  cd home                 - Navigate to home page\n" +
+               "  cd profile              - Navigate to profile page\n" +
+               "  cd friends              - Navigate to friends page\n" +
+               "  nickname <your name>    - Set your nickname (1-16) characters)\n" +
+               "  create lobby            - Create a new lobby (requires nickname set)\n" +
+               "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
                "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
-               "  help                   - Display commands\n";
+               "  help                    - Display commands\n";
 
       case "clear":
         clearHistory();
