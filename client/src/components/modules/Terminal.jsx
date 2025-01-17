@@ -109,8 +109,8 @@ const Terminal = () => {
 
     case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 12 || newNick.indexOf(" ") >= 0) {
-            return "Nickname must be between 1 and 12 characters and cannot have spaces. Usage: nickname <your-nickname>";
+        if (!newNick || newNick.length > 16 || newNick.indexOf(" ") >= 0) {
+            return "Nickname must be between 1 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
 
         try {
@@ -132,6 +132,49 @@ const Terminal = () => {
         }
     }
 
+    case "friend":
+        switch (tokens[1]) {
+            case "request":
+                if (tokens.length > 3) {
+                    return "Invalid friend command, usage: friend request <username>"
+                }
+            try {
+                const reqNickName = tokens[2];
+                const request = await post("/api/requests/sendRequest", {from: userId, to: reqNickName});
+                return `Successfully sent a friend request to ${reqNickName}`;
+            } catch (error) {
+                return `Your request returned this error: ${error}`
+            }
+
+            case "accept":
+                if (tokens.length !== 3) {
+                    return "Invalid friend command, usage: friend accept <username>";
+                }
+
+                try {
+                    const reqNickName = tokens[2];
+                    const result = await post("/api/requests/sendRequest/accept", {
+                    from: reqNickName,
+                    to: userId,
+                    });
+
+                    // Ensure you return the success message
+                    return `Successfully accepted ${reqNickName}'s friend request!`;
+                } catch (error) {
+                    // Log the full error for debugging
+                    console.error("Error accepting friend request:", error);
+
+                    // Return server-side error message or fallback
+                    return `Friend request not accepted: ${error.response?.data || "Unknown error occurred"}`;
+                }
+
+            default:
+                "Invalid friend subcommand. Try: friend request <username>"
+        }
+
+
+        break
+
       case "logout":
         handleLogout();
         return "Logging out";
@@ -142,7 +185,7 @@ const Terminal = () => {
                "  cd home                 - Navigate to home page\n" +
                "  cd profile              - Navigate to profile page\n" +
                "  cd friends              - Navigate to friends page\n" +
-               "  nickname <your name>    - Set your nickname (1-12 characters)\n" +
+               "  nickname <your name>    - Set your nickname (1-16) characters)\n" +
                "  create lobby            - Create a new lobby (requires nickname set)\n" +
                "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
                "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
