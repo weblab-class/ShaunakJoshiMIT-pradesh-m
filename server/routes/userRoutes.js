@@ -1,32 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user.js"); 
+const User = require("../models/user.js");
+
 
 router.post("/setNickname", async (req, res) => {
-  const { googleid, nickname } = req.body;
-  if (!nickname || nickname.trim().length === 0 || nickname.trim().length > 12) {
-    return res.status(400).json({
-      error: "Nickname must be between 1 and 12 characters."
-    });
+  const { userid, nickname } = req.body;
+
+  if (!nickname || nickname.length === 0 || nickname.length > 12) {
+    return res.status(400).send("Nickname must be between 1 and 12 characters");
   }
 
   try {
-    const user = await User.findOneAndUpdate(
-      { googleid },
-      { nickname: nickname.trim() },
-      { new: true }
-    );
+    const user = await User.findById(userid);
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).send("User not found");
     }
-    res.status(200).json({
+
+    user.nickname = nickname.trim();
+    await user.save();
+    return res.status(200).json({
       message: "Nickname updated successfully.",
-      nickname: user.nickname
+      nickname: user.nickname,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).send("Nickname is already taken.");
+    }
     console.error("Error updating nickname:", error);
-    res.status(500).json({ error: "Failed to update nickname." });
+    return res.status(500).send("Failed to update nickname.");
   }
 });
+
+
 
 module.exports = router;
