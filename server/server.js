@@ -79,7 +79,7 @@ app.use(
 // this checks if the user is logged in, and populates "req.user"
 app.use(auth.populateCurrentUser);
 // connect user-defined routes
-app.use("/api/Friend-Requests", requestRoutes);
+app.use("/api/requests", requestRoutes);
 app.use("/api/lobby", lobbyRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api", api);
