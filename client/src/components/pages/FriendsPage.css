@@ -1,25 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
 
-.Friends-Header {
-    text-align: center;
+/* General Layout */
+.Friends-Page {
+    padding: 20px;
+    background-color: #0d0d0d;
+    color: #00ff00;
     font-family: 'Press Start 2P', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.Friends-Header,
+.Requests-Header {
+    text-align: center;
     color: #00ff00;
     background-color: #0d0d0d;
     padding: 20px;
     border-bottom: 2px solid #00ff00; /* Neon green border */
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+    width: 90%;
 }
 
+/* Friends Table Styles */
 .Friends-Table {
     border-collapse: collapse;
     font-size: 0.8em;
     font-family: 'Press Start 2P', sans-serif;
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.25);
-    margin: 20px auto;
+    margin: 0 auto 20px auto;
     background-color: #0d0d0d;
     color: #00ff00;
     border: 1px solid #00ff00;
+    width: 90%;
 }
 
 .Friends-Table thead tr {
@@ -64,14 +79,76 @@
     background-color: #002200;
 }
 
+/* Online/Offline Icon Styles */
 .online-offline-logo {
     width: 30px;
     height: 30px;
     vertical-align: middle;
-    filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.5)); 
+    filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.5));
 }
 
-/* Add margin for spacing below the table */
-.Friends-Table-Body {
-    margin-bottom: 20px;
+/* Friend Requests Table */
+.Requests-Table {
+    border-collapse: collapse;
+    font-size: 0.8em;
+    font-family: 'Press Start 2P', sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.25);
+    margin: 0 auto 20px auto;
+    background-color: #0d0d0d;
+    color: #ffff00; /* Yellow for friend requests */
+    border: 1px solid #ffff00;
+    width: 90%;
+}
+
+.Requests-Table thead tr {
+    background-color: #1a1a1a;
+    color: #ffff00;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 2px solid #ffff00;
+}
+
+.Requests-Table thead th {
+    padding: 10px;
+}
+
+.Requests-Table th,
+.Requests-Table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.Requests-Table tbody tr {
+    border-bottom: 1px solid #555500;
+}
+
+.Requests-Table tbody tr:nth-of-type(even) {
+    background-color: #0d0d0d;
+}
+
+.Requests-Table tbody tr:hover {
+    background-color: #333300;
+    color: #ffff00;
+    cursor: pointer;
+}
+
+.Requests-Table tbody tr:last-of-type {
+    border-bottom: 2px solid #ffff00;
+}
+
+/* Empty States for Tables */
+.Friends-Table-Body p,
+.Requests-Table-Body p {
+    font-size: 1em;
+    font-family: 'Press Start 2P', sans-serif;
+    color: #555555;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Add some spacing between sections */
+.Friends-Header,
+.Requests-Header {
+    margin-bottom: 40px;
 }

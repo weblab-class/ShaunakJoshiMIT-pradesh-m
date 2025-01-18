@@ -21,6 +21,10 @@ const removeUser = (user, socket) => {
   delete socketToUserMap[socket.id];
 };
 
+const getSocketFromSocketID = (socketId) => {
+  return io.sockets.sockets.get(socketId);
+};
+
 module.exports = {
   init: (http) => {
     io = require("socket.io")(http, {
@@ -99,5 +103,6 @@ module.exports = {
   removeUser,
   getSocketFromUserID,
   getUserFromSocketID,
+  getSocketFromSocketID, 
   getIo: () => io,
 };
