@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Layout from '../layout.jsx';
 import onlinelogo from "../../assets/onlinelogo.png";
 import offlinelogo from "../../assets/offlinelogo.png";
@@ -7,56 +7,117 @@ import { UserContext } from "../App.jsx";
 import { get, post } from "../..//utilities"
 
 
+
 const FriendsPage = (props) => {
 
-    const { userID, handleLogin, handleLogout} = useContext(UserContext);
+    const { userId, handleLogin, handleLogout} = useContext(UserContext);
     const [user, setUser] = useState(null);
     const [requests, setRequests] = useState([]);
+    const [requestsData, setRequestsData] = useState([]);
+    const [friendsData, setFriendsData] = useState([]);
 
 
-    const hardcodedFriends = [
-        {name: "shaunak", online: false, server_id: 19149},
-        {name: "pradesh", online: true, server_id: 19249},
-        {name: "theo", online: true, server_id: 19349}];
+    useEffect(() => {
+        get("/api/user", { userid: userId}).then((userObj) => {
+            setUser(userObj);
+        });
+        get(`/api/requests/sendRequest/${userId}`).then((requests) => {
+            setRequests(requests)
+        });
 
-    get("/routes/userRoutes/user", { userid: userID}).then((userObj) => {
-        setUser(userObj);
-    });
+    }, [userId])
 
-    get(`/routes/requestsRoutes/Friend-Requests/${userID}`).then((requests) => {
-        setRequests(requests)
+    useEffect(() => {
+        if (requests.length > 0) {
+            Promise.all(
+                requests.map((requestObj) => {
+                    return (get("/api/user", { userid: requestObj.from }))
+                })
+            ).then((fromUserObjs) => {
+                setRequestsData(fromUserObjs);
+            });
+        }
+    }, [requests])
+
+
+
+    const friends =  user ? user.friends: [];
+
+    useEffect(() => {
+        if (friends.length > 0) {
+            Promise.all(
+                friends.map((friendId) => {
+
+                    return (get("/api/user", {userid: friendId}));
+                })
+            ).then((UserObjs) => {
+                setFriendsData(UserObjs);
+            })
+        }
     })
 
 
-    const rows = hardcodedFriends.map((friendObj) => {
+    console.log("User Friends", friends)
+    const friendRows = friendsData.map((friendObj) => {
         return (
-        <tr className = "Friends-Row">
-            <th>{friendObj.name}</th>
-            <th><img className = "online-offline-logo" src = {(friendObj.online) ? onlinelogo: offlinelogo} /></th>
-            <th>{(friendObj.online) ? friendObj.server_id: "offline" }</th>
-        </tr>)
+            <tr className = "Friends-Row">
+                <th>{friendObj.nickname}</th>
+                {/* <th><img className = "online-offline-logo" src = {(friendObj.online) ? onlinelogo: offlinelogo} /></th> */}
+                <th><img className = "online-offline-logo"  src = {onlinelogo} /></th>
+                {/* <th>{(friendObj.online) ? friendObj.server_id: "offline" }</th> */}
+                <th>"placeholder server id"</th>
+            </tr>
+        )
     })
 
-    // const friends = user.friends;
-    // const rows =
+    const requestRows = requestsData.map((fromUserObj, index) => {
+        console.log("User Obj", fromUserObj)
+        return (
+        <tr className = "Requests-Row" key = {index}>
+            <th>{fromUserObj.nickname}</th>
+            <th>"Placeholder Date"</th>
+        </tr>
+    )});
+
 
     return (
         <Layout currentPage = "friends">
-        <div className = "Friends-Header">
-            <table className="Friends-Table">
-                <thead className = "Friends-Table-Labels">
+        <div className="Friends-Page">
+            <div className="Friends-Header">
+                <h2>Friends</h2>
+                {friends.length === 0 ? (
+                <p>No friends yet. Add some!</p>
+                ) : (
+                <table className="Friends-Table">
+                    <thead>
                     <tr>
                         <th>Friend</th>
                         <th>Online</th>
                         <th>Server ID</th>
                     </tr>
-                </thead>
+                    </thead>
+                    <tbody>{friendRows}</tbody>
+                </table>
+                )}
+            </div>
 
-                <tbody className = "Friends-Table-Body">
-                    {rows}
-                </tbody>
-            </table>
-        </div>
+            <div className="Requests-Header">
+                <h2>Incoming Friend Requests</h2>
+                {requestsData.length === 0 ? (
+                <p>No incoming requests.</p>
+                ) : (
+                <table className="Requests-Table">
+                    <thead>
+                    <tr>
+                        <th>Incoming Request From</th>
+                        <th>Date Sent</th>
+                    </tr>
+                    </thead>
+                    <tbody>{requestRows}</tbody>
+                </table>
+                )}
+            </div>
+            </div>
         </Layout>
     )
 }

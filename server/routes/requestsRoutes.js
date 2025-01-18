@@ -78,13 +78,16 @@ router.post("/sendRequest", async (req, res) => {
 
     friendRequest.status = "accepted";
     await friendRequest.save();
-    // res.status(200).json({message: "Friend request accepted"})
-    res.send("Friend request accepted");
+
+    res.json({messsage: "Friend request accepted"})
   });
 
   router.post("/sendRequest/reject", auth.ensureLoggedIn, async (req, res) => {
-    const { requestId } = req.body;
-    const friendRequest = await Request.findById(requestId);
+    const { from, to } = req.body;
+    const fromUserObj = await User.findOne({nickname: from})
+    const toUserObj = await User.findById(to)
+
+    const friendRequest = await Request.findOne({from: fromUserObj._id, to: to, status: "pending"});
 
     if (!friendRequest || friendRequest.status !== "pending") {
       return res.status(404).send("Friend request not found or already handled");
@@ -92,16 +95,19 @@ router.post("/sendRequest", async (req, res) => {
 
     friendRequest.status = "rejected";
     await friendRequest.save();
-    res.send("Friend request rejected")
+    res.json({message: "Friend request rejected"})
   });
 
   router.get("/sendRequest/:userId", auth.ensureLoggedIn, async (req, res) => {
     const { userId } = req.params;
-
-    const pendingRequests = Request.find({ to: userId, status: "pending"});
-    res.json(pendingRequests)
-
-  })
+    try {
+      // Use await instead of a callback
+      const requests = await Request.find({ to: userId, status: "pending" });
+      res.json(requests);
+    } catch (err) {
+      res.status(500).send("Error fetching friend requests");
+    }
+  });
 
 
   module.exports = router;

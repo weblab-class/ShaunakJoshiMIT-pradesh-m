@@ -159,7 +159,7 @@ const Terminal = () => {
                     });
 
                     // Ensure you return the success message
-                    return `Successfully accepted ${reqNickName}'s friend request!`;
+                    return `Successfully accepted ${reqNickName}'s friend request, server says ${result.message}!`;
                 } catch (error) {
                     // Log the full error for debugging
                     console.error("Error accepting friend request:", error);
@@ -167,6 +167,22 @@ const Terminal = () => {
                     // Return server-side error message or fallback
                     return `Friend request not accepted: ${error.response?.data || "Unknown error occurred"}`;
                 }
+            case "reject":
+                if (tokens.length !== 3) {
+                    return "Invalid friend command, usage: friend reject <username>"
+                }
+                try {
+                const reqNickName = tokens[2];
+                const request = await post("/api/requests/sendRequest/reject", {
+                    from: reqNickName,
+                    to: userId,
+                });
+
+                return `Successfully rejected ${reqNickName}'s friend request`
+            } catch (error) {
+                console.error("Error rejecting friend request: ", error);
+                return `Friend request not rejected: ${error.response?.data || "Unknown error occurred"}`;
+            }
 
             default:
                 "Invalid friend subcommand. Try: friend request <username>"
