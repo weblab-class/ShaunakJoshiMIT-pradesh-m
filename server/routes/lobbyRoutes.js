@@ -36,7 +36,7 @@ router.post("/create", async (req, res) => {
 });
 
 router.post("/join", async (req, res) => {
-  const { lobbyCode, user_id } = req.body; // user_id is the nickname
+  const { lobbyCode, user_id } = req.body;
   try {
     const lobby = await Lobby.findOne({ lobbyCode });
     if (!lobby) {
@@ -79,6 +79,42 @@ router.post("/leave", async (req, res) => {
     res.status(200).json({ message: "Left lobby successfully", lobby });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/:lobbyCode/createGame", async (req, res) => {
+  const { lobbyCode } = req.params;
+  const { user_id } = req.body;
+  if (!user_id) {
+    return res.status(400).json({ message: "User id is required" });
+  }
+
+  try {
+    const lobby = await Lobby.findOne({ lobbyCode });
+    if (!lobby) {
+      return res.status(404).json({ message: "Lobby not found" });
+    }
+
+    if (lobby.host_id.trim().toLowerCase() !== user_id.trim().toLowerCase()) {
+      console.log("Lobby host_id:", JSON.stringify(lobby.host_id));
+      console.log("User id from request:", JSON.stringify(user_id));      
+      return res.status(403).json({ message: "Only the host can start the game." });
+    }
+    
+
+    if (!lobby.user_ids || lobby.user_ids.length < 3) {
+      return res.status(400).json({ message: "At least 3 players are required to start the game." });
+    }
+
+    lobby.in_game = true;
+    await lobby.save();
+
+    socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode });
+
+    res.status(200).json({ message: "Game successfully started" });
+  } catch (error) {
+    console.error("Error starting game:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

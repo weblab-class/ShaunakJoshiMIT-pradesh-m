@@ -9,30 +9,48 @@ const socket = io("http://localhost:3000");
 
 const LobbyPage = () => {
   const { lobbyCode } = useParams();
-  const [users, setUsers] = useState([]);
+  const [lobby, setLobby] = useState(null);
   const { decoded } = useContext(UserContext);
 
   const nickname = decoded?.nickname || "anonymous";
 
   useEffect(() => {
     socket.emit("joinLobby", lobbyCode, nickname);
-
+    
     socket.on("updateUsers", (data) => {
       console.log("Received update:", data);
-      setUsers(data.users || []);
+      setLobby((prevLobby) => {
+        return {
+          ...prevLobby,
+          user_ids: data.users || (prevLobby ? prevLobby.user_ids : []),
+          host_id: data.host_id || (prevLobby ? prevLobby.host_id : null),
+        };
+      });
     });
-
+    socket.on("lobbyData", (lobbyData) => {
+      setLobby(lobbyData);
+    });
+    
     return () => {
       socket.emit("leaveLobby", lobbyCode, nickname);
       socket.off("updateUsers");
+      socket.off("lobbyData");
     };
   }, [lobbyCode, nickname]);
+
+  const users = lobby?.user_ids || [];
+  const host = lobby?.host_id || (users.length ? users[0] : null);
 
   return (
     <Layout currentPage="lobby">
       <div className="lobby-page">
         <div className="lobby-container">
           <h1 className="lobby-title">Lobby: {lobbyCode}</h1>
+          {host && (
+            <h2 className="lobby-host">
+              Host: <span className="host-name">{host}</span>
+            </h2>
+          )}
           <div className="lobby-users">
             <h2>Users in Lobby</h2>
             {users.length === 0 ? (
@@ -40,7 +58,12 @@ const LobbyPage = () => {
             ) : (
               <ul className="users-list">
                 {users.map((user, index) => (
-                  <li key={index} className="user-item">{user}</li>
+                  <li key={index} className="user-item">
+                    {user}{" "}
+                    {user === host && (
+                      <span className="host-badge">(Host)</span>
+                    )}
+                  </li>
                 ))}
               </ul>
             )}
