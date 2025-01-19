@@ -5,6 +5,7 @@ import offlinelogo from "../../assets/offlinelogo.png";
 import "./FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../..//utilities"
+import { socket } from "../../client-socket.js";
 
 
 
@@ -36,10 +37,44 @@ const FriendsPage = (props) => {
             ).then((fromUserObjs) => {
                 setRequestsData(fromUserObjs);
             });
+        } else {
+            setRequestsData([]);
         }
     }, [requests])
 
 
+
+
+    useEffect(() => {
+        socket.on("friendRequestReceived", (data) => {
+            console.log("Got friend request from", data.from);
+            get(`/api/requests/sendRequest/${userId}`).then((requests) => {
+                setRequests(requests);
+            });
+        });
+
+        socket.on("friendRequestAccepted", (data) =>  {
+            console.log("Friend request was accepted", data);
+            get("/api/user", { userid: userId }).then((userObj) => setUser(userObj));
+            get(`/api/requests/sendRequest/${userId}`).then((requests) => {
+                setRequests(requests);
+              });
+        });
+
+        socket.on("friendRequestRejected", (data) => {
+            console.log("friend request was rejected", data);
+            get("/api/user", {userid: userId}).then((userObj) => setUser(userObj));
+            get(`/api/requests/sendRequest/${userId}`).then((requests) => {
+                setRequests(requests);
+              });
+
+        });
+        return () => {
+            socket.off("friendRequestReceived");
+            socket.off("friendRequestAccepted");
+            socket.off("friendRequestRejected");
+        };
+    }, [userId]);
 
     const friends =  user ? user.friends: [];
 
@@ -53,8 +88,10 @@ const FriendsPage = (props) => {
             ).then((UserObjs) => {
                 setFriendsData(UserObjs);
             })
+        } else {
+            setFriendsData([]);
         }
-    })
+    }, [friends]);
 
 
     console.log("User Friends", friends)

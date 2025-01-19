@@ -90,6 +90,12 @@ module.exports = {
           console.error("Error in leaveLobby:", error);
         }
       });
+      socket.on("initUser", (userId) => {
+        console.log(`Initializing user ${userId} on socket ${socket.id}`);
+        addUser(userId, socket)
+      });
+
+      
 
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);
@@ -103,6 +109,6 @@ module.exports = {
   removeUser,
   getSocketFromUserID,
   getUserFromSocketID,
-  getSocketFromSocketID, 
+  getSocketFromSocketID,
   getIo: () => io,
 };

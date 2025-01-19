@@ -23,6 +23,12 @@ const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (userId) {
+      socket.emit("initUser", userId);
+    }
+  }, [userId]);
+
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
     const decodedCredential = jwt_decode(userToken);

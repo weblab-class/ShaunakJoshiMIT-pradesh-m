@@ -4,6 +4,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const auth = require("../auth");
+// const io = require("../server-socket").getIo();
+const { getSocketFromUserID, getIo } = require("../server-socket");
+
 
 const User = require("../models/user")
 const Request = require("../models/friendrequests");
@@ -53,6 +56,14 @@ router.post("/sendRequest", async (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 
+    const toSocket = getSocketFromUserID(toUser._id.toString());
+    if (toSocket) {
+    toSocket.emit("friendRequestReceived", {
+      fromId: fromUser._id,
+      fromNickname: fromUser.nickname,
+      requestId: newRequest._id,
+    });
+    }
   });
 
 
@@ -80,6 +91,27 @@ router.post("/sendRequest", async (req, res) => {
     await friendRequest.save();
 
     res.json({messsage: "Friend request accepted"})
+
+    const fromSocket = getSocketFromUserID(fromUserObj._id.toString());
+
+    if (fromSocket) {
+
+      fromSocket.emit("friendRequestAccepted", {
+        fromId: fromUserObj._id,
+        toId: toUserObj._id,
+      });
+    }
+
+    const toSocket = getSocketFromUserID(toUserObj._id.toString());
+    if (toSocket) {
+      toSocket.emit("friendRequestAccepted", {
+        fromId: fromUserObj._id,
+        toId: toUserObj._id,
+      });
+  }
+
+
+
   });
 
   router.post("/sendRequest/reject", auth.ensureLoggedIn, async (req, res) => {
@@ -96,6 +128,24 @@ router.post("/sendRequest", async (req, res) => {
     friendRequest.status = "rejected";
     await friendRequest.save();
     res.json({message: "Friend request rejected"})
+
+    const fromSocket = getSocketFromUserID(fromUserObj._id.toString());
+
+    if (fromSocket) {
+      fromSocket.emit("friendRequestRejected", {
+        fromId: fromUserObj._id,
+        toId: toUserObj._id
+      });
+    }
+
+    const toSocket = getSocketFromUserID(toUserObj._id.toString());
+    if (toSocket) {
+      toSocket.emit("friendRequestRejected", {
+        fromId: fromUserObj._id,
+        toId: toUserObj._id,
+      });
+  }
+
   });
 
   router.get("/sendRequest/:userId", auth.ensureLoggedIn, async (req, res) => {
