@@ -20,6 +20,7 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import LoginPage from "./components/pages/LoginPage";
+import GamePage from "./components/pages/GamePage";
 
 
 //TODO: REPLACE WITH YOUR OWN CLIENT_ID
@@ -34,7 +35,7 @@ const router = createBrowserRouter(
         <Route path = "/settings" element = {<SettingsPage />} />
         <Route path = "/" element = {<LoginPage />} />
         <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
-
+        <Route path = "/game" element = {<GamePage />} />
       </Route>
   )
 );

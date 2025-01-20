@@ -60,6 +60,9 @@ const Terminal = () => {
           case "login":
             navigate("/");
             return "Navigating to the login page";
+          case "game":
+            navigate("/game")
+            return ("REMOVE LATER")
           default:
             return "Command does not exist";
         }
