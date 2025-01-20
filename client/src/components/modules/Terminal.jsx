@@ -41,6 +41,15 @@ const Terminal = () => {
           navigate("/profile");
           return "Navigating to profile page.";
         }
+        if (tokens[1]?.toLowerCase() === "friends") {
+          navigate("/friends");
+          return "Navigating to home page.";
+        }
+        if (tokens[1]?.toLowerCase() === "game") {
+          navigate("/game");
+          return "Navigating to home page.";
+        }
+
         return "Invalid cd command.";
 
       case "create":

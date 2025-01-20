@@ -20,7 +20,6 @@ import FriendsPage from "./components/pages/FriendsPage";
 import LobbyPage from "./components/pages/LobbyPage";
 import GamePage from "./components/pages/GamePage";
 import LoginPage from "./components/pages/LoginPage";
-import GamePage from "./components/pages/GamePage";
 
 
 
