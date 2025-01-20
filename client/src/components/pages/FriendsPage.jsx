@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import Layout from '../layout.jsx';
 import onlinelogo from "../../assets/onlinelogo.png";
 import offlinelogo from "../../assets/offlinelogo.png";
-import "./FriendsPage.css";
+import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../..//utilities"
 import { socket } from "../../client-socket.js";

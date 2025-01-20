@@ -2,7 +2,7 @@
 import React from "react";
 import Terminal from "../modules/terminal";
 import MazeWrapper from "../modules/MazeWrapper";
-import "./GamePage.css";
+import "../styles/GamePage.css";
 
 
 
