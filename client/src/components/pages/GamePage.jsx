@@ -1,12 +1,26 @@
+// GamePage.jsx
 import React from "react";
-import Layout from '../Layout.jsx';
+import Terminal from "../modules/terminal";
+import MazeWrapper from "../modules/MazeWrapper";
+import "./GamePage.css";
 
-const GamePage = () =>{
+
+
+
+const GamePage = () => {
     return (
-        <Layout currentPage="game">
-            GamePage
-        </Layout>
+        <div className="game-page">
+            {/* Maze Section: Flexible to occupy remaining space */}
+            <div className="maze-container">
+                <MazeWrapper rows={10} cols={10} />
+            </div>
+
+            {/* Terminal Section: Fixed height */}
+            <div className="terminal-container">
+                <Terminal />
+            </div>
+        </div>
     );
-}
+};
 
 export default GamePage;
