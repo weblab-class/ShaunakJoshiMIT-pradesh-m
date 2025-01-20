@@ -5,22 +5,23 @@ import App from "./components/App";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { TerminalProvider } from "./components/modules/TerminalContext";
 
-import NotFound from "./components/pages/NotFound";
-import HomePage from "./components/pages/Homepage";
-import ProfilePage from "./components/pages/ProfilePage"
-import SettingsPage from "./components/pages/SettingsPage";
-import FriendsPage from "./components/pages/FriendsPage";
-import LobbyPage from "./components/pages/LobbyPage";
-
-
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider
 } from 'react-router-dom'
+
+import NotFound from "./components/pages/NotFound";
+import HomePage from "./components/pages/Homepage";
+import ProfilePage from "./components/pages/ProfilePage"
+import SettingsPage from "./components/pages/SettingsPage";
+import FriendsPage from "./components/pages/FriendsPage";
+import LobbyPage from "./components/pages/LobbyPage";
+import GamePage from "./components/pages/GamePage";
 import LoginPage from "./components/pages/LoginPage";
 import GamePage from "./components/pages/GamePage";
+
 
 
 //TODO: REPLACE WITH YOUR OWN CLIENT_ID
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
         <Route path="/profile" element={<ProfilePage />} />
         <Route path = "/friends" element = {<FriendsPage />} />
         <Route path = "/settings" element = {<SettingsPage />} />
+        <Route path = "/game" element = {<GamePage />} />
         <Route path = "/" element = {<LoginPage />} />
         <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
         <Route path = "/game" element = {<GamePage />} />

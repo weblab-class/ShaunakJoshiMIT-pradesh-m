@@ -71,3 +71,21 @@ export const leaveLobby = async (lobbyCode, userNickname) => {
     throw error;
   }
 };
+
+export const createGame = async (lobbyCode, user_id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/lobby/${lobbyCode}/createGame`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to create game.");
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in createGame:", error);
+    throw error;
+  }
+};
