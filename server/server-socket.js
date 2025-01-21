@@ -1,4 +1,5 @@
 const Lobby = require("./models/lobby.js");
+const Game = require("./models/game.js");
 let io;
 
 const userToSocketMap = {};
@@ -92,6 +93,14 @@ module.exports = {
         console.log(`Initializing user ${userId} on socket ${socket.id}`);
         addUser(userId, socket);
       });
+
+      socket.on("getGameData", async (lobbyCode) => {
+        console.log("getting Game data you dumb fuck");
+        const game = await Game.findOne({ lobbyCode });
+        if (game) {
+          socket.emit("gameData", game);
+        }
+      })
 
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);

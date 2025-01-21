@@ -2,6 +2,8 @@ const express = require("express");
 const Lobby = require("../models/lobby.js");
 const router = express.Router();
 const socketManager = require("../server-socket");
+const Game = require("../models/game.js");
+
 
 function generateLobbyCode(existingCodes) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -13,6 +15,102 @@ function generateLobbyCode(existingCodes) {
   } while (existingCodes.has(code));
   return code;
 }
+
+
+function shuffleArray(array) {
+  const shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function getRandomElements(array, n) {
+  if (n > array.length) {
+      throw new Error("n cannot be larger than the array size");
+  }
+
+  // Create a copy of the array to avoid mutating the original
+  const shuffled = array.slice();
+
+  // Perform a partial Fisher-Yates shuffle to get the first n random elements
+  for (let i = 0; i < n; i++) {
+      const randomIndex = Math.floor(Math.random() * (shuffled.length - i)) + i;
+      [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
+  }
+
+  // Return the first n elements of the shuffled array
+  return shuffled.slice(0, n);
+}
+
+function generateGridNodes(rows, cols) {
+  const nodes = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const id = `${row}-${col}`;
+      // Evenly spaced - adjust as needed
+      const xPos = col * 100; // Reduced spacing for better fit
+      const yPos = row * 100;
+
+      // Example rigged logic
+      const isRigged = Math.random() < 0.1;
+      const challenge = isRigged
+        ? { question: 'Impossible question!', isImpossible: true }
+        : { question: `Question for folder (${row}, ${col})`, isImpossible: false };
+
+      nodes.push({
+        id,
+        type: 'folderNode', // Reference to your custom node
+        position: { x: xPos, y: yPos },
+        data: { challenge },
+        draggable: false,
+      });
+    }
+  }
+  return nodes;
+}
+
+function generateGridEdges(rows, cols) {
+  const edges = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const sourceId = `${row}-${col}`;
+
+      // Right Neighbor
+      if (col + 1 < cols) {
+        const targetId = `${row}-${col + 1}`;
+        edges.push({
+          id: `e-${sourceId}-${targetId}`,
+          source: sourceId,
+          target: targetId,
+          sourceHandle: 'right',   // Connect to the right handle of the source
+          targetHandle: 'left',    // Connect to the left handle of the target
+          type: 'default',
+          style: { stroke: '#00ff00', strokeWidth: 2 },
+        });
+      }
+
+      // Down Neighbor
+      if (row + 1 < rows) {
+        const targetId = `${row + 1}-${col}`;
+        edges.push({
+          id: `e-${sourceId}-${targetId}`,
+          source: sourceId,
+          target: targetId,
+          sourceHandle: 'bottom',  // Optional: Define additional handles if needed
+          targetHandle: 'top',     // Optional: Define additional handles if needed
+          type: 'default',
+          style: { stroke: '#00ff00', strokeWidth: 2 },
+        });
+      }
+    }
+  }
+  return edges;
+}
+
+
+
 
 router.post("/create", async (req, res) => {
   const { host_id } = req.body;
@@ -96,12 +194,22 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
       console.log("User id from request:", JSON.stringify(user_id));
       return res.status(403).json({ message: "Only the host can start the game." });
     }
-    if (!lobby.user_ids || lobby.user_ids.length < 3) {
+    if (!lobby.user_ids || lobby.user_ids.length < 2) {
       return res.status(400).json({ message: "At least 3 players are required to start the game." });
     }
     lobby.in_game = true;
     await lobby.save();
-    socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode });
+    const game = new Game({
+      lobbyCode: lobbyCode.lobbyCode,
+      user_ids: lobby.user_ids,
+      nodes: generateGridNodes(7,7),
+      edges: generateGridEdges(7,7),
+      host_id: lobby.host_id,
+      turnOrder: shuffleArray(lobby.user_ids),
+      imposters: getRandomElements(lobby.user_ids, 1),
+      currTurn: 0,
+    });
+    socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode, game });
     res.status(200).json({ message: "Game successfully started" });
   } catch (error) {
     console.error("Error starting game:", error);

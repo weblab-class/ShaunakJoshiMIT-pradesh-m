@@ -34,6 +34,7 @@ const api = require("./routes/api.js");
 const auth = require("./auth");
 const requestRoutes = require("./routes/requestsRoutes");
 const lobbyRoutes = require("./routes/lobbyRoutes.js");
+const gameRoutes = require("./routes/gameRoutes.js")
 
 // socket stuff
 const socketManager = require("./server-socket");
@@ -79,6 +80,7 @@ app.use(
 // this checks if the user is logged in, and populates "req.user"
 app.use(auth.populateCurrentUser);
 // connect user-defined routes
+app.use("/api/game", gameRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/lobby", lobbyRoutes);
 app.use("/api/user", userRoutes);

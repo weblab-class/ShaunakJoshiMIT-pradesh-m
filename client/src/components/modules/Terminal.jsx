@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
 import { get, post } from "../../utilities";
 
+import {
+  createLobby,
+  joinLobby,
+  leaveLobby,
+  createGame,
+} from "../../api.js";
+
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
@@ -10,7 +17,6 @@ import TerminalInput from "./TerminalInput";
 import "../styles/Terminal.css";
 
 import { UserContext } from "../App";
-import { createLobby, joinLobby, leaveLobby } from "../../api.js";
 
 function tokenizeCommand(command) {
   return command.trim().split(/\s+/);
@@ -76,7 +82,23 @@ const Terminal = () => {
             return `Failed to create lobby: ${error.message}`;
           }
         }
-        return "Invalid command. Did you mean 'create lobby'?";
+        if (tokens[1]?.toLowerCase() === "game") {
+          const pathParts = window.location.pathname.split("/");
+          const lobbyCode = pathParts[2];
+          if (!lobbyCode) {
+            return "You are not currently in a lobby.";
+          }
+          const host_id = getNickname();
+          try {
+            const response = await createGame(lobbyCode, host_id);
+            socket.emit("gameStarted", {lobbyCode, game: response});
+            return "Game created. Navigating to the game page.";
+          } catch (error) {
+            return `Failed to create game: ${error.message}`;
+          }
+        }
+
+        return "Invalid create command. Try 'create lobby' or 'create game'.";
 
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {

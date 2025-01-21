@@ -26,8 +26,10 @@ const LobbyPage = () => {
     socket.on("lobbyData", (lobbyData) => {
       setLobby(lobbyData)
     })
-    socket.on("gameStarted", () => {
-      navigate("/game")
+    socket.on("gameStarted", ({lobbyCode, game}) => {
+      console.log(lobbyCode)
+      navigate(`/game/${lobbyCode}`);
+
     })
     return () => {
       socket.emit("leaveLobby", lobbyCode, nickname)
