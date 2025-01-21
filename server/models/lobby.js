@@ -8,6 +8,8 @@ const LobbySchema = new mongoose.Schema({
   user_ids: [String],
   in_game: Boolean,
   host_id: String,
+  imposters: Array,
+  turnOrder: Array
 });
 
 module.exports = mongoose.model("Lobby", LobbySchema);
