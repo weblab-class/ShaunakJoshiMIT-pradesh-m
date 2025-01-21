@@ -9,6 +9,7 @@ import {
   createGame,
   setNickname,
 } from "../../api.js";
+import { get, post } from "../../utilities.js";
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
@@ -132,6 +133,54 @@ const Terminal = () => {
           return error.message || "Error setting nickname.";
         }
       }
+
+      case "friend":
+        switch (tokens[1]?.toLowerCase()) {
+          case "request":
+            if (tokens.length !== 3) {
+              return "Invalid friend command. Usage: friend request <username>";
+            }
+            try {
+              const reqNickName = tokens[2];
+              await post("/api/requests/sendRequest", { from: userId, to: reqNickName });
+              return `Successfully sent a friend request to ${reqNickName}`;
+            } catch (error) {
+              return `Error sending friend request: ${error.message}`;
+            }
+
+          case "accept":
+            if (tokens.length !== 3) {
+              return "Invalid friend command. Usage: friend accept <username>";
+            }
+            try {
+              const reqNickName = tokens[2];
+              const result = await post("/api/requests/sendRequest/accept", {
+                from: reqNickName,
+                to: userId,
+              });
+              return `Successfully accepted ${reqNickName}'s friend request.`;
+            } catch (error) {
+              return `Error accepting friend request: ${error.message}`;
+            }
+
+          case "reject":
+            if (tokens.length !== 3) {
+              return "Invalid friend command. Usage: friend reject <username>";
+            }
+            try {
+              const reqNickName = tokens[2];
+              await post("/api/requests/sendRequest/reject", {
+                from: reqNickName,
+                to: userId,
+              });
+              return `Successfully rejected ${reqNickName}'s friend request.`;
+            } catch (error) {
+              return `Error rejecting friend request: ${error.message}`;
+            }
+
+          default:
+            return "Invalid friend subcommand. Try: friend request <username>";
+        }
 
       case "logout":
         handleLogout();
