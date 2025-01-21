@@ -1,45 +1,44 @@
-import React, { useEffect, useState, useContext } from "react";
-import Layout from "../Layout.jsx";
-import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
-import { UserContext } from "../App";
-import "../styles/LobbyPage.css";
+import React, { useEffect, useState, useContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import Layout from "../Layout.jsx"
+import { io } from "socket.io-client"
+import { UserContext } from "../App"
+import "../styles/LobbyPage.css"
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000")
 
 const LobbyPage = () => {
-  const { lobbyCode } = useParams();
-  const [lobby, setLobby] = useState(null);
-  const { decoded } = useContext(UserContext);
-
-  const nickname = decoded?.nickname || "anonymous";
+  const { lobbyCode } = useParams()
+  const navigate = useNavigate()
+  const [lobby, setLobby] = useState(null)
+  const { decoded } = useContext(UserContext)
+  const nickname = decoded?.nickname || "anonymous"
 
   useEffect(() => {
-    socket.emit("joinLobby", lobbyCode, nickname);
-    
+    socket.emit("joinLobby", lobbyCode, nickname)
     socket.on("updateUsers", (data) => {
-      console.log("Received update:", data);
-      setLobby((prevLobby) => {
-        return {
-          ...prevLobby,
-          user_ids: data.users || (prevLobby ? prevLobby.user_ids : []),
-          host_id: data.host_id || (prevLobby ? prevLobby.host_id : null),
-        };
-      });
-    });
+      setLobby((prevLobby) => ({
+        ...prevLobby,
+        user_ids: data.users || (prevLobby ? prevLobby.user_ids : []),
+        host_id: data.host_id || (prevLobby ? prevLobby.host_id : null),
+      }))
+    })
     socket.on("lobbyData", (lobbyData) => {
-      setLobby(lobbyData);
-    });
-    
+      setLobby(lobbyData)
+    })
+    socket.on("gameStarted", () => {
+      navigate("/game")
+    })
     return () => {
-      socket.emit("leaveLobby", lobbyCode, nickname);
-      socket.off("updateUsers");
-      socket.off("lobbyData");
-    };
-  }, [lobbyCode, nickname]);
+      socket.emit("leaveLobby", lobbyCode, nickname)
+      socket.off("updateUsers")
+      socket.off("lobbyData")
+      socket.off("gameStarted")
+    }
+  }, [lobbyCode, nickname, navigate])
 
-  const users = lobby?.user_ids || [];
-  const host = lobby?.host_id || (users.length ? users[0] : null);
+  const users = lobby?.user_ids || []
+  const host = lobby?.host_id || (users.length ? users[0] : null)
 
   return (
     <Layout currentPage="lobby">
@@ -59,10 +58,7 @@ const LobbyPage = () => {
               <ul className="users-list">
                 {users.map((user, index) => (
                   <li key={index} className="user-item">
-                    {user}{" "}
-                    {user === host && (
-                      <span className="host-badge">(Host)</span>
-                    )}
+                    {user} {user === host && <span className="host-badge">(Host)</span>}
                   </li>
                 ))}
               </ul>
@@ -71,7 +67,7 @@ const LobbyPage = () => {
         </div>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default LobbyPage;
+export default LobbyPage
