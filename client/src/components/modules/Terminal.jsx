@@ -109,13 +109,13 @@ const Terminal = () => {
 
       case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 16 || newNick.indexOf(" ") >= 0) {
+        if (!newNick || newNick.length > 16 || newNick.length < 4 || newNick.indexOf(" ") >= 0) {
           return "Nickname must be between 1 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
 
         try {
           const response = await post("/api/user/setNickname", {
-            userid: userId,
+            userId: userId,
             nickname: newNick,
           });
 

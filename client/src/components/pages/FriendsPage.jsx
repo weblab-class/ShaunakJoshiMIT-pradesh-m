@@ -6,6 +6,7 @@ import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../..//utilities"
 import { socket } from "../../client-socket.js";
+import { index } from "d3";
 
 
 
@@ -97,7 +98,7 @@ const FriendsPage = (props) => {
     console.log("User Friends", friends)
     const friendRows = friendsData.map((friendObj) => {
         return (
-            <tr className = "Friends-Row">
+            <tr className = "Friends-Row" key = {friendObj._id || index} >
                 <th>{friendObj.nickname}</th>
                 {/* <th><img className = "online-offline-logo" src = {(friendObj.online) ? onlinelogo: offlinelogo} /></th> */}
                 <th><img className = "online-offline-logo"  src = {onlinelogo} /></th>
@@ -110,7 +111,7 @@ const FriendsPage = (props) => {
     const requestRows = requestsData.map((fromUserObj, index) => {
         console.log("User Obj", fromUserObj)
         return (
-        <tr className = "Requests-Row" key = {index}>
+        <tr className = "Requests-Row" key = {fromUserObj._id || index}>
             <th>{fromUserObj.nickname}</th>
             <th>"Placeholder Date"</th>
         </tr>

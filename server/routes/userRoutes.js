@@ -7,7 +7,7 @@ router.post("/setNickname", async (req, res) => {
   const { userId, nickname } = req.body;
   console.log("Received setNickname request:", req.body);
 
-  if (!nickname || nickname.length === 0 || nickname.length > 12) {
+  if (!nickname || nickname.length === 0 || nickname.length >16 || nickname.length < 4) {
     return res.status(400).json({ error: "Nickname must be between 1 and 12 characters" });
   }
 
