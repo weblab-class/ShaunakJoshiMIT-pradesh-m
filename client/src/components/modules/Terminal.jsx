@@ -20,12 +20,10 @@ function tokenizeCommand(command) {
 
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
-  const { userId, decoded, handleLogout } = useContext(UserContext); // userId is the internal _id
+  const { userId, decoded, handleLogout } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Use local state for the current nickname
   const getNickname = () => {
-    // Use the decoded nickname if available; otherwise, fall back to localStorage if set.
     return decoded?.nickname || localStorage.getItem("nickname") || userId || "anonymous";
   };
   const [currentNickname, setCurrentNickname] = useState(getNickname());
@@ -129,7 +127,6 @@ const Terminal = () => {
         try {
           const response = await setNickname(userId, newNick);
           localStorage.setItem("nickname", response.nickname);
-          // Update local state so that the terminal shows the new nickname immediately.
           setCurrentNickname(response.nickname);
           return `Nickname set to: ${response.nickname}`;
         } catch (error) {
