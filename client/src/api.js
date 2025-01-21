@@ -1,22 +1,27 @@
 const BASE_URL = "http://localhost:3000/api";
 
-export const setNickname = async (googleid, nickname) => {
+export const setNickname = async (userId, nickname) => {
   try {
     const response = await fetch(`${BASE_URL}/user/setNickname`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ googleid, nickname })
+      // Send the internal userId
+      body: JSON.stringify({ userId, nickname }),
     });
+
     const data = await response.json();
+
     if (!response.ok) {
       throw new Error(data.error || "Failed to set nickname");
     }
-    return data;
+    return data; // Expecting { message, nickname } on success
   } catch (error) {
     console.error("Error in setNickname:", error);
     throw error;
   }
 };
+
+// ... Other functions (createLobby, joinLobby, leaveLobby, createGame) remain unchanged.
 
 export const createLobby = async (hostNickname) => {
   try {
