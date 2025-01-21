@@ -41,7 +41,6 @@ module.exports = {
         socket.join(lobbyCode);
         console.log(`Socket ${socket.id} joined lobby ${lobbyCode} as ${user}`);
         addUser(user, socket);
-
         try {
           const lobby = await Lobby.findOne({ lobbyCode });
           if (lobby) {
@@ -49,11 +48,10 @@ module.exports = {
               lobby.user_ids.push(user);
               await lobby.save();
             }
-            // Emit the full updated list of users.
             io.to(lobbyCode).emit("updateUsers", {
               action: "join",
               user,
-              users: lobby.user_ids,
+              users: lobby.user_ids
             });
           } else {
             console.log(`Lobby ${lobbyCode} not found.`);
@@ -67,7 +65,6 @@ module.exports = {
         socket.leave(lobbyCode);
         console.log(`Socket ${socket.id} left lobby ${lobbyCode} as ${user}`);
         removeUser(user, socket);
-
         try {
           const lobby = await Lobby.findOne({ lobbyCode });
           if (lobby) {
@@ -80,7 +77,7 @@ module.exports = {
               io.to(lobbyCode).emit("updateUsers", {
                 action: "leave",
                 user,
-                users: lobby.user_ids,
+                users: lobby.user_ids
               });
             }
           } else {
@@ -90,12 +87,11 @@ module.exports = {
           console.error("Error in leaveLobby:", error);
         }
       });
+
       socket.on("initUser", (userId) => {
         console.log(`Initializing user ${userId} on socket ${socket.id}`);
-        addUser(userId, socket)
+        addUser(userId, socket);
       });
-
-      
 
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);
