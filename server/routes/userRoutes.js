@@ -1,4 +1,3 @@
-// routes/user.js
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -13,12 +12,10 @@ router.post("/setNickname", async (req, res) => {
   }
 
   try {
-    // Ensure userId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ error: "Invalid user id" });
     }
 
-    // Find the user by _id
     const user = await User.findById(userId);
     if (!user) {
       console.error("User not found for userId:", userId);

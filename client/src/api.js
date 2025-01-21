@@ -5,7 +5,6 @@ export const setNickname = async (userId, nickname) => {
     const response = await fetch(`${BASE_URL}/user/setNickname`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // Send the internal userId
       body: JSON.stringify({ userId, nickname }),
     });
 
@@ -14,14 +13,12 @@ export const setNickname = async (userId, nickname) => {
     if (!response.ok) {
       throw new Error(data.error || "Failed to set nickname");
     }
-    return data; // Expecting { message, nickname } on success
+    return data;
   } catch (error) {
     console.error("Error in setNickname:", error);
     throw error;
   }
 };
-
-// ... Other functions (createLobby, joinLobby, leaveLobby, createGame) remain unchanged.
 
 export const createLobby = async (hostNickname) => {
   try {

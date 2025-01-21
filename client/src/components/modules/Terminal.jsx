@@ -23,9 +23,14 @@ const Terminal = () => {
   const { userId, decoded, handleLogout } = useContext(UserContext);
   const navigate = useNavigate();
 
+  // Return the nickname from the decoded user if available,
+  // otherwise return "anonymous" if no nickname is set.
   const getNickname = () => {
-    return decoded?.nickname || localStorage.getItem("nickname") || userId || "anonymous";
+    return decoded?.nickname || userId ? decoded?.nickname || userId : "anonymous";
   };
+
+  // Initialize the local state with the current nickname,
+  // which is either the decoded nickname or "anonymous" if not set.
   const [currentNickname, setCurrentNickname] = useState(getNickname());
 
   const executeCommand = async (command) => {
@@ -57,7 +62,7 @@ const Terminal = () => {
       case "create":
         if (tokens[1]?.toLowerCase() === "lobby") {
           const nickname = currentNickname;
-          if (!nickname) {
+          if (!nickname || nickname === "anonymous") {
             return "Please set your nickname first with: nickname <your nickname>";
           }
           try {
@@ -74,9 +79,8 @@ const Terminal = () => {
           if (!lobbyCode) {
             return "You are not currently in a lobby.";
           }
-          const host_id = currentNickname;
           try {
-            await createGame(lobbyCode, host_id);
+            await createGame(lobbyCode, currentNickname);
             navigate("/game");
             return "Game created. Navigating to the game page.";
           } catch (error) {
@@ -89,7 +93,7 @@ const Terminal = () => {
         if (tokens[1]?.toLowerCase() === "lobby" && tokens[2]) {
           const lobbyCode = tokens[2].toUpperCase();
           const nickname = currentNickname;
-          if (!nickname) {
+          if (!nickname || nickname === "anonymous") {
             return "Please set your nickname first with: nickname <your nickname>";
           }
           try {
@@ -105,9 +109,8 @@ const Terminal = () => {
       case "leave":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens[2]) {
           const lobbyCode = tokens[2].toUpperCase();
-          const nickname = currentNickname;
           try {
-            const response = await leaveLobby(lobbyCode, nickname);
+            const response = await leaveLobby(lobbyCode, currentNickname);
             navigate("/home");
             return `Successfully left the lobby: ${lobbyCode}. ${response.message}`;
           } catch (error) {
@@ -126,7 +129,7 @@ const Terminal = () => {
         }
         try {
           const response = await setNickname(userId, newNick);
-          localStorage.setItem("nickname", response.nickname);
+          // Update the local state to immediately display the new nickname
           setCurrentNickname(response.nickname);
           return `Nickname set to: ${response.nickname}`;
         } catch (error) {
