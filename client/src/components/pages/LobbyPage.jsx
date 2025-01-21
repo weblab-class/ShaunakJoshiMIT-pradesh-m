@@ -5,7 +5,7 @@ import { io } from "socket.io-client"
 import { UserContext } from "../App"
 import "../styles/LobbyPage.css"
 
-const socket = io("http://localhost:3000")
+const socket = io("http://10.29.238.122:3000");
 
 const LobbyPage = () => {
   const { lobbyCode } = useParams()
