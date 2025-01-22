@@ -5,8 +5,7 @@ import offlinelogo from "../../assets/offlinelogo.png";
 import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../..//utilities"
-import { socket } from "../../client-socket.js";
-import { index } from "d3";
+import { SocketContext } from "../modules/SocketContext.jsx";
 
 
 
@@ -17,6 +16,7 @@ const FriendsPage = (props) => {
     const [requests, setRequests] = useState([]);
     const [requestsData, setRequestsData] = useState([]);
     const [friendsData, setFriendsData] = useState([]);
+    const socket = useContext(SocketContext);
 
 
     useEffect(() => {

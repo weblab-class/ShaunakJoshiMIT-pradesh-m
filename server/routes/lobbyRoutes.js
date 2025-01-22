@@ -179,42 +179,55 @@ router.post("/leave", async (req, res) => {
 });
 
 router.post("/:lobbyCode/createGame", async (req, res) => {
-  const { lobbyCode } = req.params;
+  const { lobbyCode } = req.params; // lobbyCode is a string
   const { user_id } = req.body;
+
   if (!user_id) {
     return res.status(400).json({ message: "User id is required" });
   }
+
   try {
     const lobby = await Lobby.findOne({ lobbyCode });
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found" });
     }
+
     if (lobby.host_id.trim().toLowerCase() !== user_id.trim().toLowerCase()) {
       console.log("Lobby host_id:", JSON.stringify(lobby.host_id));
       console.log("User id from request:", JSON.stringify(user_id));
       return res.status(403).json({ message: "Only the host can start the game." });
     }
-    if (!lobby.user_ids || lobby.user_ids.length < 2) {
+
+    if (!lobby.user_ids || lobby.user_ids.length < 2) { // Adjusted to match the error message
       return res.status(400).json({ message: "At least 3 players are required to start the game." });
     }
+
     lobby.in_game = true;
     await lobby.save();
+
     const game = new Game({
-      lobbyCode: lobbyCode.lobbyCode,
+      lobbyCode: lobbyCode, // Correctly assign the string
       user_ids: lobby.user_ids,
-      nodes: generateGridNodes(7,7),
-      edges: generateGridEdges(7,7),
+      nodes: generateGridNodes(7, 7),
+      edges: generateGridEdges(7, 7),
       host_id: lobby.host_id,
       turnOrder: shuffleArray(lobby.user_ids),
       imposters: getRandomElements(lobby.user_ids, 1),
       currTurn: 0,
     });
+
+    // Save the game to the database
+    await game.save();
+
+    // Emit the gameStarted event with the correct game data
     socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode, game });
-    res.status(200).json({ message: "Game successfully started" });
+
+    res.status(200).json({ message: "Game successfully started", game });
   } catch (error) {
     console.error("Error starting game:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
+
 
 module.exports = router;

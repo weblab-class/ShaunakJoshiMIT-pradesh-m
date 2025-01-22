@@ -7,7 +7,7 @@ export default function MazeWrapper({ gameObj }) {
     // Let Maze fill its parent's area
     <div style={{ width: '100%', height: '100%' }}>
       <ReactFlowProvider>
-        <Maze game = {gameObj} />
+        <Maze gameObj={gameObj} />
       </ReactFlowProvider>
     </div>
   );
