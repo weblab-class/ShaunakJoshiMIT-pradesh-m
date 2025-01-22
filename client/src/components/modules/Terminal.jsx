@@ -105,17 +105,18 @@ const Terminal = () => {
 
       case "appoint":
         if (tokens.length > 2) {
-          return "Invalid appoint command. Usage: appoint <nickname>";z
+          return "Invalid appoint command. Usage: appoint <nickname>";
         }
 
 
-        const appointee = tokens[1].toLowerCase();
+        const appointee = tokens[1];
         const pathParts = window.location.pathname.split("/");
         const lobbyCode = pathParts[2];
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
         try {
+          console.log("Appointing", appointee, "in lobby", lobbyCode);
           const response = await post("/api/game/appoint", {
             user_id: userId,
             lobbyCode: lobbyCode,
@@ -125,6 +126,35 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to appoint: ${error.message}`;
         }
+
+      case "vote":
+        if (tokens.length !== 2) {
+          return "Invalid vote command. Usage: vote <yes|no>";
+        }
+
+        const decision = tokens[1].toLowerCase();
+        if (!["yes", "no"].includes(decision)) {
+          return "Invalid vote. Please use 'yes' or 'no'.";
+        }
+
+        const votePathParts = window.location.pathname.split("/");
+        const voteLobbyCode = votePathParts[2];
+        if (!voteLobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+
+        try {
+          console.log(`Casting vote: ${decision} for lobby ${voteLobbyCode}`);
+          const response = await post("/api/game/vote", {
+            user_id: userId,
+            lobbyCode: voteLobbyCode,
+            decision: decision
+        });
+        console.log("Vote response:", response);
+        return `Your vote has been cast: ${decision}.`;
+      } catch (error) {
+        return `Failed to cast vote: ${error.message}`;
+      }
 
 
 

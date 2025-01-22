@@ -8,7 +8,9 @@ const Lobby = require("../models/lobby");
 const User = require("../models/user");
 
 router.post("/appoint", async (req, res) => {
-    const { user_id, lobbyCode, apointee } = req.body;
+    console.log("Reached appoint endpoint");
+    const { user_id, lobbyCode, appointee } = req.body;
+    console.log(user_id)
 
     try {
         const game = await Game.findOne({ lobbyCode });
@@ -16,31 +18,91 @@ router.post("/appoint", async (req, res) => {
             return res.status(404).json({ error: "Game not found" });
         }
 
-        const user = await User.findOne({ _id: user_id });
+        const user = await User.findById(user_id);
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        if (user.nickname !== game.turnOrder[game.currTurn]) {
-            return res.status(403).json({ error: "Not your turn" });
+        const currentPresidentNickname = game.turnOrder[game.currTurn];
+        if (user.nickname !== currentPresidentNickname) {
+            return res.status(403).json({ error: "Only the current president can appoint" });
         }
 
-        // if (!game.user_ids.includes(apointee)) {
-        //     return res.status(400).json({ error: "Invalid apointee" });
-        // }
-
-        const socket = getSocketFromUserID(user_id);
-        if (!socket) {
-            console.error(`Socket not found for user_id: ${user_id}`);
-            return res.status(404).json({ error: "User not found in any game" });
+        console.log(appointee)
+        const appointeeUser = await User.findOne( { nickname: appointee } );
+        if (!appointeeUser) {
+            return res.status(404).json({ error: "Appointee user not found" });
         }
 
-        socket.emit("appointed", apointee);
-        res.status(200).json({ message: "User successfully appointed" });
+        console.log(appointeeUser)
+        const isAppointeeInGame = game.user_ids.includes(appointeeUser.nickname);
+
+        if (!isAppointeeInGame) {
+            return res.status(400).json({ error: "Appointee is not in the game" });
+        }
+
+        game.appointedHacker = appointeeUser.nickname;
+        await game.save();
+        const io = getIo();
+        io.to(lobbyCode).emit("hackerAppointed", { appointee: appointeeUser.nickname });
+        res.status(200).json({ message: "Hacker appointed successfully", appointee });
     } catch (error) {
         console.error("Error in appoint:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Failed to appoint hacker" });
     }
 });
+
+router.post("/vote", async (req, res) => {
+    const { user_id, lobbyCode, decision} = req.body;
+    try {
+        const game = await Game.findOne({ lobbyCode });
+        if (!game) {
+            return res.status(404).json({ error: "Game not found" });
+        }
+        if (!game.appointedHacker) {
+            return res.status(400).json({ error: "No hacker has been appointed" });
+        }
+
+        if (!game.votes) {
+            game.votes = {};
+        }
+        if (game.votes[user_id]) {
+            return res.status(400).json({ error: "You have already cast your vote" });
+        }
+        game.votes[user_id] = decision;
+        await game.save();
+
+        const io = getIo();
+        io.to(lobbyCode).emit("voteCast", { user_id, decision });
+
+        if (Object.keys(game.votes).length === game.user_ids.length) {
+            const votes = Object.values(game.votes);
+            const approve = votes.filter((vote) => vote === "yes").length;
+            const reject = votes.filter((vote) => vote === "no").length;
+            let result;
+            if (approve >= reject) {
+                result = {outcome: 'approved', hacker: game.appointedHacker}
+                game.hacker = game.appointedHacker;
+                game.appointedHacker = null;
+                game.votes = {};
+
+            } else {
+                result = {outcome: 'rejected'}
+                game.appointedHacker = null;
+                game.votes = {}
+            }
+            await game.save();
+            io.to(lobbyCode).emit("voteResults", result);
+            res.status(200).json({ message: "Vote cast successfully", result });
+        } else {
+            res.status(200).json({message: "Vote cast successfully"});
+        }
+    } catch (error) {
+        console.error("Error in vote:", error);
+        res.status(500).json({error: "Failed to cast"})
+    }
+
+        });
+
 
 module.exports = router;

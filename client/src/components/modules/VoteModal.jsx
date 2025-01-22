@@ -1,35 +1,23 @@
+// VoteModal.jsx
+
 import React from "react";
-import "../styles/AppointmentModal.css";
-const VoteModal = ({ gameObj, appointee }) => {
-    if (!gameObj) return null; // Optional: Handle cases where gameObj is undefined
+import "../styles/VoteModal.css"; // Ensure you create this CSS file
+import voteIcon from '../../assets/votingicon.png'; // Replace with your actual icon path
 
-    let users = gameObj.user_ids.map((name) => {
-        return (
-            <tr>
-                <td>{name}</td>
-            </tr>
-        )
-    });
+const VoteModal = ({ lobbyCode, hacker, onClose }) => {
     return (
-        <div className="appointment-sidebar">
-            <div className="appointment-header">
-                <h2>{appointee}</h2>
-            </div>
-            <div className="appointment-content">
-                <p>Vote for this hacker!</p>
-            <table className = "player-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users}
-                </tbody>
-            </table>
-
-                {/* Add any additional content or actions here */}
-                {/* Example: Appoint Button */}
+        <div className="vote-overlay">
+            <div className="vote-modal">
+                <div className="vote-header">
+                    <img src={voteIcon} alt="Vote Icon" className="vote-icon" />
+                    <h2>Vote on Appointed Hacker</h2>
+                </div>
+                <div className="vote-content">
+                    <p>Hacker: <strong>{hacker}</strong></p>
+                    <p>Use the terminal to cast your vote:</p>
+                    <p><code>vote approve</code> or <code>vote reject</code></p>
+                </div>
+                <button className="vote-close-button" onClick={onClose} aria-label="Close Vote Modal">Close</button>
             </div>
         </div>
     );

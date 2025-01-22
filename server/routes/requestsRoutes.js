@@ -10,6 +10,8 @@ const { getSocketFromUserID, getIo } = require("../server-socket");
 
 const User = require("../models/user")
 const Request = require("../models/friendrequests");
+const Game = require("../models/game");
+const Lobby = require("../models/lobby");
 
 function generateRandomString() {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -158,6 +160,6 @@ router.post("/sendRequest", async (req, res) => {
       res.status(500).send("Error fetching friend requests");
     }
   });
-
+ 
 
   module.exports = router;
