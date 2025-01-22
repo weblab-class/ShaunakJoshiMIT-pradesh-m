@@ -102,6 +102,32 @@ const Terminal = () => {
         }
         return "Invalid create command. Try 'create lobby' or 'create game'.";
 
+
+      case "appoint":
+        if (tokens.length > 2) {
+          return "Invalid appoint command. Usage: appoint <nickname>";z
+        }
+
+
+        const appointee = tokens[1].toLowerCase();
+        const pathParts = window.location.pathname.split("/");
+        const lobbyCode = pathParts[2];
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        try {
+          const response = await post("/api/game/appoint", {
+            user_id: userId,
+            lobbyCode: lobbyCode,
+            appointee: appointee,
+          });
+          return `Successfully appointed ${appointee} as the hacker.`;
+        } catch (error) {
+          return `Failed to appoint: ${error.message}`;
+        }
+
+
+
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
           const lobbyCode = tokens[2].toUpperCase();

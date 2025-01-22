@@ -115,6 +115,23 @@ module.exports = {
         }
       });
 
+      socket.on("nextTurn", async (lobbyCode) => {
+        try {
+          const game = await Game.findOne({ lobbyCode });
+          if (game) {
+            game.currTurn = (game.currTurn + 1) % game.user_ids.length;
+            await game.save();
+            io.to(lobbyCode).emit("nextTurn", game.currTurn);
+          } else {
+            console.log(`No game data found for lobbyCode: ${lobbyCode}`);
+            socket.emit("errorMessage", { message: "No game data found for this lobby." });
+          }
+        } catch (error) {
+          console.error("Error in nextTurn:", error);
+          socket.emit("errorMessage", { message: "Error retrieving game data." });
+        }
+      });
+
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);
         console.log(`Socket disconnected: ${socket.id} (User: ${user}). Reason: ${reason}`);

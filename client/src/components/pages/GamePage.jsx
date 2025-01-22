@@ -5,6 +5,7 @@ import MazeWrapper from "../modules/MazeWrapper";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/GamePage.css";
 import AppointmentModal from "../modules/AppointmentModal";
+import VoteModal from "../modules/VoteModal.jsx";
 import { SocketContext } from "../modules/SocketContext.jsx";
 import Layout from "../Layout.jsx";
 
@@ -16,6 +17,9 @@ const GamePage = () => {
 
   const [gameObj, setGameObj] = useState(null);
   const [error, setError] = useState(null);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(true);
+  const [showVoteModal, setShowVoteModal] = useState(false);
+  const [appointee, setAppointee] = useState(null);
 
   useEffect(() => {
     console.log("GamePage mounted with lobbyCode:", lobbyCode);
@@ -49,6 +53,16 @@ const GamePage = () => {
       setError(null);
     });
 
+    socket.on("appointed", (data) => {
+        if (showAppointmentModal) {
+            setShowAppointmentModal(false);
+            console.log("appointed", data);
+            socket.emit("nextTurn", lobbyCode);
+            setAppointee(data);
+            setShowVoteModal(true);
+        }
+    })
+
     return () => {
       socket.off("gameData");
       socket.off("errorMessage");
@@ -57,6 +71,9 @@ const GamePage = () => {
   }, [lobbyCode, navigate, socket]);
 
   console.log("gameObj:", gameObj);
+
+  const modal = (showAppointmentModal) ? (
+    <AppointmentModal gameObj={gameObj} />) : (<VoteModal gameObj={gameObj} appointee={appointee} />)
 
   if (error) {
     return (
@@ -84,7 +101,8 @@ const GamePage = () => {
     <Layout currentPage="game">
       <div className="game-page" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
         {/* Appointment Modal Sidebar */}
-        <AppointmentModal gameObj={gameObj} />
+        {/* <AppointmentModal gameObj={gameObj} users = {gameObj.user_ids}/> */}
+        {modal}
 
         {/* Maze Section */}
         <div className="maze-container" style={{ flex: 1, position: 'relative' }}>
