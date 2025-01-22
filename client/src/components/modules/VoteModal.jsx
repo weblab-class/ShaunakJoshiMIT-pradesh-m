@@ -1,6 +1,6 @@
 import React from "react";
-
-const AppointmentModal = ({ gameObj }) => {
+import "../styles/appointmentModal.css";
+const VoteModal = ({ gameObj, appointee }) => {
     if (!gameObj) return null; // Optional: Handle cases where gameObj is undefined
 
     let users = gameObj.user_ids.map((name) => {
@@ -13,10 +13,10 @@ const AppointmentModal = ({ gameObj }) => {
     return (
         <div className="appointment-sidebar">
             <div className="appointment-header">
-                <h2>{gameObj.turnOrder[gameObj.currTurn]}</h2>
+                <h2>{appointee}</h2>
             </div>
             <div className="appointment-content">
-                <p>Appoint a hacker!</p>
+                <p>Vote for this hacker!</p>
             <table className = "player-table">
                 <thead>
                     <tr>
@@ -35,4 +35,4 @@ const AppointmentModal = ({ gameObj }) => {
     );
 };
 
-export default AppointmentModal;
+export default VoteModal;
