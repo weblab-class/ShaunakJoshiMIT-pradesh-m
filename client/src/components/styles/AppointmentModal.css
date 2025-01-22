@@ -1,57 +1,38 @@
 /* AppointmentModal.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
-
-/* Sidebar Container */
 .appointment-sidebar {
-    width: 250px; /* Fixed width for the sidebar */
-    background-color: #1a1a1a; /* Dark background */
-    color: #00ff00; /* Neon green text */
-    font-family: 'Press Start 2P', monospace; /* Retro font */
-    border-right: 2px solid #00ff00; /* Neon green border */
-    box-shadow: 2px 0 10px rgba(0, 255, 0, 0.5); /* Subtle glow effect */
+    width: 300px;
+    background-color: #1a1a1a;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace;
     padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    position: sticky; /* Keeps the sidebar in view during scroll */
-    top: 0px; /* Adjust based on NavBar height */
-    height: 30%; /* Full height minus NavBar and Terminal */
-    overflow-y: auto; /* Enable scrolling within the sidebar if content overflows */
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    border-radius: 10px;
+    margin-right: 20px;
 }
 
-/* Sidebar Header */
 .appointment-header {
-    text-align: center;
-    margin-bottom: 5%;
-    text-shadow: 0 0 10px #00ff00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.appointment-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.7));
 }
 
 .appointment-header h2 {
     font-size: 1em;
-    margin: 0;
+    text-shadow: 0 0 10px #00ff00;
 }
 
-/* Sidebar Content */
-.appointment-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10px 0;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
-    border-radius: 5px;
-    background-color: #2a2a2a; /* Slightly lighter for contrast */
-}
-
-.player-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
-    border-radius: 5px;
-    background-color: #2a2a2a; /* Slightly lighter for contrast */
+.appointment-content p {
+    font-size: 0.8em;
+    margin: 10px 0;
+    text-shadow: 0 0 5px #00ff00;
 }

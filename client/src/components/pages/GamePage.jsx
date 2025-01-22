@@ -53,15 +53,38 @@ const GamePage = () => {
       setError(null);
     });
 
-    socket.on("appointed", (data) => {
+    socket.on("hackerAppointed", (data) => {
         if (showAppointmentModal) {
+            console.log("Hacker appointed:", data.appointee);
+            setAppointee(data.appointee);
             setShowAppointmentModal(false);
-            console.log("appointed", data);
-            socket.emit("nextTurn", lobbyCode);
-            setAppointee(data);
             setShowVoteModal(true);
+
+        } else {
+            console.log("Cannot appoint hacker")
         }
-    })
+    });
+
+    socket.on("voteCast", (data) => {
+        console.log(`User ${data.user_id} cast ${data.decision} vote`);
+    });
+
+    socket.on("voteResults", (data) => {
+        console.log("Vote results:", data);
+        setGameObj(data.game);
+        setError(null);
+        setShowVoteModal(false);
+        setAppointee(null);
+        if (data.result.outcome === "approved"){
+            alert("Hacker approved")
+
+        }
+        if (data.result.outcome === "rejected"){
+            alert("Hacker rejected")
+
+        }
+    });
+
 
     return () => {
       socket.off("gameData");

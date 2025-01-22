@@ -1,37 +1,25 @@
+// AppointmentModal.jsx
+
 import React from "react";
+import "../styles/AppointmentModal.css";
+import hackerIcon from "../../assets/onlinelogo.png";
 
 const AppointmentModal = ({ gameObj }) => {
-    if (!gameObj) return null; // Optional: Handle cases where gameObj is undefined
+    const currentPresident = gameObj?.turnOrder[gameObj.currTurn] || "Unknown";
 
-    let users = gameObj.user_ids.map((name) => {
-        return (
-            <tr>
-                <td>{name}</td>
-            </tr>
-        )
-    });
     return (
-        <div className="appointment-sidebar">
+        <aside className="appointment-sidebar" aria-label="Appointment Sidebar">
             <div className="appointment-header">
-                <h2>{gameObj.turnOrder[gameObj.currTurn]}</h2>
+                <img src={hackerIcon} alt="Hacker Icon" className="appointment-icon" />
+                <h2>President: {currentPresident}</h2>
             </div>
             <div className="appointment-content">
-                <p>Appoint a hacker!</p>
-            <table className = "player-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users}
-                </tbody>
-            </table>
-
-                {/* Add any additional content or actions here */}
-                {/* Example: Appoint Button */}
+                <p>It's your turn to appoint a hacker.</p>
+                <p>Use the terminal to appoint a user:</p>
+                <p><code>appoint &lt;nickname&gt;</code></p>
+                <p>Awaiting appointment...</p>
             </div>
-        </div>
+        </aside>
     );
 };
 

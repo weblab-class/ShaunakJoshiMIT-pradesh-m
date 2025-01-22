@@ -9,6 +9,9 @@ const GameSchema = new mongoose.Schema({
     imposters: Array,
     turnOrder: Array,
     currTurn: Number,
+    appointedHacker: String,
+    hacker: String,
+    votes: Object,
 });
 
 module.exports = mongoose.model("Game", GameSchema);
