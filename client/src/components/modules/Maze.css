@@ -1,6 +1,3 @@
-/* Maze.css */
-
-/* Container for the maze */
 .maze-container {
     display: flex;
     justify-content: center;
@@ -8,5 +5,5 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: #f0f0f0; /* Optional: Light background for visibility */
+    background-color: #f0f0f0;
 }
