@@ -93,13 +93,13 @@ const Terminal = () => {
           const host_id = getNickname();
           try {
             const response = await createGame(lobbyCode, host_id);
-            // socket.emit("gameStarted", {lobbyCode, game: response});
+            // Optionally, emit a socket event here
+            // socket.emit("gameStarted", { lobbyCode, game: response });
             return "Game created. Navigating to the game page.";
           } catch (error) {
             return `Failed to create game: ${error.message}`;
           }
         }
-
         return "Invalid create command. Try 'create lobby' or 'create game'.";
 
       case "join":
@@ -134,7 +134,7 @@ const Terminal = () => {
       case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
         if (!newNick || newNick.length > 16 || newNick.length < 4 || newNick.indexOf(" ") >= 0) {
-          return "Nickname must be between 1 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
+          return "Nickname must be between 4 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
 
         try {
@@ -203,6 +203,17 @@ const Terminal = () => {
             return "Invalid friend subcommand. Try: friend request <username>";
         }
 
+      case "answer":
+        if (!tokens[1]) {
+          return "Usage: answer <option>  (e.g., answer a)";
+        }
+        if (window.triviaCheckAnswer) {
+          window.triviaCheckAnswer(tokens[1]);
+          return `Answered ${tokens[1]}`;
+        } else {
+          return "No trivia question is active.";
+        }
+
       case "logout":
         handleLogout();
         return "Logging out";
@@ -213,10 +224,16 @@ const Terminal = () => {
                "  cd home                 - Navigate to home page\n" +
                "  cd profile              - Navigate to profile page\n" +
                "  cd friends              - Navigate to friends page\n" +
-               "  nickname <your name>    - Set your nickname (1-16 characters)\n" +
+               "  cd settings             - Navigate to settings page\n" +
+               "  nickname <your name>    - Set your nickname (4-16 characters, no spaces)\n" +
                "  create lobby            - Create a new lobby (requires nickname set)\n" +
                "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
                "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
+               "  answer <option>         - Answer the current trivia question (e.g., answer a)\n" +
+               "  friend request <username> - Send a friend request\n" +
+               "  friend accept <username>  - Accept a friend request\n" +
+               "  friend reject <username>  - Reject a friend request\n" +
+               "  logout                  - Log out\n" +
                "  help                    - Display commands\n";
 
       case "clear":
