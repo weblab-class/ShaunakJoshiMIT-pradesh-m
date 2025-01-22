@@ -1,11 +1,6 @@
 // GamePage.jsx
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-import Terminal from "../modules/Terminal";
-=======
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
->>>>>>> gameLogic
 import MazeWrapper from "../modules/MazeWrapper";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/GamePage.css";
@@ -19,12 +14,6 @@ const GamePage = () => {
   const socket = useContext(SocketContext);
   const { userId } = useContext(UserContext);
 
-<<<<<<< HEAD
-const GamePage = (props) => {
-    const { lobbyCode} = useParams();
-    const navigate = useNavigate();
-    const [gameObj, setGameObj] = useState({});
-=======
   const [gameObj, setGameObj] = useState(null);
   const [error, setError] = useState(null);
 
@@ -39,7 +28,6 @@ const GamePage = (props) => {
     // Emit event to get game data
     socket.emit("getGameData", lobbyCode);
     console.log("Emitted 'getGameData' event with lobbyCode:", lobbyCode);
->>>>>>> gameLogic
 
     // Listen for gameData
     socket.on("gameData", (data) => {
