@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/appointmentModal.css";
+import "../styles/AppointmentModal.css";
 const VoteModal = ({ gameObj, appointee }) => {
     if (!gameObj) return null; // Optional: Handle cases where gameObj is undefined
 
