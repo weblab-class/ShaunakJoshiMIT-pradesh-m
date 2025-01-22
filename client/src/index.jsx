@@ -20,10 +20,8 @@ import FriendsPage from "./components/pages/FriendsPage";
 import LobbyPage from "./components/pages/LobbyPage";
 import GamePage from "./components/pages/GamePage";
 import LoginPage from "./components/pages/LoginPage";
+import TriviaPage from "./components/pages/TriviaPage"
 
-
-
-//TODO: REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "465324171584-jgurca8sfthunf91v7q4agppmuoir1d0.apps.googleusercontent.com";
 
 const router = createBrowserRouter(
@@ -34,6 +32,7 @@ const router = createBrowserRouter(
         <Route path = "/friends" element = {<FriendsPage />} />
         <Route path = "/settings" element = {<SettingsPage />} />
         <Route path = "/game" element = {<GamePage />} />
+        <Route path = "/trivia" element = {<TriviaPage />} />
         <Route path = "/" element = {<LoginPage />} />
         <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
         <Route path = "/game/:lobbyCode" element = {<GamePage />} />
@@ -41,7 +40,6 @@ const router = createBrowserRouter(
   )
 );
 
-// renders React Component "Root" into the DOM element with ID "root"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <TerminalProvider>

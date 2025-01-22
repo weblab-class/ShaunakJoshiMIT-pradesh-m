@@ -13,7 +13,6 @@ import {
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
-// import "./Terminal.css";
 import "../styles/Terminal.css";
 
 import { UserContext } from "../App";
