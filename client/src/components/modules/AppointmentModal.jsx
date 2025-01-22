@@ -1,15 +1,22 @@
-import react from "react";
+// AppointmentModal.jsx
+import React from "react";
+import "../styles/AppointmentModal.css";
 
-const AppointmentModal = (props) => {
+const AppointmentModal = ({ gameObj }) => {
+    if (!gameObj) return null; // Optional: Handle cases where gameObj is undefined
 
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <h2>{props.gameObj.turnOrder[props.gameObj.currTurn]}</h2>
+        <div className="appointment-sidebar">
+            <div className="appointment-header">
+                <h2>{gameObj.turnOrder[gameObj.currTurn]}</h2>
+            </div>
+            <div className="appointment-content">
                 <p>Appoint a hacker!</p>
+                {/* Add any additional content or actions here */}
+                {/* Example: Appoint Button */}
             </div>
         </div>
     );
-}
+};
 
 export default AppointmentModal;
