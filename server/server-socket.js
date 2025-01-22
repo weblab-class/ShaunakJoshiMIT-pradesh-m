@@ -1,3 +1,4 @@
+// server-socket.js
 const Lobby = require("./models/lobby.js");
 const Game = require("./models/game.js");
 let io;
@@ -48,11 +49,12 @@ module.exports = {
             if (!lobby.user_ids.includes(user)) {
               lobby.user_ids.push(user);
               await lobby.save();
+              console.log(`User ${user} added to lobby ${lobbyCode}`);
             }
             io.to(lobbyCode).emit("updateUsers", {
               action: "join",
               user,
-              users: lobby.user_ids
+              users: lobby.user_ids,
             });
           } else {
             console.log(`Lobby ${lobbyCode} not found.`);
@@ -73,13 +75,15 @@ module.exports = {
             if (lobby.user_ids.length === 0) {
               await Lobby.deleteOne({ lobbyCode });
               io.to(lobbyCode).emit("updateUsers", { action: "empty", users: [] });
+              console.log(`Lobby ${lobbyCode} deleted as it became empty.`);
             } else {
               await lobby.save();
               io.to(lobbyCode).emit("updateUsers", {
                 action: "leave",
                 user,
-                users: lobby.user_ids
+                users: lobby.user_ids,
               });
+              console.log(`User ${user} removed from lobby ${lobbyCode}`);
             }
           } else {
             console.log(`Lobby ${lobbyCode} not found.`);
@@ -95,12 +99,21 @@ module.exports = {
       });
 
       socket.on("getGameData", async (lobbyCode) => {
-        console.log("getting Game data you dumb fuck");
-        const game = await Game.findOne({ lobbyCode });
-        if (game) {
-          socket.emit("gameData", game);
+        console.log(`getGameData event received for lobbyCode: ${lobbyCode}`);
+        try {
+          const game = await Game.findOne({ lobbyCode });
+          if (game) {
+            console.log(`Game data found for lobbyCode: ${lobbyCode}`);
+            socket.emit("gameData", game);
+          } else {
+            console.log(`No game data found for lobbyCode: ${lobbyCode}`);
+            socket.emit("errorMessage", { message: "No game data found for this lobby." });
+          }
+        } catch (error) {
+          console.error("Error in getGameData:", error);
+          socket.emit("errorMessage", { message: "Error retrieving game data." });
         }
-      })
+      });
 
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);

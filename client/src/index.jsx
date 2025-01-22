@@ -20,12 +20,19 @@ import FriendsPage from "./components/pages/FriendsPage";
 import LobbyPage from "./components/pages/LobbyPage";
 import GamePage from "./components/pages/GamePage";
 import LoginPage from "./components/pages/LoginPage";
+<<<<<<< HEAD
 import TriviaPage from "./components/pages/TriviaPage"
 
+=======
+import {SocketProvider} from "./components/modules/SocketContext";
+
+//TODO: REPLACE WITH YOUR OWN CLIENT_ID
+>>>>>>> 024932f82b87a783e673aa1a5cb6dbd9029893bd
 const GOOGLE_CLIENT_ID = "465324171584-jgurca8sfthunf91v7q4agppmuoir1d0.apps.googleusercontent.com";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+
     <Route errorElement={<NotFound />} element={<App />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
@@ -43,7 +50,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <TerminalProvider>
+      <SocketProvider>
       <RouterProvider router={router} />
+      </SocketProvider>
     </TerminalProvider>
   </GoogleOAuthProvider>
 );

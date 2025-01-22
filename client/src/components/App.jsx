@@ -1,10 +1,12 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import "../utilities.css";
-import { socket } from "../client-socket";
+// import { socket } from "../client-socket";
 import { get, post } from "../utilities";
 export const UserContext = createContext(null);
+import { SocketContext } from "./modules/SocketContext.jsx";
+
 
 const App = () => {
   const [userId, setUserId] = useState(undefined);
@@ -13,6 +15,7 @@ const App = () => {
     return tokenSaved ? JSON.parse(tokenSaved) : null;
   });
   const navigate = useNavigate();
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     get("/api/whoami").then((user) => {

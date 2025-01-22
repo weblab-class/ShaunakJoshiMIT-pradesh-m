@@ -34,14 +34,14 @@ export default function Maze({ gameObj }) {
         onNodeClick={onNodeClick}
         fitView
         fitViewOnInit
-        fitViewOptions={{ padding: 0.2 }}
+        fitViewOptions={{ padding: .2}}
         minZoom={0.05}
         maxZoom={1.5}
-        panOnDrag={false}
-        zoomOnScroll={false}
+        panOnDrag={true}
+        zoomOnScroll={true}
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
-        nodesDraggable={false}
+        nodesDraggable={true}
         nodesConnectable={false}
         edgesFocusable={false}
       >

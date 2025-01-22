@@ -1,59 +1,12 @@
+/* Maze.css */
+
 /* Container for the maze */
 .maze-container {
-    display: grid;
-    gap: 0; /* No gap, edges connect visually */
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    margin: auto; /* Center the grid on the page */
-    position: relative;
-}
-
-/* Cell container (includes the cell and edges) */
-.maze-cell-container {
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80px;
-    height: 80px;
-    box-sizing: border-box;
-}
-
-/* Maze cell (folders) */
-.maze-cell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    height: 80px;
-    background-color: transparent; /* Ensure no extra background is visible */
-    box-sizing: border-box;
-}
-
-.maze-cell img {
-    width: 50px;
-    height: 50px;
-}
-
-/* Horizontal edge (between folders in the same row) */
-.maze-edge-horizontal {
-    position: absolute;
-    width: 40px; /* Adjusted length to connect folders */
-    height: 2px; /* Thickness of the edge */
-    background-color: #000; /* Edge color */
-    top: 50%; /* Align vertically with the folder */
-    right: -40px; /* Extend half the distance to the next folder */
-    transform: translateY(-50%);
-}
-
-/* Vertical edge (between folders in adjacent rows) */
-.maze-edge-vertical {
-    position: absolute;
-    width: 2px; /* Thickness of the edge */
-    height: 40px; /* Adjusted length to connect folders */
-    background-color: #000; /* Edge color */
-    left: 50%; /* Center it horizontally */
-    bottom: -40px; /* Extend downward */
-    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #f0f0f0; /* Optional: Light background for visibility */
 }

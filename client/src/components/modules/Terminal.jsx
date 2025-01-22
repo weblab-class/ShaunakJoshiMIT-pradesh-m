@@ -16,6 +16,7 @@ import TerminalInput from "./TerminalInput";
 import "../styles/Terminal.css";
 
 import { UserContext } from "../App";
+import { SocketContext } from "./SocketContext.jsx";
 
 function tokenizeCommand(command) {
   return command.trim().split(/\s+/);
@@ -24,8 +25,9 @@ function tokenizeCommand(command) {
 const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
   const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
-  const [user, setUser] = useState(null);
+  const socket = useContext(SocketContext);
 
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const defaultUsername = decoded?.name || userId || "anonymous";
 
@@ -90,7 +92,7 @@ const Terminal = () => {
           const host_id = getNickname();
           try {
             const response = await createGame(lobbyCode, host_id);
-            socket.emit("gameStarted", {lobbyCode, game: response});
+            // socket.emit("gameStarted", {lobbyCode, game: response});
             return "Game created. Navigating to the game page.";
           } catch (error) {
             return `Failed to create game: ${error.message}`;
