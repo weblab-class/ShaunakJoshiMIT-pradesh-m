@@ -1,7 +1,7 @@
 import React from "react";
 import LoginLogoutButton from "../modules/LoginLogoutButton";
 import WordSwitcher from "../modules/WordSwitcher";
-import Terminal from "../modules/terminal";
+import Terminal from "../modules/Terminal";
 import MatrixRain from "../modules/MatrixRain";
 import "../styles/LoginPage.css";
 

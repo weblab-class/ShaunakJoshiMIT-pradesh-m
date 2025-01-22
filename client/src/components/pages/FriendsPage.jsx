@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import Layout from '../layout.jsx';
+import Layout from '../Layout.jsx';
 import onlinelogo from "../../assets/onlinelogo.png";
 import offlinelogo from "../../assets/offlinelogo.png";
 import "../styles/FriendsPage.css";
