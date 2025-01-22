@@ -5,7 +5,6 @@ function Trivia() {
   const [choices, setChoices] = useState([]);
   const [feedback, setFeedback] = useState("");
 
-  // Helper function to shuffle the answer choices
   const shuffle = (array) => {
     return array.sort(() => Math.random() - 0.5);
   };
@@ -21,16 +20,15 @@ function Trivia() {
         const allChoices = shuffle([...incorrect, correct]);
         setQuestion(q);
         setChoices(allChoices);
-        setFeedback(""); // Clear any previous feedback
+        setFeedback("");
       }
     } catch (error) {
       console.error("Error fetching trivia question:", error);
     }
   };
 
-  // Check the provided answer letter against the correct answer
   const checkAnswer = (letter) => {
-    const index = letter.toLowerCase().charCodeAt(0) - 97; // 'a' => 0, 'b' => 1, etc.
+    const index = letter.toLowerCase().charCodeAt(0) - 97;
     if (index < 0 || index >= choices.length) {
       setFeedback("Invalid option. Please try 'answer a', 'answer b', etc.");
       return;
@@ -42,16 +40,13 @@ function Trivia() {
     }
   };
 
-  // Expose the checkAnswer function globally so that the Terminal can access it.
-  // In a full app consider using React Context instead.
   useEffect(() => {
     window.triviaCheckAnswer = (letter) => checkAnswer(letter);
     return () => {
       delete window.triviaCheckAnswer;
     };
-  }, [question, choices]); // update the binding whenever the question changes
+  }, [question, choices]);
 
-  // Fetch a question when the component mounts
   useEffect(() => {
     fetchQuestion();
   }, []);
