@@ -1,115 +1,84 @@
 // GamePage.jsx
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../App";
-import MazeWrapper from "../modules/MazeWrapper";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/GamePage.css";
-import AppointmentModal from "../modules/AppointmentModal";
-import VoteModal from "../modules/VoteModal.jsx";
+
+import { UserContext } from "../App";
 import { SocketContext } from "../modules/SocketContext.jsx";
+
 import Layout from "../Layout.jsx";
+import MazeWrapper from "../modules/MazeWrapper";
+import AppointmentSidebar from "../modules/AppointmentSidebar.jsx";
+import VoteSidebar from "../modules/VoteSidebar.jsx";
+
+import "../styles/GamePage.css";
 
 const GamePage = () => {
   const { lobbyCode } = useParams();
   const navigate = useNavigate();
-  const socket = useContext(SocketContext);
   const { userId } = useContext(UserContext);
+  const socket = useContext(SocketContext);
 
+  // Instead of local "which sidebar" booleans, store the entire game object
   const [gameObj, setGameObj] = useState(null);
   const [error, setError] = useState(null);
-  const [showAppointmentModal, setShowAppointmentModal] = useState(true);
-  const [showVoteModal, setShowVoteModal] = useState(false);
-  const [appointee, setAppointee] = useState(null);
 
   useEffect(() => {
-    console.log("GamePage mounted with lobbyCode:", lobbyCode);
     if (!lobbyCode) {
-      navigate("/home");
+      // No code → back to home
       console.error("No lobby code provided, redirecting to home");
+      navigate("/home");
       return;
     }
 
-    // Emit event to get game data
-    socket.emit("getGameData", lobbyCode);
-    console.log("Emitted 'getGameData' event with lobbyCode:", lobbyCode);
+    // Join the lobby
+    console.log("Joining lobby:", lobbyCode, "userId:", userId);
+    socket.emit("joinLobby", lobbyCode, userId);
 
-    // Listen for gameData
+    // Request initial game data
+    socket.emit("getGameData", lobbyCode);
+
+    // Listen for the game data from server
     socket.on("gameData", (data) => {
       console.log("Received game data:", data);
       setGameObj(data);
       setError(null);
     });
 
-    // Listen for errorMessage
+    // Optionally listen for error messages
     socket.on("errorMessage", (data) => {
       console.error("Error from server:", data.message);
       setError(data.message);
     });
 
-    // Optionally, listen for 'gameStarted' if you want real-time updates
+    // Optionally, if your server still emits this:
     socket.on("gameStarted", (data) => {
       console.log("Game started:", data);
       setGameObj(data.game);
       setError(null);
     });
 
-    socket.on("hackerAppointed", (data) => {
-        if (showAppointmentModal) {
-            console.log("Hacker appointed:", data.appointee);
-            setAppointee(data.appointee);
-            setShowAppointmentModal(false);
-            setShowVoteModal(true);
-
-        } else {
-            console.log("Cannot appoint hacker")
-        }
-    });
-
-    socket.on("voteCast", (data) => {
-        console.log(`User ${data.user_id} cast ${data.decision} vote`);
-    });
-
-    socket.on("voteResults", (data) => {
-        console.log("Vote results:", data);
-        setGameObj(data.game);
-        setError(null);
-        setShowVoteModal(false);
-        setAppointee(null);
-        if (data.result.outcome === "approved"){
-            alert("Hacker approved")
-
-        }
-        if (data.result.outcome === "rejected"){
-            alert("Hacker rejected")
-
-        }
-    });
-
-
+    // Cleanup on unmount
     return () => {
       socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  }, [lobbyCode, navigate, socket]);
+  }, [lobbyCode, navigate, socket, userId]);
 
-  console.log("gameObj:", gameObj);
-
-  const modal = (showAppointmentModal) ? (
-    <AppointmentModal gameObj={gameObj} />) : (<VoteModal gameObj={gameObj} appointee={appointee} />)
-
+  // If there's an error, display it
   if (error) {
     return (
       <Layout currentPage="game">
         <div className="error-page">
           <h2>Error</h2>
           <p>{error}</p>
-          <button onClick={() => navigate("/home")}>Go to Home</button>
+          <button onClick={() => navigate("/home")}>Go Home</button>
         </div>
       </Layout>
     );
   }
 
+  // If we haven't received gameObj yet, show a loading message
   if (!gameObj) {
     return (
       <Layout currentPage="game">
@@ -120,15 +89,24 @@ const GamePage = () => {
     );
   }
 
+  // Decide which sidebar to show based on the server-controlled "phase"
+  let sidebar;
+  if (gameObj.phase === "VOTE") {
+    // If the server has set phase=VOTE, show the vote sidebar
+    sidebar = <VoteSidebar gameObj={gameObj} />;
+  } else {
+    // Otherwise (e.g. phase=APPOINT), show the appointment sidebar
+    sidebar = <AppointmentSidebar gameObj={gameObj} />;
+  }
+
   return (
     <Layout currentPage="game">
-      <div className="game-page" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-        {/* Appointment Modal Sidebar */}
-        {/* <AppointmentModal gameObj={gameObj} users = {gameObj.user_ids}/> */}
-        {modal}
+      <div className="game-page" style={{ display: "flex", flexDirection: "row", height: "100%" }}>
+        {/* The dynamic sidebar */}
+        {sidebar}
 
-        {/* Maze Section */}
-        <div className="maze-container" style={{ flex: 1, position: 'relative' }}>
+        {/* The Maze area */}
+        <div className="maze-container" style={{ flex: 1, position: "relative" }}>
           <MazeWrapper gameObj={gameObj} />
         </div>
       </div>

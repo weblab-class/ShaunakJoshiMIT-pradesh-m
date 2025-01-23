@@ -12,6 +12,7 @@ const GameSchema = new mongoose.Schema({
     appointedHacker: String,
     hacker: String,
     votes: Object,
+    phase: String, 
 });
 
 module.exports = mongoose.model("Game", GameSchema);

@@ -214,6 +214,7 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
       turnOrder: shuffleArray(lobby.user_ids),
       imposters: getRandomElements(lobby.user_ids, 1),
       currTurn: 0,
+      phase: "APPOINT",
     });
 
     // Save the game to the database
