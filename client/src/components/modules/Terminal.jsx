@@ -2,23 +2,19 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TerminalContext } from "./TerminalContext";
 import { get, post } from "../../utilities";
-
 import {
   createLobby,
   joinLobby,
   leaveLobby,
   createGame,
 } from "../../api.js";
-
 import TerminalHeader from "./TerminalHeader";
 import TerminalDisplay from "./TerminalDisplay";
 import TerminalInput from "./TerminalInput";
-// import "./Terminal.css";
 import "../styles/Terminal.css";
-
 import { UserContext } from "../App";
 import { SocketContext } from "./SocketContext.jsx";
-
+import { AudioContext } from "../modules/AudioContext";
 function tokenizeCommand(command) {
   return command.trim().split(/\s+/);
 }
@@ -27,7 +23,7 @@ const Terminal = () => {
   const { history, addHistory, clearHistory } = useContext(TerminalContext);
   const { userId, handleLogin, handleLogout, decoded } = useContext(UserContext);
   const socket = useContext(SocketContext);
-
+  const { playDing } = useContext(AudioContext);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const defaultUsername = decoded?.name || userId || "anonymous";
@@ -55,18 +51,23 @@ const Terminal = () => {
         switch (tokens[1]?.toLowerCase()) {
           case "profile":
             navigate("/profile");
+            playDing();
             return "Navigating to the profile page";
           case "home":
             navigate("/home");
+            playDing();
             return "Navigating to the home page";
           case "friends":
             navigate("/friends");
+            playDing();
             return "Navigating to the friends page";
           case "settings":
             navigate("/settings");
+            playDing();
             return "Navigating to the settings page";
           case "login":
             navigate("/");
+            playDing();
             return "Navigating to the login page";
           default:
             return "Command does not exist";
@@ -75,10 +76,12 @@ const Terminal = () => {
       case "create":
         if (tokens[1]?.toLowerCase() === "lobby") {
           const nickname = getNickname();
-          if (!nickname) return "Please set your nickname first with: nickname <your nickname>";
+          if (!nickname)
+            return "Please set your nickname first with: nickname <your nickname>";
           try {
             const lobby = await createLobby(nickname);
             navigate(`/lobby/${lobby.lobbyCode}`);
+            playDing();
             return `Lobby created: ${lobby.lobbyCode}. Navigating to the lobby.`;
           } catch (error) {
             return `Failed to create lobby: ${error.message}`;
@@ -93,8 +96,7 @@ const Terminal = () => {
           const host_id = getNickname();
           try {
             const response = await createGame(lobbyCode, host_id);
-            // Optionally, emit a socket event here
-            // socket.emit("gameStarted", { lobbyCode, game: response });
+            playDing();
             return "Game created. Navigating to the game page.";
           } catch (error) {
             return `Failed to create game: ${error.message}`;
@@ -102,12 +104,10 @@ const Terminal = () => {
         }
         return "Invalid create command. Try 'create lobby' or 'create game'.";
 
-
       case "appoint":
         if (tokens.length > 2) {
           return "Invalid appoint command. Usage: appoint <nickname>";
         }
-
 
         const appointee = tokens[1];
         const pathParts = window.location.pathname.split("/");
@@ -148,24 +148,24 @@ const Terminal = () => {
           const response = await post("/api/game/vote", {
             user_id: userId,
             lobbyCode: voteLobbyCode,
-            decision: decision
-        });
-        console.log("Vote response:", response);
-        return `Your vote has been cast: ${decision}.`;
-      } catch (error) {
-        return `Failed to cast vote: ${error.message}`;
-      }
-
-
+            decision: decision,
+          });
+          console.log("Vote response:", response);
+          return `Your vote has been cast: ${decision}.`;
+        } catch (error) {
+          return `Failed to cast vote: ${error.message}`;
+        }
 
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
           const lobbyCode = tokens[2].toUpperCase();
           const nickname = getNickname();
-          if (!nickname) return "Please set your nickname first with: nickname <your nickname>";
+          if (!nickname)
+            return "Please set your nickname first with: nickname <your nickname>";
           try {
             const lobby = await joinLobby(lobbyCode, nickname);
             navigate(`/lobby/${lobbyCode}`);
+            playDing();
             return `Joined lobby: ${lobbyCode}. Navigating to the lobby.`;
           } catch (error) {
             return `Failed to join lobby: ${error.message}`;
@@ -180,6 +180,7 @@ const Terminal = () => {
           try {
             const response = await leaveLobby(lobbyCode, nickname);
             navigate("/home");
+            playDing();
             return `Successfully left the lobby: ${lobbyCode}. ${response.message}`;
           } catch (error) {
             return `Failed to leave lobby: ${error.message}`;
@@ -189,7 +190,12 @@ const Terminal = () => {
 
       case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (!newNick || newNick.length > 16 || newNick.length < 4 || newNick.indexOf(" ") >= 0) {
+        if (
+          !newNick ||
+          newNick.length > 16 ||
+          newNick.length < 4 ||
+          newNick.indexOf(" ") >= 0
+        ) {
           return "Nickname must be between 4 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
 
@@ -203,6 +209,8 @@ const Terminal = () => {
             ...prevUser,
             nickname: newNick,
           }));
+
+          playDing();
 
           return `Nickname set to: ${response.nickname}`;
         } catch (error) {
@@ -219,7 +227,11 @@ const Terminal = () => {
             }
             try {
               const reqNickName = tokens[2];
-              await post("/api/requests/sendRequest", { from: userId, to: reqNickName });
+              await post("/api/requests/sendRequest", {
+                from: userId,
+                to: reqNickName,
+              });
+              playDing();
               return `Successfully sent a friend request to ${reqNickName}`;
             } catch (error) {
               return `Error sending friend request: ${error.message}`;
@@ -235,6 +247,7 @@ const Terminal = () => {
                 from: reqNickName,
                 to: userId,
               });
+              playDing();
               return `Successfully accepted ${reqNickName}'s friend request.`;
             } catch (error) {
               return `Error accepting friend request: ${error.message}`;
@@ -250,6 +263,7 @@ const Terminal = () => {
                 from: reqNickName,
                 to: userId,
               });
+              playDing();
               return `Successfully rejected ${reqNickName}'s friend request.`;
             } catch (error) {
               return `Error rejecting friend request: ${error.message}`;
@@ -265,6 +279,7 @@ const Terminal = () => {
         }
         if (window.triviaCheckAnswer) {
           window.triviaCheckAnswer(tokens[1]);
+          playDing();
           return `Answered ${tokens[1]}`;
         } else {
           return "No trivia question is active.";
@@ -272,6 +287,7 @@ const Terminal = () => {
 
       case "logout":
         handleLogout();
+        playDing();
         return "Logging out";
 
       case "help":

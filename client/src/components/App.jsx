@@ -2,11 +2,11 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import "../utilities.css";
-// import { socket } from "../client-socket";
 import { get, post } from "../utilities";
-export const UserContext = createContext(null);
 import { SocketContext } from "./modules/SocketContext.jsx";
+import { AudioProvider } from "./modules/AudioContext";
 
+export const UserContext = createContext(null);
 
 const App = () => {
   const [userId, setUserId] = useState(undefined);
@@ -30,7 +30,7 @@ const App = () => {
     if (userId) {
       socket.emit("initUser", userId);
     }
-  }, [userId]);
+  }, [userId, socket]);
 
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
@@ -69,9 +69,11 @@ const App = () => {
   };
 
   return (
-    <UserContext.Provider value={authContextValue}>
-      <Outlet />
-    </UserContext.Provider>
+    <AudioProvider>
+      <UserContext.Provider value={authContextValue}>
+        <Outlet />
+      </UserContext.Provider>
+    </AudioProvider>
   );
 };
 
