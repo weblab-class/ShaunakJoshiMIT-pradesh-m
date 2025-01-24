@@ -90,7 +90,6 @@ body {
 
 .slider-container input.slider {
     flex: 2;
-    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     border-radius: 5px;
