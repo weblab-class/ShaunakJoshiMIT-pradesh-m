@@ -9,6 +9,10 @@ import Layout from "../Layout.jsx";
 import MazeWrapper from "../modules/MazeWrapper";
 import AppointmentSidebar from "../modules/AppointmentSidebar.jsx";
 import VoteSidebar from "../modules/VoteSidebar.jsx";
+import DefaultSidebar from "../modules/DefaultSidebar.jsx";
+import HackerSidebar from "../modules/HackerSidebar.jsx";
+import TriviaSidebar from "../modules/TriviaSidebar.jsx";
+import { get } from "../../utilities";
 
 import "../styles/GamePage.css";
 
@@ -18,13 +22,12 @@ const GamePage = () => {
   const { userId } = useContext(UserContext);
   const socket = useContext(SocketContext);
 
-  // Instead of local "which sidebar" booleans, store the entire game object
   const [gameObj, setGameObj] = useState(null);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (!lobbyCode) {
-      // No code → back to home
       console.error("No lobby code provided, redirecting to home");
       navigate("/home");
       return;
@@ -56,14 +59,16 @@ const GamePage = () => {
       setGameObj(data.game);
       setError(null);
     });
-
+    get("/api/user", { userid: userId }).then((user) => {
+      setUser(user);
+    });
     // Cleanup on unmount
     return () => {
       socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  }, [lobbyCode, navigate, socket, userId]);
+  }, [socket, lobbyCode, userId, navigate, ]);
 
   // If there's an error, display it
   if (error) {
@@ -89,23 +94,60 @@ const GamePage = () => {
     );
   }
 
-  // Decide which sidebar to show based on the server-controlled "phase"
+  const userNickname = user?.nickname || "anonymous";
+  const currentPresidentNickname = gameObj.turnOrder[gameObj.currTurn];
+  const isPresident = (userNickname === currentPresidentNickname);
+
+  const currentPhase = gameObj.phase;
+  const isHacker = userNickname === gameObj.hacker;
+  console.log(userNickname, currentPresidentNickname)
+
   let sidebar;
-  if (gameObj.phase === "VOTE") {
-    // If the server has set phase=VOTE, show the vote sidebar
+  if (currentPhase === "VOTE") {
+    // Show VoteSidebar to all players
     sidebar = <VoteSidebar gameObj={gameObj} />;
+  } else if (currentPhase === "APPOINT") {
+    if (isPresident) {
+      // Only the president sees AppointmentSidebar
+      sidebar = <AppointmentSidebar gameObj={gameObj} />;
+    } else {
+      // Others see DefaultSidebar
+      sidebar = (
+        <DefaultSidebar
+          gameObj={gameObj}
+          currentUserNickname={userNickname}
+        />
+      );
+    }
+  } else if (currentPhase === "MOVE") {
+    if (isHacker) {
+      sidebar = <HackerSidebar gameObj={gameObj} />;
+    } else {
+      sidebar = (
+        <DefaultSidebar
+          gameObj={gameObj}
+          currentUserNickname={userNickname}
+        />
+      );
+    }
+  } else if (currentPhase === "TRIVIA") {
+    sidebar = (
+      <TriviaSidebar gameObj={gameObj} currentUserNickname={userNickname} />
+    );
   } else {
-    // Otherwise (e.g. phase=APPOINT), show the appointment sidebar
-    sidebar = <AppointmentSidebar gameObj={gameObj} />;
+    sidebar = (
+      <DefaultSidebar
+        gameObj={gameObj}
+        currentUserNickname={userNickname}
+      />
+    );
   }
 
   return (
     <Layout currentPage="game">
       <div className="game-page" style={{ display: "flex", flexDirection: "row", height: "100%" }}>
-        {/* The dynamic sidebar */}
         {sidebar}
 
-        {/* The Maze area */}
         <div className="maze-container" style={{ flex: 1, position: "relative" }}>
           <MazeWrapper gameObj={gameObj} />
         </div>

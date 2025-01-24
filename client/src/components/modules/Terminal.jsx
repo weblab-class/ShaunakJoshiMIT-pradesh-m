@@ -50,6 +50,10 @@ const Terminal = () => {
     const tokens = tokenizeCommand(command);
     const primary = tokens[0]?.toLowerCase();
 
+
+    const pathParts = window.location.pathname.split("/");
+    const lobbyCode = pathParts[2];
+
     switch (primary) {
       case "cd":
         switch (tokens[1]?.toLowerCase()) {
@@ -110,8 +114,7 @@ const Terminal = () => {
 
 
         const appointee = tokens[1];
-        const pathParts = window.location.pathname.split("/");
-        const lobbyCode = pathParts[2];
+
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
@@ -126,6 +129,26 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to appoint: ${error.message}`;
         }
+      case "move":
+        if (tokens.length !== 2) {
+          return "Invalid move command. Usage: move <direction>";
+        }
+        const targetNode = tokens[1].toLowerCase();
+
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        try {
+          console.log(`Moving to ${targetNode} in lobby ${lobbyCode}`);
+          const response = await post("/api/game/move", {
+            user_id: userId,
+            lobbyCode: lobbyCode,
+            targetNode: targetNode,
+          });
+          return `Proposed move to ${targetNode}.`;
+        } catch (error) {
+          return `Failed to move: ${error.message}`;
+        }
 
       case "vote":
         if (tokens.length !== 2) {
@@ -137,8 +160,7 @@ const Terminal = () => {
           return "Invalid vote. Please use 'yes' or 'no'.";
         }
 
-        const votePathParts = window.location.pathname.split("/");
-        const voteLobbyCode = votePathParts[2];
+        const voteLobbyCode = pathParts[2];
         if (!voteLobbyCode) {
           return "You are not currently in a lobby.";
         }
@@ -155,6 +177,25 @@ const Terminal = () => {
       } catch (error) {
         return `Failed to cast vote: ${error.message}`;
       }
+      case "answer":
+        if (tokens.length !== 2) {
+          return "Invalid answer command. Usage: answer <answer>";
+        }
+        const answer = tokens[1].toLowerCase();
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        try {
+          console.log(`Submitting answer: ${answer} for lobby ${lobbyCode}`);
+          const response = await post("/api/game/answer", {
+            user_id: userId,
+            lobbyCode: lobbyCode,
+            answer: answer,
+          });
+          return `Your answer has been submitted: ${answer}.`;
+        } catch (error) {
+          return `Failed to submit answer: ${error.message}`;
+        }
 
 
 

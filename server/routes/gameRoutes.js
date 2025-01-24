@@ -101,17 +101,16 @@ router.post("/vote", async (req, res) => {
 
       if (approve >= reject) {
         // Approved
-        game.hacker = game.appointedHacker; // Officially becomes the hacker
+        game.hacker = game.appointedHacker;
+        game.phase = "MOVE";
       } else {
         io.to(lobbyCode).emit("nextTurn", lobbyCode);
+        game.phase = "APPOINT";
       }
 
       // Reset for next round (or next appointment)
       game.appointedHacker = null;
       game.votes = {};
-
-      // Return to "APPOINT" phase, or whatever your next phase is
-      game.phase = "APPOINT";
 
       await game.save();
 
@@ -133,5 +132,109 @@ router.post("/vote", async (req, res) => {
     return res.status(500).json({ error: "Failed to cast" });
   }
 });
+
+
+
+
+router.post("/move", async (req, res) => {
+  const { user_id, lobbyCode, targetNode} = req.body;
+  try {
+    const game = await Game.findOne({ lobbyCode });
+    if (!game) {
+      return res.status(404).json({ error: "Lobby not found" });
+    }
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const userNickname = user.nickname;
+
+    if (game.phase !== "MOVE") {
+      return res.status(403).json({ error: "Cannot move while in this phase" });
+    }
+
+    if (game.hacker !== userNickname) {
+      return res.status(403).json({ error: "Only the hacker can move" });
+    }
+
+    function isAdjacentViaEdges(game, currentNode, targetNode) {
+        return game.edges.some((edge) => {
+          const {source, target} = edge;
+          return (source === currentNode && target === targetNode) || (target === currentNode && source === targetNode);
+        });
+    }
+
+    const currentNode = game.location || "0-0";
+
+    const validMove = isAdjacentViaEdges(game, currentNode, targetNode);
+    if (!validMove) {
+      return res.status(403).json({ error: `Invalid move from ${currentNode} to ${targetNode}.` });
+    }
+    game.nextLocation = targetNode;
+    game.phase = "TRIVIA";
+
+    const triviaQuestion = generateTriviaQuestion();
+    game.triviaQuestion = triviaQuestion;
+
+    await game.save();
+
+    // Broadcast updated game (all done)
+    const io = getIo();
+    io.to(lobbyCode).emit("gameData", game);
+    // io.to(lobbyCode).emit("nextTurn", lobbyCode);
+
+    return res.status(200).json({ message: "Move successful" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+router.post("/answer", async (req, res) => {
+  const { user_id, lobbyCode, answer } = req.body;
+  try {
+    const game = await Game.findOne({ lobbyCode });
+    if (!game) {
+      return res.status(404).json({ error: "Lobby not found" });
+    }
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const userNickname = user.nickname;
+
+    if (game.phase !== "TRIVIA") {
+      return res.status(403).json({ error: "Cannot answer while in this phase" });
+    }
+
+    const { question, choices, correctChoice } = game.triviaQuestion;
+    const answerRight = answer - 1 === correctChoice;
+    const io = getIo();
+    if (answerRight) {
+        game.location = game.nextLocation;
+        game.nextLocation = null;
+        game.phase = "RESULT";
+    } else {
+        game.nextLocation = null;
+        game.phase = "RESULT";
+    }
+    // io.to(lobbyCode).emit("nextTurn", lobbyCode);
+    await game.save();
+    return res.status(200).json({ message: "Answer submitted" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
+
+function generateTriviaQuestion() {
+    return {
+      question: "What is the capital of France?",
+      choices: ["Berlin", "London", "Paris", "Rome"],
+      correctChoice: 2,
+    };
+  }
 
 module.exports = router;
