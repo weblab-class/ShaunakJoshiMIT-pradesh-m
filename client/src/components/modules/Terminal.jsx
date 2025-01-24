@@ -197,6 +197,19 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to submit answer: ${error.message}`;
         }
+      case "next":
+        if (tokens.length !== 1) {
+          return "Invalid next command. Usage: next";
+        }
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        try {
+          const response = await post("/api/game/result", { lobbyCode, user_id: userId });
+          return `The game result is: ${response.result}.`;
+        } catch (error) {
+          return `Failed to get game result: ${error.message}`;
+        }
 
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {

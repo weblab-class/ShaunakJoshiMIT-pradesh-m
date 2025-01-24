@@ -121,7 +121,7 @@ module.exports = {
           if (game) {
             game.currTurn = (game.currTurn + 1) % game.user_ids.length;
             await game.save();
-            io.to(lobbyCode).emit("nextTurn", game.currTurn);
+            io.to(lobbyCode).emit("gameData", game);
           } else {
             console.log(`No game data found for lobbyCode: ${lobbyCode}`);
             socket.emit("errorMessage", { message: "No game data found for this lobby." });

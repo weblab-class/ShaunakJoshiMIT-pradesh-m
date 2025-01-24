@@ -201,24 +201,29 @@ router.post("/answer", async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const userNickname = user.nickname;
+
+    if (user.nickname !== game.hacker) {
+      return res.status(403).json({ error: "Only the hacker can answer" });
+    }
 
     if (game.phase !== "TRIVIA") {
       return res.status(403).json({ error: "Cannot answer while in this phase" });
     }
 
     const { question, choices, correctChoice } = game.triviaQuestion;
-    const answerRight = answer - 1 === correctChoice;
     const io = getIo();
-    if (answerRight) {
-        game.location = game.nextLocation;
-        game.nextLocation = null;
-        game.phase = "RESULT";
-    } else {
-        game.nextLocation = null;
-        game.phase = "RESULT";
-    }
+    // if (answerRight) {
+    //     game.phase = "RESULT";
+    //     game.hackerAnswer = answer;
+    // } else {
+    //     game.phase = "RESULT";
+    //     game.hackerAnswer = answer;
+    // }
     // io.to(lobbyCode).emit("nextTurn", lobbyCode);
+
+    game.phase = "RESULT";
+    game.hackerAnswer = answer;
+    io.to(lobbyCode).emit("gameData", game);
     await game.save();
     return res.status(200).json({ message: "Answer submitted" });
   } catch (error) {
@@ -227,7 +232,60 @@ router.post("/answer", async (req, res) => {
   }
 });
 
+router.post("/result", async (req, res) => {
+    const { lobbyCode, user_id } = req.body;
+    try {
+      const game = await Game.findOne({ lobbyCode });
+      const user = await User.findById(user_id);
 
+      if (!game) {
+        return res.status(404).json({ error: "Lobby not found" });
+      }
+      if (game.phase !== "RESULT") {
+        return res.status(403).json({ error: "Cannot process result while in this phase" });
+      }
+      if (user.nickname !== game.hacker) {
+        return res.status(403).json({ error: "Only the hacker can submit the result" });
+      }
+
+      const answerRight = (game.hackerAnswer - 1) === game.triviaQuestion.correctChoice;
+
+      if (answerRight) {
+        game.location = game.nextLocation;
+        game.nextLocation = null;
+        game.phase = "APPOINT";
+      } else {
+        const nodeIdToDelete = game.nextLocation;
+
+        const nodeExists = game.nodes.some((node) => node.id === nodeIdToDelete);
+        if (!nodeExists) {
+          return res.status(400).json({ error: `Node ${nodeIdToDelete} does not exist in the game.` });
+        }
+
+        game.nodes = game.nodes.filter((node) => node.id !== nodeIdToDelete);
+        game.edges = game.edges.filter(
+          (edge) => edge.source !== nodeIdToDelete && edge.target !== nodeIdToDelete
+        );
+
+
+        game.phase = "APPOINT";
+
+        game.nextLocation = null;
+      }
+
+      await game.save();
+
+      const io = getIo();
+      io.to(lobbyCode).emit("gameData", game);
+
+      io.to(lobbyCode).emit("nextTurn", lobbyCode);
+
+      return res.status(200).json({ message: "Result submitted successfully" });
+    } catch (error) {
+      console.error("Error in /result:", error);
+      return res.status(500).json({ error: "An internal server error occurred." });
+    }
+  });
 
 function generateTriviaQuestion() {
     return {
