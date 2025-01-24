@@ -102,6 +102,8 @@ router.post("/vote", async (req, res) => {
       if (approve >= reject) {
         // Approved
         game.hacker = game.appointedHacker; // Officially becomes the hacker
+      } else {
+        io.to(lobbyCode).emit("nextTurn", lobbyCode);
       }
 
       // Reset for next round (or next appointment)
