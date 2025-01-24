@@ -4,11 +4,13 @@ import backgroundMusicFile from '../assets/sounds/background-music.mp3';
 
 export const ding = new Howl({
   src: [dingSound],
-  volume: 0.5,
+  volume: 0.25,
+  preload: true
 });
 
 export const backgroundMusic = new Howl({
   src: [backgroundMusicFile],
   loop: true,
-  volume: 0.3,
+  volume: 0.25,
+  preload: true
 });

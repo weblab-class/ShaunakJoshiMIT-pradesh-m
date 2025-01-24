@@ -10,17 +10,26 @@ const SettingsPage = () => {
     const socket = useContext(SocketContext);
     const { setBackgroundMusicVolume, setClickVolume, backgroundMusic } = useContext(AudioContext);
 
-    const [soundVolume, setSoundVolume] = useState(backgroundMusic ? backgroundMusic.volume() * 100 : 50);
-    const [fxVolume, setFxVolume] = useState(50);
+    const [soundVolume, setSoundVolume] = useState(() => {
+        const savedSoundVolume = localStorage.getItem('soundVolume');
+        return savedSoundVolume ? Number(savedSoundVolume) : (backgroundMusic ? backgroundMusic.volume() * 100 : 50);
+    });
+
+    const [fxVolume, setFxVolume] = useState(() => {
+        const savedFxVolume = localStorage.getItem('fxVolume');
+        return savedFxVolume ? Number(savedFxVolume) : 50;
+    });
 
     useEffect(() => {
         if (backgroundMusic) {
-            setBackgroundMusicVolume(soundVolume / 200);
+            setBackgroundMusicVolume(soundVolume / 100);
+            localStorage.setItem('soundVolume', soundVolume);
         }
     }, [soundVolume, setBackgroundMusicVolume, backgroundMusic]);
 
     useEffect(() => {
         setClickVolume(fxVolume / 100);
+        localStorage.setItem('fxVolume', fxVolume);
     }, [fxVolume, setClickVolume]);
 
     const handleSoundChange = (e) => {
@@ -42,7 +51,7 @@ const SettingsPage = () => {
                     <h2>Audio Settings</h2>
                     
                     <div className="slider-container">
-                        <label htmlFor="sound-slider">Background Music Volume</label>
+                        <label htmlFor="sound-slider">Music Volume</label>
                         <input
                             type="range"
                             id="sound-slider"
@@ -56,7 +65,7 @@ const SettingsPage = () => {
                     </div>
 
                     <div className="slider-container">
-                        <label htmlFor="fx-slider">Click FX Volume</label>
+                        <label htmlFor="fx-slider">FX Volume</label>
                         <input
                             type="range"
                             id="fx-slider"
