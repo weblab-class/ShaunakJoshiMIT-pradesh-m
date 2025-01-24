@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { ding, backgroundMusic } from '../utils/sounds';
 
 export const AudioContext = createContext();
@@ -9,12 +9,31 @@ export const AudioProvider = ({ children }) => {
   };
 
   const playBackgroundMusic = () => {
-    backgroundMusic.play();
+    if (!backgroundMusic.playing()) {
+      backgroundMusic.play();
+    }
   };
 
   const pauseBackgroundMusic = () => {
-    backgroundMusic.pause();
+    if (backgroundMusic.playing()) {
+      backgroundMusic.pause();
+    }
   };
+
+  const setBackgroundMusicVolume = (volume) => {
+    backgroundMusic.volume(volume);
+  };
+
+  const setClickVolume = (volume) => {
+    ding.volume(volume);
+  };
+
+  useEffect(() => {
+    playBackgroundMusic();
+    return () => {
+      backgroundMusic.stop();
+    };
+  }, []);
 
   return (
     <AudioContext.Provider
@@ -22,6 +41,8 @@ export const AudioProvider = ({ children }) => {
         playDing,
         playBackgroundMusic,
         pauseBackgroundMusic,
+        setBackgroundMusicVolume,
+        setClickVolume,
         backgroundMusic,
       }}
     >

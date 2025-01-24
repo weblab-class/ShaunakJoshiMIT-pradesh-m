@@ -1,22 +1,34 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from '../Layout.jsx';
 import "../styles/SettingsPage.css";
 import { UserContext } from "../App.jsx";
 import { SocketContext } from "../modules/SocketContext.jsx";
+import { AudioContext } from "../modules/AudioContext";
 
 const SettingsPage = () => {
     const { userId } = useContext(UserContext);
     const socket = useContext(SocketContext);
+    const { setBackgroundMusicVolume, setClickVolume, backgroundMusic } = useContext(AudioContext);
 
-    const [soundVolume, setSoundVolume] = useState(50);
+    const [soundVolume, setSoundVolume] = useState(backgroundMusic ? backgroundMusic.volume() * 100 : 50);
     const [fxVolume, setFxVolume] = useState(50);
 
+    useEffect(() => {
+        if (backgroundMusic) {
+            setBackgroundMusicVolume(soundVolume / 200);
+        }
+    }, [soundVolume, setBackgroundMusicVolume, backgroundMusic]);
+
+    useEffect(() => {
+        setClickVolume(fxVolume / 100);
+    }, [fxVolume, setClickVolume]);
+
     const handleSoundChange = (e) => {
-        setSoundVolume(e.target.value);
+        setSoundVolume(Number(e.target.value));
     };
 
     const handleFxChange = (e) => {
-        setFxVolume(e.target.value);
+        setFxVolume(Number(e.target.value));
     };
 
     return (
@@ -30,7 +42,7 @@ const SettingsPage = () => {
                     <h2>Audio Settings</h2>
                     
                     <div className="slider-container">
-                        <label htmlFor="sound-slider">Sound Volume</label>
+                        <label htmlFor="sound-slider">Background Music Volume</label>
                         <input
                             type="range"
                             id="sound-slider"
@@ -44,7 +56,7 @@ const SettingsPage = () => {
                     </div>
 
                     <div className="slider-container">
-                        <label htmlFor="fx-slider">FX Volume</label>
+                        <label htmlFor="fx-slider">Click FX Volume</label>
                         <input
                             type="range"
                             id="fx-slider"

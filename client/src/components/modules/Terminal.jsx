@@ -15,6 +15,7 @@ import "../styles/Terminal.css";
 import { UserContext } from "../App";
 import { SocketContext } from "./SocketContext.jsx";
 import { AudioContext } from "../modules/AudioContext";
+
 function tokenizeCommand(command) {
   return command.trim().split(/\s+/);
 }
