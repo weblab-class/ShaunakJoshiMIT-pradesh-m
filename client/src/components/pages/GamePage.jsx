@@ -12,6 +12,7 @@ import VoteSidebar from "../modules/VoteSidebar.jsx";
 import DefaultSidebar from "../modules/DefaultSidebar.jsx";
 import HackerSidebar from "../modules/HackerSidebar.jsx";
 import TriviaSidebar from "../modules/TriviaSidebar.jsx";
+import ResultSidebar from "../modules/ResultSidebar.jsx";
 import { get } from "../../utilities";
 
 import "../styles/GamePage.css";
@@ -133,6 +134,10 @@ const GamePage = () => {
   } else if (currentPhase === "TRIVIA") {
     sidebar = (
       <TriviaSidebar gameObj={gameObj} currentUserNickname={userNickname} />
+    );
+  } else if (currentPhase === "RESULT") {
+    sidebar = (
+      <ResultSidebar gameObj={gameObj} currentUserNickname={userNickname} />
     );
   } else {
     sidebar = (

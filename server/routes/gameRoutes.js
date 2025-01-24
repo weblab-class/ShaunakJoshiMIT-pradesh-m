@@ -248,7 +248,7 @@ router.post("/result", async (req, res) => {
         return res.status(403).json({ error: "Only the hacker can submit the result" });
       }
 
-      const answerRight = (game.hackerAnswer - 1) === game.triviaQuestion.correctChoice;
+      const answerRight = (Number(game.hackerAnswer) - 1) === game.triviaQuestion.correctChoice;
 
       if (answerRight) {
         game.location = game.nextLocation;

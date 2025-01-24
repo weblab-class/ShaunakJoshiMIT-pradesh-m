@@ -5,6 +5,7 @@ import "../styles/ResultSidebar.css";
 
 const ResultSidebar = ({ gameObj, currentUserNickname }) => {
   const { triviaQuestion, hackerAnswer, nextLocation } = gameObj;
+  const outcome = Number(hackerAnswer) - 1 === triviaQuestion.correctChoice;
 
   // Handle cases where necessary data might be missing
   if (!triviaQuestion || hackerAnswer === undefined || !outcome) {
@@ -15,7 +16,6 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
       </div>
     );
   }
-const outcome = hackerAnswer.toNumber() - 1 === triviaQuestion.correctChoice.toNumber();
   // Determine if the current user is the hacker
   const isHacker = currentUserNickname === gameObj.hacker;
 
