@@ -365,28 +365,30 @@ const Terminal = () => {
 
       case "help":
         return "\nAvailable commands:\n\n" +
-               "  clear                   - Clears the terminal\n" +
-               "  cd home                 - Navigate to home page\n" +
-               "  cd profile              - Navigate to profile page\n" +
-               "  cd friends              - Navigate to friends page\n" +
-               "  cd settings             - Navigate to settings page\n" +
-               "  nickname <your name>    - Set your nickname (4-16 characters, no spaces)\n" +
-               "  create lobby            - Create a new lobby (requires nickname set)\n" +
-               "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
-               "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
-               "  answer <option>         - Answer the current trivia question (e.g., answer a)\n" +
-               "  friend request <username> - Send a friend request\n" +
-               "  friend accept <username>  - Accept a friend request\n" +
-               "  friend reject <username>  - Reject a friend request\n" +
-               "  logout                  - Log out\n" +
-               "  help                    - Display commands\n";
+        "  clear                      - Clears the terminal\n" +
+        "  cd home                    - Navigate to home page\n" +
+        "  cd profile                 - Navigate to profile page\n" +
+        "  cd friends                 - Navigate to friends page\n" +
+        "  cd settings                - Navigate to settings page\n" +
+        "  cd rules                   - Navigate to rules page\n" +
+        "  cd login                   - Navigate to the login page\n" +
+        "  nickname <your name>       - Set your nickname (4-16 characters, no spaces)\n" +
+        "  create lobby               - Create a new lobby (requires nickname set)\n" +
+        "  join lobby <lobbyCode>     - Join an existing lobby (requires nickname set)\n" +
+        "  leave lobby <lobbyCode>    - Leave the specified lobby\n" +
+        "  friend request <username>  - Send a friend request\n" +
+        "  friend accept <username>   - Accept a friend request\n" +
+        "  friend reject <username>   - Reject a friend request\n" +
+        "  logout                     - Log out\n" +
+        "  help                       - Display commands\n";
+
 
       case "clear":
         clearHistory();
         return "";
 
       default:
-        return "Command does not exist";
+        return "Command does not exist, type 'help' for a list of commands";
     }
   };
 
