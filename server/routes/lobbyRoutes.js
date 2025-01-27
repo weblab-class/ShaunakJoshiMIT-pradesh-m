@@ -5,6 +5,7 @@ const Lobby = require("../models/lobby.js");
 const router = express.Router();
 const socketManager = require("../server-socket");
 const Game = require("../models/game.js");
+const User = require("../models/user.js");
 
 /** -------------- IMPORT PHASE TIMEOUTS -------------- **/
 const { setPhaseTimeout, clearPhaseTimeout } = require("../utils/phaseTimeouts.js");
@@ -110,10 +111,13 @@ function generateGridEdges(rows, cols) {
 router.post("/create", async (req, res) => {
   const { host_id } = req.body;
   try {
+    const user = await User.findOne({ nickname: host_id });
     const existingLobbies = await Lobby.find({}, { lobbyCode: 1 });
     const existingCodes = new Set(existingLobbies.map((lobby) => lobby.lobbyCode));
     const newLobbyCode = generateLobbyCode(existingCodes);
 
+    user.lobbyCode = newLobbyCode;
+    await user.save();
     const lobby = new Lobby({
       lobbyCode: newLobbyCode,
       user_ids: [host_id],
@@ -133,6 +137,7 @@ router.post("/join", async (req, res) => {
   const { lobbyCode, user_id } = req.body;
   try {
     const lobby = await Lobby.findOne({ lobbyCode });
+    const user = await User.findOne({ nickname: user_id });
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found" });
     }
@@ -140,6 +145,9 @@ router.post("/join", async (req, res) => {
       lobby.user_ids.push(user_id);
       await lobby.save();
     }
+
+    user.lobbyCode = lobbyCode;
+    await user.save();
     socketManager.getIo().to(lobbyCode).emit("updateUsers", {
       action: "join",
       user: user_id,
@@ -156,6 +164,10 @@ router.post("/leave", async (req, res) => {
   const { lobbyCode, user_id } = req.body;
   try {
     const lobby = await Lobby.findOne({ lobbyCode });
+    const user = await User.findOne({ nickname: user_id });
+
+    user.lobbyCode = null;
+    await user.save();
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found" });
     }

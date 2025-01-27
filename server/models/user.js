@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   googleid: String,
   friends: Array,
   nickname: { type: String, default: null, unique: true},
+  lobbyCode: String,
 });
 
 module.exports = mongoose.model("user", UserSchema);

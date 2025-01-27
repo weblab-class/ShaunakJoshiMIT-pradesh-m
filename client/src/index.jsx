@@ -21,6 +21,7 @@ import LobbyPage from "./components/pages/LobbyPage";
 import GamePage from "./components/pages/GamePage";
 import LoginPage from "./components/pages/LoginPage";
 import TriviaPage from "./components/pages/TriviaPage";
+import RulesPage from "./components/pages/RulesPage";
 
 import {SocketProvider} from "./components/modules/SocketContext";
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter(
         <Route path = "/trivia" element = {<TriviaPage />} />
         <Route path="/lobby/:lobbyCode" element={<LobbyPage />} />
         <Route path = "/game/:lobbyCode" element = {<GamePage />} />
+        <Route path = "/rules" element = {<RulesPage />} />
       </Route>
   )
 );

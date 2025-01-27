@@ -70,6 +70,10 @@ const Terminal = () => {
             navigate("/settings");
             playDing();
             return "Navigating to the settings page";
+          case "rules":
+            navigate("/rules");
+            playDing();
+            return "Navigating to the rules page";
           case "login":
             navigate("/");
             playDing();

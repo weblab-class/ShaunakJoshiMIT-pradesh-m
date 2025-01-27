@@ -101,9 +101,8 @@ const FriendsPage = (props) => {
             <tr className = "Friends-Row" key = {friendObj._id || index} >
                 <th>{friendObj.nickname}</th>
                 {/* <th><img className = "online-offline-logo" src = {(friendObj.online) ? onlinelogo: offlinelogo} /></th> */}
-                <th><img className = "online-offline-logo"  src = {onlinelogo} /></th>
-                {/* <th>{(friendObj.online) ? friendObj.server_id: "offline" }</th> */}
-                <th>"placeholder server id"</th>
+                <th><img className = "online-offline-logo"  src = {(friendObj.lobbyCode) ? onlinelogo: offlinelogo} /></th>
+                <th>{(friendObj.lobbyCode) ? friendObj.lobbyCode: "offline" }</th>
             </tr>
         )
     })
