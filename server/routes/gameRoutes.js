@@ -272,13 +272,15 @@ router.post("/result", async (req, res) => {
 
         game.nextLocation = null;
       }
+      game.currTurn = (game.currTurn + 1) % game.user_ids.length;
+
+      game.phase = "APPOINT";
 
       await game.save();
 
       const io = getIo();
       io.to(lobbyCode).emit("gameData", game);
 
-      io.to(lobbyCode).emit("nextTurn", lobbyCode);
 
       return res.status(200).json({ message: "Result submitted successfully" });
     } catch (error) {

@@ -8,7 +8,7 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
   const outcome = Number(hackerAnswer) - 1 === triviaQuestion.correctChoice;
 
   // Handle cases where necessary data might be missing
-  if (!triviaQuestion || hackerAnswer === undefined || !outcome) {
+  if (!triviaQuestion || hackerAnswer === undefined ) {
     return (
       <div className="result-sidebar">
         <h2>Result Phase</h2>
@@ -20,7 +20,7 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
   const isHacker = currentUserNickname === gameObj.hacker;
 
   // Extract the selected and correct answers
-  const selectedAnswer = triviaQuestion.choices[hackerAnswer];
+  const selectedAnswer = triviaQuestion.choices[Number(hackerAnswer) - 1];
   const correctAnswer = triviaQuestion.choices[triviaQuestion.correctChoice];
 
   return (
@@ -41,7 +41,7 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
       </section>
 
       <section className="result-message">
-        {outcome === "success" ? (
+        {(outcome) ? (
           <h3 className="success">
             Move to <strong>{nextLocation}</strong> was <strong>successful!</strong>
           </h3>
