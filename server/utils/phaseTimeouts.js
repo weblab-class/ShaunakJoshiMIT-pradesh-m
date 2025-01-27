@@ -2,6 +2,10 @@ const phaseTimeouts = new Map();
 
 function setPhaseTimeout(lobbyCode, phase, durationMs, onTimeout) {
     clearPhaseTimeout(lobbyCode, phase);
+
+    const timeoutId = setTimeout(() => {
+        onTimeout();
+    }, durationMs);
     phaseTimeouts.set(lobbyCode, { timeoutId, phase});
 }
 
