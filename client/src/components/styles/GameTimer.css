@@ -1,0 +1,41 @@
+/* GameTimer.css */
+
+.game-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #222;
+    color: #0f0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 10px #0f0;
+    margin-bottom: 10px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .game-timer.warning {
+    background-color: #8b0000; /* Dark red */
+    color: #fff;
+    box-shadow: 0 0 15px #ff0000;
+  }
+
+  .game-timer.blink {
+    animation: blink 1s step-start 0s infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .timer-label {
+    margin-right: 10px;
+    font-size: 1.2em;
+  }
+
+  .timer-value {
+    font-size: 1.5em;
+    font-weight: bold;
+  }

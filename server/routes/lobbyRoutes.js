@@ -208,16 +208,19 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
     const game = new Game({
       lobbyCode: lobbyCode, // Correctly assign the string
       user_ids: lobby.user_ids,
-      nodes: generateGridNodes(7, 7),
-      edges: generateGridEdges(7, 7),
-      rows: 7,
-      cols: 7,
+      nodes: generateGridNodes(2, 2),
+      edges: generateGridEdges(2, 2),
+      rows: 2,
+      cols: 2,
       host_id: lobby.host_id,
       turnOrder: shuffleArray(lobby.user_ids),
       imposters: getRandomElements(lobby.user_ids, 1),
       currTurn: 0,
       phase: "APPOINT",
       location: "0-0",
+      timeLimit: 600,
+      startTime: new Date(),
+      endTime: new Date(Date.now() + 600*1000),
     });
 
     // Save the game to the database

@@ -197,6 +197,20 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to submit answer: ${error.message}`;
         }
+
+      case "role":
+        if (tokens.length !== 1) {
+          return "Invalid role command. Usage: role";
+        }
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        try {
+          const response = await get("/api/game/role", { lobbyCode, user_id: userId });
+          return `Your role is: ${response.role}.`;
+        } catch (error) {
+          return `Failed to get your role: ${error.message}`;
+        }
       case "next":
         if (tokens.length !== 1) {
           return "Invalid next command. Usage: next";

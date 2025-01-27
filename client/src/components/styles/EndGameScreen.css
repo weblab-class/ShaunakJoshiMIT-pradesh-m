@@ -1,0 +1,43 @@
+/* EndGameScreen.css */
+
+.end-game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1a1a;
+    color: #00ff00;
+    padding: 40px;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 20px #00ff00;
+    text-align: center;
+  }
+
+  .end-game-screen h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    text-shadow: 0 0 10px #00ff00;
+  }
+
+  .end-game-screen p {
+    margin: 10px 0;
+    font-size: 1.2em;
+  }
+
+  .end-game-screen button {
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: #00ff00;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', monospace;
+    transition: background-color 0.3s;
+  }
+
+  .end-game-screen button:hover {
+    background-color: #0f0;
+  }

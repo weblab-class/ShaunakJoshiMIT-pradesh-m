@@ -103,6 +103,14 @@ module.exports = {
         try {
           const game = await Game.findOne({ lobbyCode });
           if (game) {
+            function isTimeUp(game) {
+              return Date.now() >= new Date(game.endTime).getTime();
+            }
+            if (isTimeUp(game)) {
+              game.winner = "FBI";
+              game.phase = "END";
+              await game.save();
+            }
             console.log(`Game data found for lobbyCode: ${lobbyCode}`);
             socket.emit("gameData", game);
           } else {

@@ -19,6 +19,11 @@ const GameSchema = new mongoose.Schema({
     triviaQuestion: Object,
     nextLocation: {type: String},
     hackerAnswer: String,
+    winner: String,
+    timeLimit: Number,
+    startTime: Date,
+    endTime: Date,
+    phaseTimeLimits: Number
 });
 
 module.exports = mongoose.model("Game", GameSchema);

@@ -1,5 +1,5 @@
 // GamePage.jsx
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { UserContext } from "../App";
@@ -13,6 +13,9 @@ import DefaultSidebar from "../modules/DefaultSidebar.jsx";
 import HackerSidebar from "../modules/HackerSidebar.jsx";
 import TriviaSidebar from "../modules/TriviaSidebar.jsx";
 import ResultSidebar from "../modules/ResultSidebar.jsx";
+import GameTimer from "../modules/GameTimer.jsx";
+import EndGameScreen from "../modules/EndGameScreen.jsx";
+import IntermediateModal from "../modules/IntermediateModal.jsx";
 import { get } from "../../utilities";
 
 import "../styles/GamePage.css";
@@ -27,6 +30,14 @@ const GamePage = () => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    content: "",
+  });
+
+  const prevPhaseRef = useRef(null);
+
   useEffect(() => {
     if (!lobbyCode) {
       console.error("No lobby code provided, redirecting to home");
@@ -34,42 +45,98 @@ const GamePage = () => {
       return;
     }
 
-    // Join the lobby
     console.log("Joining lobby:", lobbyCode, "userId:", userId);
     socket.emit("joinLobby", lobbyCode, userId);
 
-    // Request initial game data
     socket.emit("getGameData", lobbyCode);
 
-    // Listen for the game data from server
     socket.on("gameData", (data) => {
       console.log("Received game data:", data);
       setGameObj(data);
       setError(null);
     });
 
-    // Optionally listen for error messages
     socket.on("errorMessage", (data) => {
       console.error("Error from server:", data.message);
       setError(data.message);
     });
 
-    // Optionally, if your server still emits this:
     socket.on("gameStarted", (data) => {
       console.log("Game started:", data);
       setGameObj(data.game);
       setError(null);
     });
-    get("/api/user", { userid: userId }).then((user) => {
-      setUser(user);
-    });
-    // Cleanup on unmount
+
+    get("/api/user", { userid: userId })
+      .then((userObj) => {
+        setUser(userObj);
+      })
+      .catch((err) => {
+        console.error("User Not Found");
+      });
+
     return () => {
       socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  }, [socket, lobbyCode, userId, navigate, ]);
+  }, [socket, lobbyCode, userId, navigate]);
+
+  // Stable onClose function using useCallback
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  // useEffect to handle phase changes
+  useEffect(() => {
+    if (!gameObj || !gameObj.phase) return;
+
+    const prevPhase = prevPhaseRef.current;
+    const currentPhase = gameObj.phase.toUpperCase();
+
+    if (prevPhase && currentPhase && prevPhase !== currentPhase) {
+      let title = "";
+      let content = "";
+
+      switch (currentPhase) {
+        case "APPOINT":
+          if (prevPhase === "VOTE") {
+            title = "Appointment Phase";
+            content = `The vote failed. The next president, ${gameObj.turnOrder[gameObj.currTurn]}, is appointing a hacker.`;
+          } else {
+            title = "Appointment Phase";
+            content = `The current president, ${gameObj.turnOrder[gameObj.currTurn]}, is appointing a hacker.`;
+          }
+          break;
+        case "VOTE":
+          title = "Voting Phase";
+          content = `${gameObj.turnOrder[gameObj.currTurn]} appointed ${gameObj.appointedHacker}. Vote to determine if they should hack the next folder.`;
+          break;
+        case "MOVE":
+          title = "Move Phase";
+          content = `The vote passed! The hacker, ${gameObj.hacker}, will choose the next folder to hack.`;
+          break;
+        case "TRIVIA":
+          title = "Trivia Phase";
+          content = `Hacker ${gameObj.hacker} must successfully hack the next folder, ${gameObj.nextLocation}.`;
+          break;
+        case "END":
+          title = "Game Over";
+          content = `The game has ended.`;
+          break;
+        default:
+          break;
+      }
+
+      if (title && content) {
+        setModalContent({ title, content });
+        setIsModalOpen(true);
+      }
+    }
+
+    // Update prevPhaseRef.current after handling
+    prevPhaseRef.current = gameObj.phase.toUpperCase();
+  }, [gameObj]);
 
   // If there's an error, display it
   if (error) {
@@ -97,48 +164,29 @@ const GamePage = () => {
 
   const userNickname = user?.nickname || "anonymous";
   const currentPresidentNickname = gameObj.turnOrder[gameObj.currTurn];
-  const isPresident = (userNickname === currentPresidentNickname);
+  const isPresident = userNickname === currentPresidentNickname;
 
-  const currentPhase = gameObj.phase;
+  const currentPhase = gameObj.phase.toUpperCase();
   const isHacker = userNickname === gameObj.hacker;
-  console.log(userNickname, currentPresidentNickname)
+  console.log(userNickname, currentPresidentNickname);
 
   let sidebar;
-  if (currentPhase === "VOTE") {
-    // Show VoteSidebar to all players
+  if (currentPhase === "END") {
+    sidebar = <EndGameScreen gameObj={gameObj} />;
+  } else if (currentPhase === "VOTE") {
     sidebar = <VoteSidebar gameObj={gameObj} />;
   } else if (currentPhase === "APPOINT") {
-    if (isPresident) {
-      // Only the president sees AppointmentSidebar
-      sidebar = <AppointmentSidebar gameObj={gameObj} />;
-    } else {
-      // Others see DefaultSidebar
-      sidebar = (
-        <DefaultSidebar
-          gameObj={gameObj}
-          currentUserNickname={userNickname}
-        />
-      );
-    }
+    sidebar = isPresident
+      ? <AppointmentSidebar gameObj={gameObj} />
+      : <DefaultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   } else if (currentPhase === "MOVE") {
-    if (isHacker) {
-      sidebar = <HackerSidebar gameObj={gameObj} />;
-    } else {
-      sidebar = (
-        <DefaultSidebar
-          gameObj={gameObj}
-          currentUserNickname={userNickname}
-        />
-      );
-    }
+    sidebar = isHacker
+      ? <HackerSidebar gameObj={gameObj} />
+      : <DefaultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   } else if (currentPhase === "TRIVIA") {
-    sidebar = (
-      <TriviaSidebar gameObj={gameObj} currentUserNickname={userNickname} />
-    );
+    sidebar = <TriviaSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   } else if (currentPhase === "RESULT") {
-    sidebar = (
-      <ResultSidebar gameObj={gameObj} currentUserNickname={userNickname} />
-    );
+    sidebar = <ResultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   } else {
     sidebar = (
       <DefaultSidebar
@@ -150,12 +198,32 @@ const GamePage = () => {
 
   return (
     <Layout currentPage="game">
-      <div className="game-page" style={{ display: "flex", flexDirection: "row", height: "100%" }}>
-        {sidebar}
+      <div className="game-page">
+        <header className="game-header">
+          {gameObj.endTime && currentPhase !== "END" && (
+            <GameTimer gameObj={gameObj} />
+          )}
+          <h1>Lobby Code: {lobbyCode}</h1>
+        </header>
 
-        <div className="maze-container" style={{ flex: 1, position: "relative" }}>
-          <MazeWrapper gameObj={gameObj} />
+        <div className="game-main">
+          <aside className="game-sidebar">
+            {sidebar}
+          </aside>
+
+          <main className="maze-container">
+            <MazeWrapper gameObj={gameObj} />
+          </main>
         </div>
+
+        {/* Intermediate Modal */}
+        <IntermediateModal
+          isOpen={isModalOpen}
+          title={modalContent.title}
+          content={modalContent.content}
+          duration={5000} // Modal will close after 5 seconds (5000ms)
+          onClose={handleCloseModal}
+        />
       </div>
     </Layout>
   );
