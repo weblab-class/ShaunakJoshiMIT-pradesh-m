@@ -17,6 +17,7 @@ import GameTimer from "../modules/GameTimer.jsx";
 import EndGameScreen from "../modules/EndGameScreen.jsx";
 import IntermediateModal from "../modules/IntermediateModal.jsx";
 import { get } from "../../utilities";
+import PhaseTimer from "../modules/PhaseTimer.jsx";
 
 import "../styles/GamePage.css";
 
@@ -35,6 +36,8 @@ const GamePage = () => {
     title: "",
     content: "",
   });
+
+  const [role, setRole] = useState(null);
 
   const prevPhaseRef = useRef(null);
 
@@ -74,6 +77,11 @@ const GamePage = () => {
       .catch((err) => {
         console.error("User Not Found");
       });
+    get("/api/game/role", { lobbyCode, user_id: userId }).then((data) => {
+      setRole(data.role);
+    }).catch(error => {
+      console.error("Error in /role:", error);
+    });
 
     return () => {
       socket.off("gameData");
@@ -202,6 +210,14 @@ const GamePage = () => {
         <header className="game-header">
           {gameObj.endTime && currentPhase !== "END" && (
             <GameTimer gameObj={gameObj} />
+          )}
+          {gameObj.phaseEndTime && currentPhase !== "END" && (
+            <PhaseTimer phaseEndTime={gameObj.phaseEndTime} />
+          )}
+          {role && (
+            <div className="user-role">
+              <strong>Your Role:</strong> {role}
+            </div>
           )}
           <h1>Lobby Code: {lobbyCode}</h1>
         </header>

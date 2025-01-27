@@ -23,7 +23,7 @@ const GameSchema = new mongoose.Schema({
     timeLimit: Number,
     startTime: Date,
     endTime: Date,
-    phaseTimeLimits: Number
+    phaseEndTime: Number
 });
 
 module.exports = mongoose.model("Game", GameSchema);
