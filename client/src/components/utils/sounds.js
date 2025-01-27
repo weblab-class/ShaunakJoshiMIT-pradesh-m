@@ -11,6 +11,6 @@ export const ding = new Howl({
 export const backgroundMusic = new Howl({
   src: [backgroundMusicFile],
   loop: true,
-  volume: 0.25,
+  volume: 0.1,
   preload: true
 });
