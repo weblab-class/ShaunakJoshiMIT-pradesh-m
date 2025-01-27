@@ -104,7 +104,7 @@ router.post("/vote", async (req, res) => {
         game.hacker = game.appointedHacker;
         game.phase = "MOVE";
       } else {
-        io.to(lobbyCode).emit("nextTurn", lobbyCode);
+        game.currTurn = (game.currTurn + 1) % game.user_ids.length;
         game.phase = "APPOINT";
       }
 
@@ -212,14 +212,7 @@ router.post("/answer", async (req, res) => {
 
     const { question, choices, correctChoice } = game.triviaQuestion;
     const io = getIo();
-    // if (answerRight) {
-    //     game.phase = "RESULT";
-    //     game.hackerAnswer = answer;
-    // } else {
-    //     game.phase = "RESULT";
-    //     game.hackerAnswer = answer;
-    // }
-    // io.to(lobbyCode).emit("nextTurn", lobbyCode);
+
 
     game.phase = "RESULT";
     game.hackerAnswer = answer;
