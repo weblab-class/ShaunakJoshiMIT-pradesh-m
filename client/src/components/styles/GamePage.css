@@ -1,65 +1,56 @@
 /* GamePage.css */
-
 .game-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full viewport height */
-    background-color: #111;
-    color: #fff;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #111;
+  color: #fff;
+}
 
-  .game-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #1a1a1a;
-    padding: 20px;
-    border-bottom: 2px solid #00ff00;
-  }
+.game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-bottom: 2px solid #00ff00;
+}
 
-  .game-header h1 {
-    color: #00ff00;
-    margin-top: 10px;
-    font-family: 'Press Start 2P', monospace;
-    text-shadow: 0 0 10px #00ff00;
-  }
+/* Remove or comment out the old width. We’ll let each sidebar's CSS handle the width. */
+.game-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
 
-  .game-main {
-    display: flex;
-    flex: 1; /* Take up remaining space */
-    overflow: hidden; /* Prevent content from overflowing */
-  }
+.game-sidebar {
+  /* Remove or override the old width: 250px; */
+  width: auto !important; /* Now each sidebar’s own width property will apply */
+  /* You can still keep these if you want scroll behavior in the sidebar */
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+}
 
-  .game-sidebar {
-    width: 400px; /* Increased from 250px */
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    flex-shrink: 0; /* Prevent the sidebar from shrinking */
-  }
-
-  .maze-container {
-    flex: 1;
-    background-color: #000;
-    position: relative;
-    overflow: hidden; /* Prevent content from overflowing */
-  }
-
-  /* styles/GamePage.css */
+.maze-container {
+  flex: 1;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+}
 
 .phase-timer {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #ff6347; /* Tomato color */
-  }
-
-  /* styles/GamePage.css */
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ff6347;
+}
 
 .user-role {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    color: #ff6347; /* Tomato color */
-  }
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #ff6347;
+}

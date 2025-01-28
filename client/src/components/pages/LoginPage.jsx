@@ -30,7 +30,7 @@ const LoginPage = () => {
 
       {/* Terminal area */}
       <div className="terminal-wrapper">
-        <Terminal />
+        {/* <Terminal /> */}
       </div>
     </div>
   );
