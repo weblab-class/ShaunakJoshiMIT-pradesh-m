@@ -9,7 +9,9 @@ const LobbySchema = new mongoose.Schema({
   in_game: Boolean,
   host_id: String,
   imposters: Array,
-  turnOrder: Array
+  turnOrder: Array,
+  timeLimit: { type: Number, default: 10 },
+  gridSize: { type: Number, default: 3 },
 });
 
 module.exports = mongoose.model("Lobby", LobbySchema);

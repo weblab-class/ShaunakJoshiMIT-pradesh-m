@@ -1,3 +1,5 @@
+//src/api.js
+
 const BASE_URL = "http://localhost:3000/api";
 
 export const setNickname = async (userId, nickname) => {
