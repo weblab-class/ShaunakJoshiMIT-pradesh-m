@@ -1,14 +1,15 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import ReactFlow, { Background, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
-import FileNode from './FileNode'; 
+import FileNode from './FileNode';
 
 export default function Maze({ gameObj }) {
   const [displayNodes, setDisplayNodes] = useState([]);
 
+  // Build adjacency to figure out which nodes are connected
   const buildAdjacencyMap = (nodes, edges) => {
     const map = {};
-    nodes.forEach((n) => { map[n.id] = []; });
+    nodes.forEach(n => { map[n.id] = []; });
     edges.forEach(({ source, target }) => {
       map[source]?.push(target);
       map[target]?.push(source);
@@ -22,14 +23,15 @@ export default function Maze({ gameObj }) {
     const adjacencyMap = buildAdjacencyMap(gameObj.nodes, gameObj.edges);
     const currentLocation = gameObj.location || '0-0';
     const isMovePhase = (gameObj.phase || '').toUpperCase() === 'MOVE';
-    
-    // Identify the goal node by the row/col
+
+    // The goal is the bottom-right node
     const goalId = `${gameObj.rows - 1}-${gameObj.cols - 1}`;
 
     const newNodes = gameObj.nodes.map((node) => {
       const isCurrent = node.id === currentLocation;
       const isGoal = node.id === goalId;
 
+      // If we're in the MOVE phase, highlight adjacent nodes
       let isAllowedMove = false;
       if (isMovePhase && !isCurrent) {
         const neighbors = adjacencyMap[currentLocation] || [];
@@ -42,8 +44,8 @@ export default function Maze({ gameObj }) {
           ...node.data,
           label: node.id,
           isCurrent,
-          isAllowedMove,
           isGoal,
+          isAllowedMove,
         },
       };
     });
@@ -51,7 +53,8 @@ export default function Maze({ gameObj }) {
     setDisplayNodes(newNodes);
   }, [gameObj]);
 
-  const onNodeClick = useCallback((event, node) => {
+  // Optionally display a question if the node has a challenge
+  const onNodeClick = useCallback((evt, node) => {
     if (!node?.data?.challenge) return;
     const { question, isImpossible } = node.data.challenge;
     alert(
@@ -75,11 +78,11 @@ export default function Maze({ gameObj }) {
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.05}
         maxZoom={1.5}
-        panOnDrag={true}
-        zoomOnScroll={true}
+        panOnDrag
+        zoomOnScroll
         zoomOnPinch={false}
         zoomOnDoubleClick={false}
-        nodesDraggable={true}
+        nodesDraggable
         nodesConnectable={false}
         edgesFocusable={false}
       >
