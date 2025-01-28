@@ -1,24 +1,26 @@
-import React from 'react';
+// NavBar.jsx
+import React from "react";
 import "../styles/NavBar.css";
 
 const NavBar = ({ currentPage }) => {
-  const pages = ['home', 'settings', 'friends', 'profile'];
-  
+  // Capitalize the current page for display
+  const pageName =
+    currentPage.charAt(0).toUpperCase() + currentPage.slice(1).toLowerCase();
+
   return (
     <div className="navbar">
-      <div className="navbar-logo">Logo goes here</div>
-      <div className="navbar-hint">
-        Hint: Type "help" in terminal for instructions on navigating our website
+      <div className="navbar-logo">RETRO LOGO</div>
+
+      {/* Display the current page in a simple, static manner */}
+      <div className="navbar-current-page">
+        Currently on: <span className="navbar-page-highlight">{pageName}</span>
       </div>
-      <div className="navbar-pages">
-        {pages.map((page) => (
-          <span
-            key={page}
-            className={`navbar-page ${currentPage === page ? 'active' : ''}`}
-          >
-            {page.charAt(0).toUpperCase() + page.slice(1)}
-          </span>
-        ))}
+
+      {/* Animated hint bar with marquee effect */}
+      <div className="navbar-hint-animated">
+        <span className="marquee">
+          HINT: TYPE "HELP" IN THE TERMINAL FOR INSTRUCTIONS
+        </span>
       </div>
     </div>
   );

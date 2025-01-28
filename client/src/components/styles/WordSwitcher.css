@@ -1,0 +1,44 @@
+/* WordSwitcher.css */
+
+/* Basic styling for the displayed word */
+.switch-word {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2rem;
+    color: #00ff00;
+    text-shadow: 0 0 2px #00ff00;
+    margin: 0.5rem 0;
+    position: relative;
+  }
+
+  /* Glitch effect triggered by .glitch class */
+  .switch-word.glitch {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
+  }
+
+  /* Glitch Keyframes */
+  @keyframes glitch {
+    0% {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+    20% {
+      transform: translate(-2px, 2px);
+      opacity: 0.8;
+    }
+    40% {
+      transform: translate(2px, -2px);
+      opacity: 0.9;
+    }
+    60% {
+      transform: translate(-1px, 1px);
+      opacity: 0.8;
+    }
+    80% {
+      transform: translate(1px, -1px);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }

@@ -1,3 +1,4 @@
+// SettingsPage.jsx
 import React, { useState, useEffect, useContext } from "react";
 import Layout from '../Layout.jsx';
 import "../styles/SettingsPage.css";
@@ -12,7 +13,9 @@ const SettingsPage = () => {
 
     const [soundVolume, setSoundVolume] = useState(() => {
         const savedSoundVolume = localStorage.getItem('soundVolume');
-        return savedSoundVolume ? Number(savedSoundVolume) : (backgroundMusic ? backgroundMusic.volume() * 100 : 50);
+        return savedSoundVolume
+          ? Number(savedSoundVolume)
+          : (backgroundMusic ? backgroundMusic.volume() * 100 : 50);
     });
 
     const [fxVolume, setFxVolume] = useState(() => {
@@ -42,14 +45,19 @@ const SettingsPage = () => {
 
     return (
         <Layout currentPage="settings">
+            {/* The outer container is now position: relative so we can place the background behind */}
             <div className="settings-container">
+
+                {/* Retro Animated Background */}
+                <div className="retro-bg"></div>
+
                 <header className="settings-header">
                     <h1>Settings</h1>
                 </header>
 
                 <section className="settings-section">
                     <h2>Audio Settings</h2>
-                    
+
                     <div className="slider-container">
                         <label htmlFor="sound-slider">Music Volume</label>
                         <input
@@ -81,6 +89,6 @@ const SettingsPage = () => {
             </div>
         </Layout>
     );
-}
+};
 
 export default SettingsPage;

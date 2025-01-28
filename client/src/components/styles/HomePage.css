@@ -1,3 +1,12 @@
+/* HomePage.css */
+
+/* (1) Retro Font Import (optional if you want Courier New only)
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+Uncomment if you want a more pixelated look. */
+
+/* Existing Styles -- Slightly reduced repetition to keep the code neat. */
+
+/* -------------- HOME PAGE CONTAINER -------------- */
 .homepage {
   position: relative;
   height: 100vh;
@@ -8,11 +17,13 @@
   align-items: center;
   justify-content: flex-start;
   padding-top: 10vh;
+  /* You can change Courier New to Press Start 2P if you prefer a pixel font */
   font-family: 'Courier New', Courier, monospace;
   color: #00ff00;
   overflow: hidden;
 }
 
+/* -------------- MAIN HOMEPAGE CONTENT -------------- */
 .homepage-content {
   position: relative;
   z-index: 2;
@@ -39,6 +50,7 @@
   text-shadow: 0 0 5px #00ff00;
 }
 
+/* Flicker & Shake (unchanged) */
 @keyframes flickerStatic {
   0% { opacity: 1; }
   20% { opacity: 0.95; }
@@ -49,13 +61,70 @@
 }
 
 @keyframes shake {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(1px, -1px); }
-  50% { transform: translate(-1px, 1px); }
-  75% { transform: translate(1px, 1px); }
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(1px, -1px); }
+  50%  { transform: translate(-1px, 1px); }
+  75%  { transform: translate(1px, 1px); }
   100% { transform: translate(0, 0); }
 }
 
+/* -------------- NEW: GAME INFO SECTION -------------- */
+.game-info {
+  position: relative;
+  z-index: 2; /* Stays above the background animation */
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  background-color: rgba(13, 13, 13, 0.75);
+  border: 2px dashed #00ff00;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+/* ASCII mole styling */
+.ascii-mole {
+  font-family: 'Courier New', monospace; /* Ensures the alignment is correct */
+  color: #00ff00;
+  font-size: 1rem;
+  margin: 0; /* Remove default pre margin */
+}
+
+/* Info text */
+.game-desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.game-desc-title {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+/* Blinking text effect for "INFILTRATION IN PROGRESS..." */
+.blinking-text {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #00ff00;
+  animation: blink 1s step-start infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.game-desc-body {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* -------------- BACKGROUND ANIMATION (unchanged) -------------- */
 .animation-bg {
   position: absolute;
   top: 0;
@@ -76,5 +145,29 @@
   }
   to {
     background-position: 0 50px;
+  }
+}
+
+/* -------------- MEDIA QUERIES (OPTIONAL) -------------- */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  .tagline {
+    font-size: 1rem;
+  }
+  .game-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ascii-mole {
+    font-size: 0.9rem;
+  }
+  .game-desc-title {
+    font-size: 1rem;
+  }
+  .blinking-text, .game-desc-body {
+    font-size: 0.8rem;
   }
 }

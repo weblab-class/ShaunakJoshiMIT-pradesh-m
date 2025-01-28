@@ -1,81 +1,117 @@
+/* LoginPage.css */
+
+/* Import retro pixel font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Main container with flex properties for centering */
 .login-container {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    background: linear-gradient(135deg, #000, #0a0a0a);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 10vh;
-    font-family: 'Courier New', Courier, monospace;
-    color: #00ff00;
-    overflow: hidden;
-    z-index: 0;
-  }
-  
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #000, #0a0a0a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center vertically */
+  font-family: 'Press Start 2P', monospace;
+  color: #00ff00;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* The MatrixRain canvas is absolutely positioned, so it's behind everything */
+.login-box {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(13, 13, 13, 0.85);
+  padding: 2rem 3rem;
+  border: 2px solid #00ff00;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 255, 0, 0.5);
+  text-align: center;
+  width: 350px;
+  /* Removed margin-top and margin-bottom for proper centering */
+  margin: 0;
+
+  /* Flexbox for inner content alignment */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* Space between elements */
+}
+
+/* Adjusted title size for better fit */
+.login-title {
+  font-size: 2rem; /* Reduced from 3rem */
+  margin: 0;
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  animation: flickerStatic 3s infinite;
+}
+
+/* Blue word styling for WordSwitcher */
+.blue-word {
+  color: #0000FF;
+}
+
+/* Login button styling */
+.login-button {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-family: 'Press Start 2P', monospace;
+  color: #00ff00;
+  background-color: transparent;
+  border: 2px solid #00ff00;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.login-button:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Terminal area below the login box */
+.terminal-wrapper {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.terminal {
+  background: rgba(0, 0, 0, 0.9) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  color: #00ff00;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Flicker animation for the .login-title */
+@keyframes flickerStatic {
+  0% { opacity: 1; }
+  20% { opacity: 0.95; }
+  40% { opacity: 1; }
+  60% { opacity: 0.97; }
+  80% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 600px) {
   .login-box {
-    position: relative;
-    z-index: 2;
-    background-color: rgba(13, 13, 13, 0.85);
-    padding: 2rem 4rem;
-    border: 2px solid #00ff00;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-    text-align: center;
-    max-width: 600px;
-    margin-bottom: 2rem;
+    width: 90%; /* Adjust width for smaller screens */
+    padding: 1.5rem 2rem;
   }
-  
+
   .login-title {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-    animation: flickerStatic 3s infinite;
+    font-size: 1.5rem;
   }
-  
-  @keyframes flickerStatic {
-    0% { opacity: 1; }
-    20% { opacity: 0.95; }
-    40% { opacity: 1; }
-    60% { opacity: 0.97; }
-    80% { opacity: 1; }
-    100% { opacity: 1; }
-  }
-  
-  .blue-word {
-    color: #0000FF;
-  }
-  
+
   .login-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.25rem;
-    color: #00ff00;
-    background-color: transparent;
-    border: 2px solid #00ff00;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 1rem;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
   }
-  
-  .login-button:hover {
-    background-color: rgba(0, 255, 0, 0.1);
-  }
-  
-  .terminal-wrapper {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 1rem;
-    margin-top: 1rem;
-    position: relative;
-    z-index: 2;
-  }
-  
-  .terminal {
-    background: rgba(0, 0, 0, 0.9) !important;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-    color: #00ff00;
-    width: 100%;
-  }
-  
+}

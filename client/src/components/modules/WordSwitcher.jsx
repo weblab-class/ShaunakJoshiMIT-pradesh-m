@@ -1,28 +1,35 @@
-import react, { useState, useEffect, useRef } from "react";
+// WordSwitcher.jsx
+import React, { useState, useEffect, useRef } from "react";
+import "../styles/WordSwitcher.css"; // New CSS file for glitch effect (see below)
 
+const WordSwitcher = ({ words = [] }) => {
+  const [currWord, setCurrWord] = useState(words[0] || "");
+  const [glitch, setGlitch] = useState(false);
+  const indexRef = useRef(0);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Trigger the glitch animation
+      setGlitch(true);
 
-const WordSwitcher = (props) => {
-    let words = props.words
-    console.log(words)
-    const [currWord, switchWord] = useState(words[0]);
-    let index = useRef(0);
-    useEffect(() => {
+      // Switch the word
+      setCurrWord(words[indexRef.current]);
+      indexRef.current = (indexRef.current + 1) % words.length;
 
-        let interval = setInterval(() => {
-            switchWord(words[index.current]);
-            index.current++;
+      // Remove glitch class after 300ms (length of glitch animation)
+      setTimeout(() => {
+        setGlitch(false);
+      }, 300);
+    }, 1600);
 
-            if (index.current >= words.length) {
-                index.current = 0;
-            }
-        }, 1600);
+    return () => clearInterval(interval);
+  }, [words]);
 
-        return () => clearInterval(interval);
-    })
+  return (
+    <h1 className={`switch-word ${glitch ? "glitch" : ""}`}>
+      {currWord}
+    </h1>
+  );
+};
 
-    return (
-        <h1>{currWord}</h1>
-    )
-}
 export default WordSwitcher;

@@ -1,3 +1,4 @@
+// LoginPage.jsx
 import React from "react";
 import LoginLogoutButton from "../modules/LoginLogoutButton";
 import WordSwitcher from "../modules/WordSwitcher";
@@ -8,18 +9,26 @@ import "../styles/LoginPage.css";
 const LoginPage = () => {
   return (
     <div className="login-container">
+      {/* MatrixRain background */}
       <MatrixRain />
-      
+
+      {/* Centered retro-styled login box */}
       <div className="login-box">
-        <h1 className="login-title">Log in</h1>
+        <h1 className="login-title">ACCESS PANEL</h1>
+
+        {/* Glitching WordSwitcher */}
         <WordSwitcher
           words={[
-            "Hacker",
-            <span key="agent" className="blue-word">Agent?</span>
+            "HACKER",
+            <span key="agent" className="blue-word">AGENT?</span>
           ]}
         />
+
+        {/* Login/Logout Button */}
         <LoginLogoutButton className="login-button" />
       </div>
+
+      {/* Terminal area */}
       <div className="terminal-wrapper">
         <Terminal />
       </div>

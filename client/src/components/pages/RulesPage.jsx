@@ -5,7 +5,7 @@ import "../styles/RulesPage.css";
 
 const RulesPage = () => {
   return (
-    <Layout>
+    <Layout currentPage="rules">
     <div className="Rules-Page">
       <header className="Rules-Header">
         <h1>Hacker vs FBI: Game Rules</h1>
