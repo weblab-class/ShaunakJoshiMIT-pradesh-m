@@ -3,15 +3,22 @@ import { Handle } from 'reactflow';
 import FolderIcon from '../../assets/foldericon.png';
 
 export default function FileNode({ data }) {
-  const { label, isCurrent, isAllowedMove } = data || {};
+  const { label, isCurrent, isAllowedMove, isGoal } = data || {};
 
-  // Decide on a border color or style based on flags
+  // Decide on a border style based on flags, with a priority order
   let borderStyle = 'none';
+
+  // Highlight the goal (bottom-right) in blue by default
+  if (isGoal) {
+    borderStyle = '2px solid blue';
+  }
+
+  // If it's the current location, highlight in red (takes priority over goal)
   if (isCurrent) {
-    // Red border if this is the current node
     borderStyle = '2px solid red';
-  } else if (isAllowedMove) {
-    // Green border if user can move to this node (in MOVE phase and adjacent)
+  } 
+  // If it's an allowed move, highlight in green (if not current)
+  else if (isAllowedMove) {
     borderStyle = '2px solid green';
   }
 
