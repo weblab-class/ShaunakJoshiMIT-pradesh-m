@@ -1,3 +1,5 @@
+/* LOBBYPAGE.CSS (original + minimal changes) */
+
 .lobby-page {
   height: 100vh;
   width: 100vw;
@@ -6,6 +8,8 @@
   align-items: center;
   justify-content: center;
   padding-top: 5vh;
+  /* NEW: prevent scrolling entirely */
+  overflow: hidden;
 }
 
 .lobby-container {
@@ -19,7 +23,10 @@
   max-width: 800px;
   min-height: 300px;
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-  margin-top: -55vh;
+
+  /* CHANGED: adjust margin so it's lower, not covering navbar as much */
+  /* was: margin-top: -55vh; */
+  margin-top: -45vh;
 }
 
 .lobby-title {
@@ -88,4 +95,31 @@
   padding: 2px 6px;
   border-radius: 4px;
   margin-left: 10px;
+}
+
+/* If you have .lobby-settings, keep it unchanged from before */
+.lobby-settings {
+  margin-top: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1.5rem;
+  border: 1px dashed #00ff00;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.lobby-settings h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.lobby-settings p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.lobby-settings p span {
+  color: #ff5722; /* bright orange to highlight values */
+  font-weight: bold;
 }

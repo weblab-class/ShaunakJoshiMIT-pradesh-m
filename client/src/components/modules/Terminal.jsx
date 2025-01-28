@@ -47,9 +47,8 @@ const Terminal = () => {
     const tokens = tokenizeCommand(command);
     const primary = tokens[0]?.toLowerCase();
 
-
     const pathParts = window.location.pathname.split("/");
-    const lobbyCode = pathParts[2];
+    const lobbyCode = pathParts[2]; // e.g. /lobby/XXXX => 'XXXX'
 
     switch (primary) {
       case "cd":
@@ -113,14 +112,11 @@ const Terminal = () => {
         if (tokens.length > 2) {
           return "Invalid appoint command. Usage: appoint <nickname>";
         }
-
         const appointee = tokens[1];
-
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
         try {
-          console.log("Appointing", appointee, "in lobby", lobbyCode);
           const response = await post("/api/game/appoint", {
             user_id: userId,
             lobbyCode: lobbyCode,
@@ -130,17 +126,16 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to appoint: ${error.message}`;
         }
+
       case "move":
         if (tokens.length !== 2) {
           return "Invalid move command. Usage: move <direction>";
         }
         const targetNode = tokens[1].toLowerCase();
-
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
         try {
-          console.log(`Moving to ${targetNode} in lobby ${lobbyCode}`);
           const response = await post("/api/game/move", {
             user_id: userId,
             lobbyCode: lobbyCode,
@@ -155,29 +150,24 @@ const Terminal = () => {
         if (tokens.length !== 2) {
           return "Invalid vote command. Usage: vote <yes|no>";
         }
-
         const decision = tokens[1].toLowerCase();
         if (!["yes", "no"].includes(decision)) {
           return "Invalid vote. Please use 'yes' or 'no'.";
         }
-
-        const voteLobbyCode = pathParts[2];
-        if (!voteLobbyCode) {
+        if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
-
         try {
-          console.log(`Casting vote: ${decision} for lobby ${voteLobbyCode}`);
           const response = await post("/api/game/vote", {
             user_id: userId,
-            lobbyCode: voteLobbyCode,
-            decision: decision
-        });
-        console.log("Vote response:", response);
-        return `Your vote has been cast: ${decision}.`;
-      } catch (error) {
-        return `Failed to cast vote: ${error.message}`;
-      }
+            lobbyCode,
+            decision,
+          });
+          return `Your vote has been cast: ${decision}.`;
+        } catch (error) {
+          return `Failed to cast vote: ${error.message}`;
+        }
+
       case "answer":
         if (tokens.length !== 2) {
           return "Invalid answer command. Usage: answer <answer>";
@@ -187,11 +177,10 @@ const Terminal = () => {
           return "You are not currently in a lobby.";
         }
         try {
-          console.log(`Submitting answer: ${answer} for lobby ${lobbyCode}`);
           const response = await post("/api/game/answer", {
             user_id: userId,
-            lobbyCode: lobbyCode,
-            answer: answer,
+            lobbyCode,
+            answer,
           });
           return `Your answer has been submitted: ${answer}.`;
         } catch (error) {
@@ -211,6 +200,7 @@ const Terminal = () => {
         } catch (error) {
           return `Failed to get your role: ${error.message}`;
         }
+
       case "next":
         if (tokens.length !== 1) {
           return "Invalid next command. Usage: next";
@@ -219,7 +209,10 @@ const Terminal = () => {
           return "You are not currently in a lobby.";
         }
         try {
-          const response = await post("/api/game/result", { lobbyCode, user_id: userId });
+          const response = await post("/api/game/result", {
+            lobbyCode,
+            user_id: userId,
+          });
           return `The game result is: ${response.result}.`;
         } catch (error) {
           return `Failed to get game result: ${error.message}`;
@@ -227,15 +220,15 @@ const Terminal = () => {
 
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
-          const lobbyCode = tokens[2].toUpperCase();
+          const joinCode = tokens[2].toUpperCase();
           const nickname = getNickname();
           if (!nickname)
             return "Please set your nickname first with: nickname <your nickname>";
           try {
-            const lobby = await joinLobby(lobbyCode, nickname);
-            navigate(`/lobby/${lobbyCode}`);
+            const lobby = await joinLobby(joinCode, nickname);
+            navigate(`/lobby/${joinCode}`);
             playDing();
-            return `Joined lobby: ${lobbyCode}. Navigating to the lobby.`;
+            return `Joined lobby: ${joinCode}. Navigating to the lobby.`;
           } catch (error) {
             return `Failed to join lobby: ${error.message}`;
           }
@@ -244,13 +237,13 @@ const Terminal = () => {
 
       case "leave":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
-          const lobbyCode = tokens[2].toUpperCase();
+          const leaveCode = tokens[2].toUpperCase();
           const nickname = getNickname() || defaultUsername;
           try {
-            const response = await leaveLobby(lobbyCode, nickname);
+            const response = await leaveLobby(leaveCode, nickname);
             navigate("/home");
             playDing();
-            return `Successfully left the lobby: ${lobbyCode}. ${response.message}`;
+            return `Successfully left the lobby: ${leaveCode}. ${response.message}`;
           } catch (error) {
             return `Failed to leave lobby: ${error.message}`;
           }
@@ -267,20 +260,16 @@ const Terminal = () => {
         ) {
           return "Nickname must be between 4 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
-
         try {
           const response = await post("/api/user/setNickname", {
             userId: userId,
             nickname: newNick,
           });
-
           setUser((prevUser) => ({
             ...prevUser,
             nickname: newNick,
           }));
-
           playDing();
-
           return `Nickname set to: ${response.nickname}`;
         } catch (error) {
           console.error("Error setting nickname:", error);
@@ -312,7 +301,7 @@ const Terminal = () => {
             }
             try {
               const reqNickName = tokens[2];
-              const result = await post("/api/requests/sendRequest/accept", {
+              await post("/api/requests/sendRequest/accept", {
                 from: reqNickName,
                 to: userId,
               });
@@ -342,17 +331,61 @@ const Terminal = () => {
             return "Invalid friend subcommand. Try: friend request <username>";
         }
 
-      case "answer":
-        if (!tokens[1]) {
-          return "Usage: answer <option>  (e.g., answer a)";
+      // ---------------------------------------------------
+      // NEW: "time" <minutes> => sets timeLimit in the lobby
+      // ---------------------------------------------------
+      case "time": {
+        // usage: time <minutes>
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
         }
-        if (window.triviaCheckAnswer) {
-          window.triviaCheckAnswer(tokens[1]);
+        if (tokens.length !== 2) {
+          return "Usage: time <minutes>";
+        }
+        const newTime = Number(tokens[1]);
+        if (isNaN(newTime) || newTime < 1 || newTime > 60) {
+          return "Invalid time limit. Must be an integer between 1 and 60.";
+        }
+        try {
+          const response = await post("/api/lobby/updateSettings", {
+            lobbyCode,
+            userNickname: getNickname(),
+            timeLimit: newTime,
+          });
           playDing();
-          return `Answered ${tokens[1]}`;
-        } else {
-          return "No trivia question is active.";
+          return `Time limit updated to ${newTime} minute(s).`;
+        } catch (error) {
+          return `Failed to set time limit: ${error.message}`;
         }
+      }
+
+      // ---------------------------------------------------
+      // NEW: "grid" <3|9> => sets gridSize in the lobby
+      // ---------------------------------------------------
+      case "grid": {
+        // usage: grid <3|9>
+        if (!lobbyCode) {
+          return "You are not currently in a lobby.";
+        }
+        if (tokens.length !== 2) {
+          return "Usage: grid <3|9>";
+        }
+        const g = Number(tokens[1]);
+        if (![3, 9].includes(g)) {
+          return "Grid size must be either 3 or 9.";
+        }
+        try {
+          const response = await post("/api/lobby/updateSettings", {
+            lobbyCode,
+            userNickname: getNickname(),
+            gridSize: g,
+          });
+          playDing();
+          return `Grid size updated to ${g}x${g}.`;
+        } catch (error) {
+          return `Failed to set grid size: ${error.message}`;
+        }
+      }
 
       case "logout":
         handleLogout();
@@ -360,22 +393,31 @@ const Terminal = () => {
         return "Logging out";
 
       case "help":
-        return "\nAvailable commands:\n\n" +
-               "  clear                   - Clears the terminal\n" +
-               "  cd home                 - Navigate to home page\n" +
-               "  cd profile              - Navigate to profile page\n" +
-               "  cd friends              - Navigate to friends page\n" +
-               "  cd settings             - Navigate to settings page\n" +
-               "  nickname <your name>    - Set your nickname (4-16 characters, no spaces)\n" +
-               "  create lobby            - Create a new lobby (requires nickname set)\n" +
-               "  join lobby <lobbyCode>  - Join an existing lobby (requires nickname set)\n" +
-               "  leave lobby <lobbyCode> - Leave the specified lobby\n" +
-               "  answer <option>         - Answer the current trivia question (e.g., answer a)\n" +
-               "  friend request <username> - Send a friend request\n" +
-               "  friend accept <username>  - Accept a friend request\n" +
-               "  friend reject <username>  - Reject a friend request\n" +
-               "  logout                  - Log out\n" +
-               "  help                    - Display commands\n";
+        return (
+          "\nAvailable commands:\n\n" +
+          "  clear                   - Clears the terminal\n" +
+          "  cd home                 - Navigate to home page\n" +
+          "  cd profile              - Navigate to profile page\n" +
+          "  cd friends              - Navigate to friends page\n" +
+          "  cd settings             - Navigate to settings page\n" +
+          "  nickname <your name>    - Set your nickname (4-16 chars, no spaces)\n" +
+          "  create lobby            - Create a new lobby (requires nickname)\n" +
+          "  join lobby <code>       - Join an existing lobby\n" +
+          "  leave lobby <code>      - Leave the specified lobby\n" +
+          "  friend request <user>   - Send a friend request\n" +
+          "  friend accept <user>    - Accept a friend request\n" +
+          "  friend reject <user>    - Reject a friend request\n" +
+          "  appoint <nickname>      - Appoint a hacker (must be president)\n" +
+          "  vote <yes|no>           - Vote on current appointment\n" +
+          "  move <nodeId>           - Move in the game if you are hacker\n" +
+          "  answer <answer>         - Submit a trivia answer\n" +
+          "  role                    - Show your current role\n" +
+          "  next                    - Finalize the result (hacker only)\n" +
+          "  time <minutes>          - Set the lobby time limit (1-60)\n" +
+          "  grid <3|9>              - Set the lobby grid size (3 or 9)\n" +
+          "  logout                  - Log out\n" +
+          "  help                    - Display commands\n"
+        );
 
       case "clear":
         clearHistory();

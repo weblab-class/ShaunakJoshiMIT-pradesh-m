@@ -29,7 +29,6 @@ const LobbyPage = () => {
     socket.on("gameStarted", ({lobbyCode, game}) => {
       console.log(lobbyCode)
       navigate(`/game/${lobbyCode}`);
-
     })
     return () => {
       socket.emit("leaveLobby", lobbyCode, nickname)
@@ -66,6 +65,15 @@ const LobbyPage = () => {
               </ul>
             )}
           </div>
+
+          {/* NEW: Show timeLimit and gridSize if lobby is loaded */}
+          {lobby && (
+            <div className="lobby-settings">
+              <h3>Current Lobby Settings</h3>
+              <p>Time Limit: <span>{lobby.timeLimit || 10}</span> minute(s)</p>
+              <p>Grid Size: <span>{lobby.gridSize || 3} x {lobby.gridSize || 3}</span></p>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
