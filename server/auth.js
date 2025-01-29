@@ -54,6 +54,7 @@ function login(req, res) {
     })
     .catch((err) => {
       console.log(`Failed to log in: ${err}`);
+      console.log('req.session.user', req.session.user)
       res.status(401).send({ err });
     });
 }

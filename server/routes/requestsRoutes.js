@@ -71,7 +71,7 @@ router.post("/sendRequest", async (req, res) => {
 
 
 
-  router.post("/sendRequest/accept", auth.ensureLoggedIn, async (req, res) => {
+  router.post("/sendRequest/accept", async (req, res) => {
     const { from, to } = req.body;
 
     const fromUserObj = await User.findOne({nickname: from})
@@ -117,7 +117,7 @@ router.post("/sendRequest", async (req, res) => {
 
   });
 
-  router.post("/sendRequest/reject", auth.ensureLoggedIn, async (req, res) => {
+  router.post("/sendRequest/reject", async (req, res) => {
     const { from, to } = req.body;
     const fromUserObj = await User.findOne({nickname: from})
     const toUserObj = await User.findById(to)

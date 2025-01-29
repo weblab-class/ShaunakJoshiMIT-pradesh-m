@@ -53,6 +53,10 @@ const Terminal = () => {
     switch (primary) {
       case "cd":
         switch (tokens[1]?.toLowerCase()) {
+          case "login":
+            navigate("/");
+            playDing();
+            return "Navigating to the login page";
           case "profile":
             navigate("/profile");
             playDing();
