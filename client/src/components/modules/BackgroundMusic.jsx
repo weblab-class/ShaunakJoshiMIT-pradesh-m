@@ -12,7 +12,7 @@ const BackgroundMusic = () => {
     } else {
       playBackgroundMusic();
     }
-    setIsPlaying(!isPlaying);
+    setIsPlaying(!isPlaying); 
   };
 
   return (

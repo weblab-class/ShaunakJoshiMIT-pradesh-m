@@ -1,4 +1,5 @@
 // TriviaSidebar.jsx
+
 import React from "react";
 import PropTypes from "prop-types";
 import "../styles/TriviaSidebar.css";
@@ -10,7 +11,6 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
   const nextLocation = gameObj.nextLocation;
   const triviaQuestion = gameObj.triviaQuestion;
 
-  // Handle case where triviaQuestion might not be available
   if (!triviaQuestion) {
     return (
       <div className="trivia-sidebar">
@@ -20,32 +20,29 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
     );
   }
 
-  // Determine the header based on whether the user is the hacker
+  // The heading changes if you are the hacker vs. a bystander
   let header;
-
   if (currentUserNickname === hacker) {
     header = (
       <h3>
-        Answer the following question correctly to move to{" "}
-        <strong>{nextLocation}</strong>
+        Answer correctly to hack <strong>{nextLocation}</strong>!
       </h3>
     );
   } else {
     header = (
       <div>
         <h3>
-          Hacker <strong>{hacker}</strong> proposes to target{" "}
+          Hacker <strong>{hacker}</strong> is targeting{" "}
           <strong>{nextLocation}</strong>
         </h3>
         <h3>
-          {hacker} must answer the following question correctly to move to{" "}
-          <strong>{nextLocation}</strong>
+          {hacker} must answer correctly to hack <strong>{nextLocation}</strong>
         </h3>
       </div>
     );
   }
 
-  // Map through the trivia choices to create table rows
+  // Build the answer table rows
   const answerChoices = triviaQuestion.choices.map((choice, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
@@ -70,21 +67,18 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
               <th>Choice</th>
             </tr>
           </thead>
-          <tbody>
-            {answerChoices}
-          </tbody>
+          <tbody>{answerChoices}</tbody>
         </table>
       </section>
 
       <section className="instructions">
         {currentUserNickname === hacker ? (
           <h3>
-            Answer the question using the terminal:{" "}
-            <code>answer &lt;option-index&gt;</code>
+            Use the terminal: <code>answer &lt;option-number&gt;</code>
           </h3>
         ) : (
           <h3>
-            Waiting for <strong>{hacker}</strong> to answer the question.
+            Waiting for <strong>{hacker}</strong> to answer...
           </h3>
         )}
       </section>
