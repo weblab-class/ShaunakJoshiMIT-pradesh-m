@@ -2,10 +2,10 @@
 
 import React, {useContext, useState, useEffect} from "react";
 import "../styles/VoteSidebar.css";
-import voteIcon from '../../assets/votingicon.png';
-import clockIcon from "../../assets/clock.png";
-import check from "../../assets/check.png";
-import noIcon from "../../assets/noIcon.png";
+import voteIcon from '../assets/images/votingicon.png';
+import clockIcon from "../assets/images/clock.png";
+import check from "../assets/images/check.png";
+import noIcon from "../assets/images/noIcon.png";
 import { SocketContext } from "./SocketContext.jsx";
 
 const VoteSidebar = ({ gameObj }) => {
