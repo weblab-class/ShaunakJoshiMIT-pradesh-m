@@ -12,6 +12,7 @@
     color: #66cc66;
     font-family: 'Press Start 2P', monospace;
     display: flex;
+    opacity : 1;
     flex-direction: column;
   }
   
