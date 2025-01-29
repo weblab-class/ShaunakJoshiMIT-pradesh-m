@@ -1,4 +1,4 @@
-/* LOBBYPAGE.CSS (original + minimal changes) */
+/* LobbyPage.css */
 
 .lobby-page {
   height: 100vh;
@@ -8,7 +8,6 @@
   align-items: center;
   justify-content: center;
   padding-top: 5vh;
-  /* NEW: prevent scrolling entirely */
   overflow: hidden;
 }
 
@@ -16,16 +15,13 @@
   background-color: rgba(0, 0, 0, 0.85);
   color: #00ff00;
   font-family: 'Courier New', Courier, monospace;
-  padding: 3rem 5rem; 
+  padding: 3rem 5rem;
   border: 2px solid #00ff00;
   border-radius: 10px;
   width: 90%;
   max-width: 800px;
   min-height: 300px;
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-
-  /* CHANGED: adjust margin so it's lower, not covering navbar as much */
-  /* was: margin-top: -55vh; */
   margin-top: -45vh;
 }
 
@@ -97,7 +93,6 @@
   margin-left: 10px;
 }
 
-/* If you have .lobby-settings, keep it unchanged from before */
 .lobby-settings {
   margin-top: 1.5rem;
   background-color: rgba(0, 0, 0, 0.7);
@@ -120,6 +115,37 @@
 }
 
 .lobby-settings p span {
-  color: #ff5722; /* bright orange to highlight values */
+  color: #ff5722;
   font-weight: bold;
+}
+
+.command-hints {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 10px #00ff00;
+    z-index: 5;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.command-hints h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.command-hints ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.command-hints li {
+    margin: 0.25rem 0;
 }

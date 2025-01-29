@@ -28,7 +28,7 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
-    cursor: url('../assets/images/assets/pixel-cursor.png'), auto; /* Custom cursor */
+    cursor: url('../assets/images/assets/pixel-cursor.png'), auto;
 }
 
 .profile-header {
@@ -52,7 +52,7 @@ body {
     width: 100%;
     max-width: 500px;
     animation: fadeIn 2s ease-in-out;
-    z-index: 4; /* Above all animated elements */
+    z-index: 4;
 }
 
 .user-info-section h2 {
@@ -81,7 +81,6 @@ body {
     margin-right: 1rem;
 }
 
-/* Glowing Neon Text Animation */
 @keyframes neonGlow {
     from {
         text-shadow:
@@ -101,7 +100,6 @@ body {
     }
 }
 
-/* Glitch Effect for Profile Header */
 @keyframes glitch {
     0% {
         clip: rect(42px, 9999px, 44px, 0);
@@ -123,14 +121,12 @@ body {
         clip: rect(10px, 9999px, 15px, 0);
         transform: skew(0.5deg);
     }
-    /* Repeat or add more keyframes for a stronger glitch effect */
     100% {
         clip: rect(42px, 9999px, 44px, 0);
         transform: skew(0.5deg);
     }
 }
 
-/* Binary Rain Animation */
 .binary-rain {
     position: absolute;
     top: 0;
@@ -138,15 +134,15 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    pointer-events: none; /* Allows clicks to pass through */
-    z-index: 0; /* Positioned behind all other elements */
+    pointer-events: none;
+    z-index: 0;
     background: transparent;
 }
 
 .binary-rain .binary-stream {
     position: absolute;
     top: -100%;
-    width: 2%; /* Adjust width for density */
+    width: 2%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -157,13 +153,12 @@ body {
 .binary-rain .binary-stream span {
     display: block;
     color: #00ff00;
-    font-family: 'Press Start 2P', monospace; /* Monospace font for binary */
+    font-family: 'Press Start 2P', monospace;
     font-size: 1rem;
     line-height: 1.5rem;
     animation: blink 1.5s step-start infinite;
 }
 
-/* Positioning multiple streams with varying delays */
 .binary-rain .binary-stream:nth-child(1) {
     left: 10%;
     animation-delay: 0s;
@@ -214,7 +209,6 @@ body {
     animation-delay: 27s;
 }
 
-/* Binary Rain Movement */
 @keyframes binaryRain {
     0% {
         transform: translateY(-100%);
@@ -224,7 +218,6 @@ body {
     }
 }
 
-/* Blinking Animation for Binary Digits */
 @keyframes blink {
     0%, 50%, 100% {
         opacity: 1;
@@ -234,7 +227,6 @@ body {
     }
 }
 
-/* Scan Lines Overlay */
 .scan-lines {
     position: absolute;
     top: 0;
@@ -243,13 +235,13 @@ body {
     height: 100%;
     background: repeating-linear-gradient(
         to bottom,
-        rgba(0, 255, 0, 0.1),
-        rgba(0, 255, 0, 0.1) 2px,
-        rgba(0, 255, 0, 0.2) 2px,
-        rgba(0, 255, 0, 0.2) 4px
+        rgba(0,255,0,0.1),
+        rgba(0,255,0,0.1) 2px,
+        rgba(0,255,0,0.2) 2px,
+        rgba(0,255,0,0.2) 4px
     );
-    pointer-events: none; /* Allows clicks to pass through */
-    z-index: 2; /* Positioned above binary rain but below content */
+    pointer-events: none;
+    z-index: 2;
     animation: scan 5s linear infinite;
     opacity: 0.3;
 }
@@ -263,7 +255,6 @@ body {
     }
 }
 
-/* Binary Rain Overlay (Optional for Depth) */
 .binary-overlay {
     position: absolute;
     top: 0;
@@ -272,7 +263,7 @@ body {
     height: 100%;
     background: rgba(0, 255, 0, 0.05);
     pointer-events: none;
-    z-index: 1; /* Positioned above binary rain but below scan lines and content */
+    z-index: 1;
     animation: binaryOverlay 15s ease-in-out infinite;
 }
 
@@ -285,31 +276,25 @@ body {
     }
 }
 
-/* Neon Glow and Glitch Effects are retained */
-
-/* Loading Indicator */
 .loading {
     font-size: 1.5rem;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
     animation: pulse 2s infinite;
-    z-index: 4; /* Above all animated elements */
+    z-index: 4;
 }
 
-/* Pulse Animation for Loading */
 @keyframes pulse {
     0% { opacity: 0.7; }
     50% { opacity: 1; }
     100% { opacity: 0.7; }
 }
 
-/* Fade In Animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Media Queries for Responsiveness */
 @media (max-width: 600px) {
     .profile-header h1 {
         font-size: 2.5rem;
@@ -335,6 +320,35 @@ body {
     .binary-rain .binary-stream {
         animation-duration: 20s;
     }
+}
 
-    /* Adjust number of streams for smaller screens if necessary */
+.command-hints {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 10px #00ff00;
+    z-index: 5;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.command-hints h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.command-hints ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.command-hints li {
+    margin: 0.25rem 0;
 }

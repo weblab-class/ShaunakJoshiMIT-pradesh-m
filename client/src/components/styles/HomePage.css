@@ -1,12 +1,22 @@
 /* HomePage.css */
 
-/* (1) Retro Font Import (optional if you want Courier New only)
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-Uncomment if you want a more pixelated look. */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap');
 
-/* Existing Styles -- Slightly reduced repetition to keep the code neat. */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1a1a1a, #2e2e2e);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    font-family: 'Orbitron', sans-serif;
+}
 
-/* -------------- HOME PAGE CONTAINER -------------- */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .homepage {
   position: relative;
   height: 100vh;
@@ -17,13 +27,11 @@ Uncomment if you want a more pixelated look. */
   align-items: center;
   justify-content: flex-start;
   padding-top: 10vh;
-  /* You can change Courier New to Press Start 2P if you prefer a pixel font */
   font-family: 'Courier New', Courier, monospace;
   color: #00ff00;
   overflow: hidden;
 }
 
-/* -------------- MAIN HOMEPAGE CONTENT -------------- */
 .homepage-content {
   position: relative;
   z-index: 2;
@@ -50,7 +58,6 @@ Uncomment if you want a more pixelated look. */
   text-shadow: 0 0 5px #00ff00;
 }
 
-/* Flicker & Shake (unchanged) */
 @keyframes flickerStatic {
   0% { opacity: 1; }
   20% { opacity: 0.95; }
@@ -68,10 +75,9 @@ Uncomment if you want a more pixelated look. */
   100% { transform: translate(0, 0); }
 }
 
-/* -------------- NEW: GAME INFO SECTION -------------- */
 .game-info {
   position: relative;
-  z-index: 2; /* Stays above the background animation */
+  z-index: 2;
   display: flex;
   align-items: flex-start;
   gap: 2rem;
@@ -84,15 +90,13 @@ Uncomment if you want a more pixelated look. */
   margin-bottom: 2rem;
 }
 
-/* ASCII mole styling */
 .ascii-mole {
-  font-family: 'Courier New', monospace; /* Ensures the alignment is correct */
+  font-family: 'Courier New', monospace;
   color: #00ff00;
   font-size: 1rem;
-  margin: 0; /* Remove default pre margin */
+  margin: 0;
 }
 
-/* Info text */
 .game-desc {
   display: flex;
   flex-direction: column;
@@ -106,7 +110,6 @@ Uncomment if you want a more pixelated look. */
   text-shadow: 0 0 5px #00ff00;
 }
 
-/* Blinking text effect for "INFILTRATION IN PROGRESS..." */
 .blinking-text {
   font-size: 1rem;
   font-weight: bold;
@@ -124,7 +127,6 @@ Uncomment if you want a more pixelated look. */
   line-height: 1.4;
 }
 
-/* -------------- BACKGROUND ANIMATION (unchanged) -------------- */
 .animation-bg {
   position: absolute;
   top: 0;
@@ -148,26 +150,62 @@ Uncomment if you want a more pixelated look. */
   }
 }
 
-/* -------------- MEDIA QUERIES (OPTIONAL) -------------- */
-@media (max-width: 768px) {
-  .title {
-    font-size: 2rem;
-  }
-  .tagline {
+.command-hints {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 1rem;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 10px #00ff00;
+    z-index: 5;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.command-hints h3 {
+    margin: 0 0 0.5rem 0;
     font-size: 1rem;
-  }
-  .game-info {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  .ascii-mole {
-    font-size: 0.9rem;
-  }
-  .game-desc-title {
-    font-size: 1rem;
-  }
-  .blinking-text, .game-desc-body {
-    font-size: 0.8rem;
-  }
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.command-hints ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.command-hints li {
+    margin: 0.25rem 0;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    .title {
+        font-size: 2.5rem;
+    }
+    .tagline {
+        font-size: 1rem;
+    }
+    .game-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .ascii-mole {
+        font-size: 0.9rem;
+    }
+    .game-desc-title {
+        font-size: 1rem;
+    }
+    .blinking-text, .game-desc-body {
+        font-size: 0.8rem;
+    }
 }
