@@ -1,14 +1,9 @@
-// auth.js
-
 const { OAuth2Client } = require("google-auth-library");
 const User = require("./models/user");
+const socketManager = require("./server-socket");
 
-// create a new OAuth client used to verify google sign-in
-// TODO: replace with your own CLIENT_ID
-const CLIENT_ID = "465324171584-jgurca8sfthunf91v7q4agppmuoir1d0.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 
-// accepts a login token from the frontend, and verifies that it's legit
 function verify(token) {
   return client
     .verifyIdToken({
@@ -18,26 +13,13 @@ function verify(token) {
     .then((ticket) => ticket.getPayload());
 }
 
-// gets user from DB, or makes a new account if it doesn't exist yet
-function getOrCreateUser(googleUser) {
-  // the "sub" field is a unique Google identifier
-  return User.findOne({ googleid: googleUser.sub }).then((existingUser) => {
+function getOrCreateUser(user) {
+  return User.findOne({ googleid: user.sub }).then((existingUser) => {
     if (existingUser) return existingUser;
 
-    // If not found, create a new user doc
-    const generateUsername = (name) => {
-      const clearName = name.replace(/\s+/g, "");
-      const randomString = Array.from({ length: 4 }, () => {
-        const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        return chars[Math.floor(Math.random() * chars.length)];
-      }).join("");
-      return clearName + randomString;
-    };
-
     const newUser = new User({
-      name: googleUser.name,
-      googleid: googleUser.sub,
-      nickname: generateUsername(googleUser.name),
+      name: user.name,
+      googleid: user.sub,
     });
 
     return newUser.save();
@@ -46,15 +28,13 @@ function getOrCreateUser(googleUser) {
 
 function login(req, res) {
   verify(req.body.token)
-    .then((googleUser) => getOrCreateUser(googleUser))
+    .then((user) => getOrCreateUser(user))
     .then((user) => {
-      // persist user in the session
-      req.session.user = user; // <-- CRITICAL: store user doc in session
-      res.send(user);          // returns the user doc to the client
+      req.session.user = user;
+      res.send(user);
     })
     .catch((err) => {
       console.log(`Failed to log in: ${err}`);
-      console.log('req.session.user', req.session.user)
       res.status(401).send({ err });
     });
 }
@@ -65,8 +45,7 @@ function logout(req, res) {
 }
 
 function populateCurrentUser(req, res, next) {
-  // populates "req.user" for convenience
-  req.user = req.session.user || null;
+  req.user = req.session.user;
   next();
 }
 
@@ -74,6 +53,7 @@ function ensureLoggedIn(req, res, next) {
   if (!req.user) {
     return res.status(401).send({ err: "not logged in" });
   }
+
   next();
 }
 

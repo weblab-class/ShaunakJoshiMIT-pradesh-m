@@ -10,7 +10,7 @@ const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const path = require("path");
-const cors = require("cors");
+// const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes");
 const requestRoutes = require("./routes/requestsRoutes");
@@ -45,19 +45,19 @@ mongoose
 const app = express();
 
 // CORS Setup
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow mobile apps, curl, etc.
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // allow cookies
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true); // allow mobile apps, curl, etc.
+//       if (allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true, // allow cookies
+//   })
+// );
 
 app.use(validator.checkRoutes);
 app.use(express.json());
