@@ -42,20 +42,45 @@ const GamePage = () => {
   const prevPhaseRef = useRef(null);
 
   useEffect(() => {
+    // Existing socket event listeners
+
+    const handleGameCreated = (data) => {
+      console.log("Game created:", data.game);
+      setGameObj(data.game);
+      setError(null);
+      // Optionally, navigate to the game page if not already there
+      // navigate(`/game/${data.game.lobbyCode}`);
+    };
+
+    socket.on("gameStarted", handleGameCreated);
+
+    return () => {
+      // Existing cleanup
+      socket.off("gameStarted", handleGameCreated);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    console.log("Setting up socket listeners for gameData, errorMessage, gameStarted...");
+
     if (!lobbyCode) {
       console.error("No lobby code provided, redirecting to home");
       navigate("/home");
       return;
     }
-
-    console.log("Joining lobby:", lobbyCode, "userId:", userId);
-    // socket.emit("joinLobby", lobbyCode, userId);
-    // socket.emit("joinLobby", lobbyCode, user);
+    console.log("JOINING LOBBY", lobbyCode, userId)
     get("/api/user", { userid: userId }).then((userObj) => {
       setUser(userObj);
       const userNickname = userObj.nickname;
       socket.emit("joinLobby", lobbyCode, userNickname);
-    });
+
+      // then also fetch role
+      get("/api/game/role", { lobbyCode, user_id: userId }).then((data) => {
+        setRole(data.role);
+      }).catch(console.error);
+    }).catch(console.error);
+
 
 
     socket.emit("getGameData", lobbyCode);
@@ -77,20 +102,10 @@ const GamePage = () => {
       setError(null);
     });
 
-    get("/api/user", { userid: userId })
-      .then((userObj) => {
-        setUser(userObj);
-      })
-      .catch((err) => {
-        console.error("User Not Found");
-      });
-    get("/api/game/role", { lobbyCode, user_id: userId }).then((data) => {
-      setRole(data.role);
-    }).catch(error => {
-      console.error("Error in /role:", error);
-    });
 
     return () => {
+      console.log("Cleaning up socket listeners...");
+
       socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");

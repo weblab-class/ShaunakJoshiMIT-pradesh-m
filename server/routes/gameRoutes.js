@@ -158,6 +158,7 @@ router.post("/appoint", async (req, res) => {
     await game.save();
 
     const io = getIo();
+    console.log("Emitting Game Data after APPOINT")
     io.to(lobbyCode).emit("gameData", game);
 
     // If we time out in VOTE
@@ -259,7 +260,7 @@ router.post("/vote", async (req, res) => {
         game.phase === "MOVE" ? PHASE_DURATIONS.MOVE : PHASE_DURATIONS.APPOINT;
       game.phaseEndTime = Date.now() + nextPhaseDuration;
       await game.save();
-
+      console.log("Emitting Game Data after VOTE")
       io.to(lobbyCode).emit("gameData", game);
 
       setPhaseTimeout(lobbyCode, game.phase, nextPhaseDuration, async () => {
@@ -386,6 +387,7 @@ router.post("/answer", async (req, res) => {
     await game.save();
 
     const io = getIo();
+    console.log("Emitting Game Data after ANSWER")
     io.to(lobbyCode).emit("gameData", game);
 
     // If forced time-out => finalize

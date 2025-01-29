@@ -42,6 +42,8 @@ module.exports = {
       socket.on("joinLobby", async (lobbyCode, nickname) => {
         socket.join(lobbyCode);
         console.log(`Socket ${socket.id} joined lobby ${lobbyCode} as ${nickname}`);
+        console.log("Rooms for this socket now:", [...socket.rooms]); // show an array of joined rooms
+
         addUser(nickname, socket);
         try {
           const lobby = await Lobby.findOne({ lobbyCode });
@@ -53,7 +55,7 @@ module.exports = {
             }
             io.to(lobbyCode).emit("updateUsers", {
               action: "join",
-              user: nickname, 
+              user: nickname,
               users: lobby.user_ids,
             });
           } else {
@@ -68,16 +70,23 @@ module.exports = {
         socket.leave(lobbyCode);
         console.log(`Socket ${socket.id} left lobby ${lobbyCode} as ${user}`);
         removeUser(user, socket);
+
         try {
-          const lobby = await Lobby.findOne({ lobbyCode });
+          // Atomic update: Remove the user from user_ids
+          const lobby = await Lobby.findOneAndUpdate(
+            { lobbyCode },
+            { $pull: { user_ids: user } },
+            { new: true } // Return the updated document
+          );
+
           if (lobby) {
-            lobby.user_ids = lobby.user_ids.filter((id) => id !== user);
             if (lobby.user_ids.length === 0) {
+              // If no users left, delete the lobby
               await Lobby.deleteOne({ lobbyCode });
               io.to(lobbyCode).emit("updateUsers", { action: "empty", users: [] });
               console.log(`Lobby ${lobbyCode} deleted as it became empty.`);
             } else {
-              await lobby.save();
+              // Emit updated user list
               io.to(lobbyCode).emit("updateUsers", {
                 action: "leave",
                 user,
@@ -86,10 +95,14 @@ module.exports = {
               console.log(`User ${user} removed from lobby ${lobbyCode}`);
             }
           } else {
-            console.log(`Lobby ${lobbyCode} not found.`);
+            console.log(`Lobby ${lobbyCode} not found or already deleted.`);
           }
         } catch (error) {
           console.error("Error in leaveLobby:", error);
+          if (error.name === 'VersionError') {
+            console.warn(`VersionError while leaving lobby ${lobbyCode}:`, error.message);
+            // Optionally, refetch the lobby or inform the user
+          }
         }
       });
 

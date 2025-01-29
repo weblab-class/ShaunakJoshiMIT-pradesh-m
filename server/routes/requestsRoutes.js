@@ -50,7 +50,8 @@ router.post("/sendRequest", async (req, res) => {
       _id: generateRandomString(),
       from: req.body.from,
       to: toUser._id,
-      status: "pending"
+      status: "pending",
+      date: Date.now()
     })
 
     newRequest.save().then((newRequest) => res.send(newRequest))
@@ -153,13 +154,12 @@ router.post("/sendRequest", async (req, res) => {
   router.get("/sendRequest/:userId", auth.ensureLoggedIn, async (req, res) => {
     const { userId } = req.params;
     try {
-      // Use await instead of a callback
       const requests = await Request.find({ to: userId, status: "pending" });
       res.json(requests);
     } catch (err) {
       res.status(500).send("Error fetching friend requests");
     }
   });
- 
+
 
   module.exports = router;

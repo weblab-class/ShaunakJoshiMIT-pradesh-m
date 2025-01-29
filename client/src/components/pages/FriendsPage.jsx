@@ -1,8 +1,8 @@
 // FriendsPage.jsx
 import React, { useState, useContext, useEffect } from "react";
-import Layout from '../Layout.jsx';
-import onlinelogo from "../../assets/onlinelogo.png";
-import offlinelogo from "../../assets/offlinelogo.png";
+import Layout from "../Layout.jsx";
+import onlinelogo from "../assets/images/assets/onlinelogo.png";
+import offlinelogo from "../assets/images/assets/offlinelogo.png";
 import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../../utilities";
@@ -25,14 +25,16 @@ const FriendsPage = (props) => {
     });
   }, [userId]);
 
+
   useEffect(() => {
     if (requests.length > 0) {
       Promise.all(
-        requests.map((requestObj) => {
-          return get("/api/user", { userid: requestObj.from });
+        requests.map(async (requestObj) => {
+          const userObj = await get("/api/user", { userid: requestObj.from });
+          return { user: userObj, date: requestObj.date };
         })
-      ).then((fromUserObjs) => {
-        setRequestsData(fromUserObjs);
+      ).then((results) => {
+        setRequestsData(results);
       });
     } else {
       setRequestsData([]);
@@ -85,6 +87,10 @@ const FriendsPage = (props) => {
     }
   }, [friends]);
 
+
+
+
+
   const friendRows = friendsData.map((friendObj, index) => {
     return (
       <tr className="Friends-Row" key={friendObj._id || index}>
@@ -101,11 +107,18 @@ const FriendsPage = (props) => {
     );
   });
 
-  const requestRows = requestsData.map((fromUserObj, index) => {
+  const requestRows = requestsData.map((data, index) => {
+    const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
     return (
-      <tr className="Requests-Row" key={fromUserObj._id || index}>
-        <th>{fromUserObj.nickname}</th>
-        <th>"Placeholder Date"</th>
+      <tr className="Requests-Row" key={data.user._id || index}>
+        <th>{data.user.nickname}</th>
+        <th>{formattedDate}</th>
       </tr>
     );
   });

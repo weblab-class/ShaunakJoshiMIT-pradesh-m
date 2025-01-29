@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import FolderIcon from '../../assets/foldericon.png';
+import FolderIcon from '../assets/images/assets/foldericon.png';
 
 export default function FileNode({ data }) {
   const { label, isCurrent, isAllowedMove, isGoal } = data || {};

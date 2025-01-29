@@ -231,7 +231,7 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
 
     // Use the lobby's timeLimit and gridSize to build the game
     const chosenRows = lobby.gridSize || 3;
-    const chosenCols = chosenRows; 
+    const chosenCols = chosenRows;
     const chosenTimeLimit = lobby.timeLimit || 10; // in minutes
 
     const nodes = generateGridNodes(chosenRows, chosenCols);
@@ -262,6 +262,7 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
 
     await game.save();
 
+    
     // Broadcast to all players
     socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode, game });
 

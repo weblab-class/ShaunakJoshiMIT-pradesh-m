@@ -11,6 +11,7 @@ const RequestSchema = new mongoose.Schema({
         enum: ["pending", "accepted", "rejected"],
         default: "pending"
     },
+    date: {type: Number, default: Date.now()}
 });
 
 
