@@ -1,7 +1,7 @@
 
 const BASE_URL = process.env.NODE_ENV === "production"
   ? "https://find-the-moles.onrender.com/api"
-  : "http://localhost:3000/api";
+  : "http://localhost:10000/api";
 
 /**
  * Helper function for POST requests with credentials included.
