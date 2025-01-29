@@ -1,9 +1,9 @@
-const mongoose = require("mongoose"); // Add this line
+const mongoose = require("mongoose");
 
 const LobbySchema = new mongoose.Schema({
   lobbyCode: {
     type: String,
-    unique: true, // Enforces unique constraint on lobbyCode
+    unique: true,
   },
   user_ids: [String],
   in_game: Boolean,

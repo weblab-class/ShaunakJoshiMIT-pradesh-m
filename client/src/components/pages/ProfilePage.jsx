@@ -1,5 +1,3 @@
-// ProfilePage.jsx
-
 import React, { useState, useContext, useEffect } from "react";
 import Layout from "../Layout.jsx";
 import "../styles/ProfilePage.css";

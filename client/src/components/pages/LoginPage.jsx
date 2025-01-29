@@ -1,4 +1,3 @@
-// LoginPage.jsx
 import React from "react";
 import LoginLogoutButton from "../modules/LoginLogoutButton";
 import WordSwitcher from "../modules/WordSwitcher";

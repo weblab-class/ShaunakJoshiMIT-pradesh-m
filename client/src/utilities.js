@@ -1,7 +1,3 @@
-/**
- * utility functions to make API requests.
- */
-
 function formatParams(params) {
   return Object.keys(params)
     .map((key) => key + "=" + encodeURIComponent(params[key]))
@@ -26,7 +22,7 @@ export function get(endpoint, params = {}) {
   const fullPath = endpoint + "?" + formatParams(params);
   return fetch(fullPath, {
     method: "GET",
-    credentials: "include", // crucial
+    credentials: "include",
   })
     .then(convertToJSON)
     .catch((error) => {
@@ -37,7 +33,7 @@ export function get(endpoint, params = {}) {
 export function post(endpoint, params = {}) {
   return fetch(endpoint, {
     method: "POST",
-    credentials: "include", // crucial
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   })

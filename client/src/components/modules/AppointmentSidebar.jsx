@@ -1,5 +1,3 @@
-// AppointmentSidebar.jsx
-
 import React from "react";
 import "../styles/AppointmentSidebar.css";
 import siteLogo from "../assets/images/site-logo.png";

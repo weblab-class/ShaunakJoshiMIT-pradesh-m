@@ -1,4 +1,4 @@
-// Layout.jsx
+
 import React from "react";
 import NavBar from "./modules/NavBar.jsx";
 import Terminal from "./modules/Terminal.jsx";
@@ -9,28 +9,25 @@ const Layout = ({ children, currentPage }) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",    // Fill the viewport height
+        height: "100vh",
       }}
     >
-      {/* Top NavBar */}
       <NavBar currentPage={currentPage} />
 
-      {/* Main content area, scrollable, with extra bottom padding to avoid overlap */}
       <main
         style={{
           flex: 1,
-          overflow: "auto",          // Enable scrolling within the main area
-          paddingBottom: "0px",    // Space reserved for the Terminal
+          overflow: "auto",
+          paddingBottom: "0px",
         }}
       >
         {children}
       </main>
 
-      {/* Terminal Footer */}
       <div
         style={{
-          flexShrink: 0,   // Prevent the terminal from shrinking
-          height: "220px", // Match paddingBottom above, or however tall your Terminal is
+          flexShrink: 0,
+          height: "220px",
           boxSizing: "border-box",
         }}
       >

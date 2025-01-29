@@ -1,4 +1,3 @@
-// FriendsPage.jsx
 import React, { useState, useContext, useEffect } from "react";
 import Layout from "../Layout.jsx";
 import onlinelogo from "../assets/images/onlinelogo.png";

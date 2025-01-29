@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { AudioContext } from '../context/AudioContext'; // Import AudioContext
-import '../styles/BackgroundMusic.css'; // Import CSS for styling
+import { AudioContext } from '../context/AudioContext';
+import '../styles/BackgroundMusic.css';
 
 const BackgroundMusic = () => {
   const { playBackgroundMusic, pauseBackgroundMusic, backgroundMusic } = useContext(AudioContext);

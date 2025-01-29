@@ -3,16 +3,13 @@ const BASE_URL = process.env.NODE_ENV === "production"
   ? "https://find-the-moles.onrender.com/api"
   : "http://localhost:10000/api";
 
-/**
- * Helper function for POST requests with credentials included.
- */
 const post = async (endpoint, data) => {
   try {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-      credentials: "include", // IMPORTANT: Include cookies
+      credentials: "include",
     });
 
     const resData = await response.json();
@@ -28,9 +25,6 @@ const post = async (endpoint, data) => {
   }
 };
 
-/**
- * Helper function for GET requests with credentials included.
- */
 const get = async (endpoint, params = {}) => {
   try {
     const url = new URL(`${BASE_URL}/${endpoint}`);
@@ -38,7 +32,7 @@ const get = async (endpoint, params = {}) => {
 
     const response = await fetch(url, {
       method: "GET",
-      credentials: "include", // IMPORTANT: Include cookies
+      credentials: "include",
     });
 
     const resData = await response.json();
@@ -53,8 +47,6 @@ const get = async (endpoint, params = {}) => {
     throw error;
   }
 };
-
-// Exported API functions
 
 export const setNickname = async (userId, nickname) => {
   return await post("user/setNickname", { userId, nickname });
@@ -79,5 +71,3 @@ export const createGame = async (lobbyCode, user_id) => {
   const data = await post(`lobby/${lobbyCode}/createGame`, { user_id });
   return data;
 };
-
-// Add other API functions as needed, following the same pattern.

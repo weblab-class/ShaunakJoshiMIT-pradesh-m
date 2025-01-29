@@ -1,4 +1,3 @@
-// SettingsPage.jsx
 import React, { useState, useEffect, useContext } from "react";
 import Layout from '../Layout.jsx';
 import "../styles/SettingsPage.css";

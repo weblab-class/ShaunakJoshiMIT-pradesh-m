@@ -1,4 +1,3 @@
-// IntermediateModal.jsx
 import React, { useEffect } from "react";
 import "../styles/IntermediateModal.css"; 
 

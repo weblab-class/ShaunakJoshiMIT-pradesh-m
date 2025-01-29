@@ -1,6 +1,5 @@
-// WordSwitcher.jsx
 import React, { useState, useEffect, useRef } from "react";
-import "../styles/WordSwitcher.css"; // New CSS file for glitch effect (see below)
+import "../styles/WordSwitcher.css";
 
 const WordSwitcher = ({ words = [] }) => {
   const [currWord, setCurrWord] = useState(words[0] || "");

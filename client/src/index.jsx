@@ -24,7 +24,6 @@ import RulesPage from "./components/pages/RulesPage";
 
 import {SocketProvider} from "./components/modules/SocketContext";
 
-//TODO: REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID = "465324171584-jgurca8sfthunf91v7q4agppmuoir1d0.apps.googleusercontent.com";
 
 const router = createBrowserRouter(
@@ -44,7 +43,6 @@ const router = createBrowserRouter(
   )
 );
 
-// renders React Component "Root" into the DOM element with ID "root"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <TerminalProvider>
