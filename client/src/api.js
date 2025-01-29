@@ -1,95 +1,84 @@
-//src/api.js
+// src/api.js
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = process.env.NODE_ENV === "production"
+  ? "https://find-the-moles.onrender.com/api"  // Replace with your Render app URL
+  : "http://localhost:3000/api";
 
-export const setNickname = async (userId, nickname) => {
+/**
+ * Helper function for POST requests with credentials included.
+ */
+const post = async (endpoint, data) => {
   try {
-    const response = await fetch(`${BASE_URL}/user/setNickname`, {
+    const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, nickname }),
+      body: JSON.stringify(data),
+      credentials: "include", // IMPORTANT: Include cookies
     });
 
-    const data = await response.json();
+    const resData = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "Failed to set nickname");
+      throw new Error(resData.error || resData.message || "POST request failed");
     }
-    return data;
+
+    return resData;
   } catch (error) {
-    console.error("Error in setNickname:", error);
+    console.error(`Error in POST ${endpoint}:`, error);
     throw error;
   }
+};
+
+/**
+ * Helper function for GET requests with credentials included.
+ */
+const get = async (endpoint, params = {}) => {
+  try {
+    const url = new URL(`${BASE_URL}/${endpoint}`);
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include", // IMPORTANT: Include cookies
+    });
+
+    const resData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(resData.error || resData.message || "GET request failed");
+    }
+
+    return resData;
+  } catch (error) {
+    console.error(`Error in GET ${endpoint}:`, error);
+    throw error;
+  }
+};
+
+// Exported API functions
+
+export const setNickname = async (userId, nickname) => {
+  return await post("user/setNickname", { userId, nickname });
 };
 
 export const createLobby = async (hostNickname) => {
-  try {
-    const response = await fetch(`${BASE_URL}/lobby/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ host_id: hostNickname })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to create lobby");
-    }
-    return data.lobby;
-  } catch (error) {
-    console.error("Error in createLobby:", error);
-    throw error;
-  }
+  const data = await post("lobby/create", { host_id: hostNickname });
+  return data.lobby;
 };
 
 export const joinLobby = async (lobbyCode, userNickname) => {
-  try {
-    const response = await fetch(`${BASE_URL}/lobby/join`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lobbyCode, user_id: userNickname })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to join lobby");
-    }
-    return data.lobby;
-  } catch (error) {
-    console.error("Error joining lobby:", error);
-    throw error;
-  }
+  const data = await post("lobby/join", { lobbyCode, user_id: userNickname });
+  return data.lobby;
 };
 
 export const leaveLobby = async (lobbyCode, userNickname) => {
-  try {
-    const response = await fetch(`${BASE_URL}/lobby/leave`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lobbyCode, user_id: userNickname })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to leave lobby");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error leaving lobby:", error);
-    throw error;
-  }
+  const data = await post("lobby/leave", { lobbyCode, user_id: userNickname });
+  return data;
 };
 
 export const createGame = async (lobbyCode, user_id) => {
-  try {
-    const response = await fetch(`${BASE_URL}/lobby/${lobbyCode}/createGame`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to create game.");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error in createGame:", error);
-    throw error;
-  }
+  const data = await post(`lobby/${lobbyCode}/createGame`, { user_id });
+  return data;
 };
+
+// Add other API functions as needed, following the same pattern.
