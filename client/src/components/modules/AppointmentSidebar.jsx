@@ -2,7 +2,7 @@
 
 import React from "react";
 import "../styles/AppointmentSidebar.css";
-import hackerIcon from "../../assets/hacker.png";
+import hackerIcon from "../assets/hacker.png";
 
 const AppointmentSidebar = ({ gameObj }) => {
   const currentPresident = gameObj?.turnOrder[gameObj.currTurn] || "Unknown";
