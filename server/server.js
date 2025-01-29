@@ -1,3 +1,5 @@
+// server.js
+
 const validator = require("./validator");
 validator.checkSetup();
 
@@ -18,10 +20,13 @@ const api = require("./routes/api.js");
 const auth = require("./auth");
 const socketManager = require("./server-socket");
 
-// For example:
+// Environment Variables
 const mongoConnectionURL = process.env.MONGO_SRV;
 const databaseName = "findthemoles";
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:3000"; // Add your Render app URL in .env
+const SESSION_SECRET = process.env.SESSION_SECRET || "session-secret";
 
+// Connect to MongoDB
 mongoose.set("strictQuery", false);
 mongoose
   .connect(mongoConnectionURL, {
@@ -33,23 +38,37 @@ mongoose
   .catch((err) => console.log(`Error connecting to MongoDB: ${err}`));
 
 const app = express();
-app.use(cors());
 
-app.use(validator.checkRoutes);
-app.use(express.json());
-
+// CORS Configuration
 app.use(
-  session({
-    secret: "session-secret", // or use process.env.SESSION_SECRET
-    resave: false,
-    saveUninitialized: false,
+  cors({
+    origin: CLIENT_ORIGIN,      // e.g., "https://yourapp.onrender.com"
+    credentials: true,          // Allow cookies to be sent
   })
 );
 
-// fill req.user if logged in
+// Middleware
+app.use(validator.checkRoutes);
+app.use(express.json());
+
+// Session Configuration
+app.use(
+  session({
+    secret: SESSION_SECRET,     // Use a strong secret in production
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
+  })
+);
+
+// Populate req.user if logged in
 app.use(auth.populateCurrentUser);
 
-// MOUNT OUR ROUTES
+// Mount Routes
 app.use("/api/user", userRoutes);        // e.g. /api/user/setNickname
 app.use("/api/requests", requestRoutes);
 app.use("/api/lobby", lobbyRoutes);      // includes /updateSettings
@@ -60,7 +79,7 @@ app.get("/debug", (req, res) => {
   res.send("Server is working!");
 });
 
-// serve the React app
+// Serve the React app
 const reactPath = path.resolve(__dirname, "..", "client", "dist");
 app.use(express.static(reactPath));
 
@@ -73,7 +92,7 @@ app.get("*", (req, res) => {
   });
 });
 
-// error handler
+// Error Handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   if (status === 500) {
@@ -85,7 +104,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = 3000;
+const port = process.env.PORT || 3000; // Use environment PORT
 const server = http.Server(app);
 socketManager.init(server);
 
