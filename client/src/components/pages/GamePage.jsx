@@ -101,7 +101,7 @@ const GamePage = () => {
     return () => {
       console.log("Cleaning up socket listeners...");
 
-      // socket.off("gameData");
+      socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
@@ -248,7 +248,7 @@ const GamePage = () => {
           isOpen={isModalOpen}
           title={modalContent.title}
           content={modalContent.content}
-          duration={5000} 
+          duration={3000} 
           onClose={handleCloseModal}
         />
       </div>

@@ -17,10 +17,6 @@ const VoteSidebar = ({ gameObj }) => {
         socket.on("gameData", (game) => {
             setGame(game);
         });
-
-        return () => {
-            socket.off("gameData");
-        };
     }, [socket]);
 
 
