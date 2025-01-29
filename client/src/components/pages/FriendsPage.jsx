@@ -1,8 +1,8 @@
 // FriendsPage.jsx
 import React, { useState, useContext, useEffect } from "react";
 import Layout from "../Layout.jsx";
-import onlinelogo from "../assets/images/assets/onlinelogo.png";
-import offlinelogo from "../assets/images/assets/offlinelogo.png";
+import onlinelogo from "../assets/images/onlinelogo.png";
+import offlinelogo from "../assets/images/offlinelogo.png";
 import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../../utilities";
