@@ -21,7 +21,7 @@ export default function DefaultSidebar({ gameObj, currentUserNickname }) {
             >
               {playerNickname}
               {playerNickname === currentPresidentNickname && (
-                <span className="role-badge">President</span>
+                <span className="role-badge">P</span>
               )}
             </li>
           ))}
