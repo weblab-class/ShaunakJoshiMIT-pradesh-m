@@ -1,3 +1,5 @@
+/* ProfilePage.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap');
 
 body {
@@ -26,6 +28,7 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
+    cursor: url('../assets/images/assets/pixel-cursor.png'), auto; /* Custom cursor */
 }
 
 .profile-header {
@@ -37,7 +40,7 @@ body {
     font-size: 3rem;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-    animation: glow 1.5s ease-in-out infinite alternate;
+    animation: neonGlow 1.5s ease-in-out infinite alternate, glitch 2s infinite;
 }
 
 .user-info-section {
@@ -49,6 +52,7 @@ body {
     width: 100%;
     max-width: 500px;
     animation: fadeIn 2s ease-in-out;
+    z-index: 4; /* Above all animated elements */
 }
 
 .user-info-section h2 {
@@ -56,7 +60,7 @@ body {
     margin-bottom: 1.5rem;
     color: #00ff00;
     text-shadow: 0 0 5px #00ff00;
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: neonGlow 2s ease-in-out infinite alternate;
 }
 
 .user-info p {
@@ -77,39 +81,235 @@ body {
     margin-right: 1rem;
 }
 
-@keyframes glow {
+/* Glowing Neon Text Animation */
+@keyframes neonGlow {
     from {
-        text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+        text-shadow:
+            0 0 5px #00ff00,
+            0 0 10px #00ff00,
+            0 0 20px #00ff00,
+            0 0 40px #00ff00,
+            0 0 80px #00ff00;
     }
     to {
-        text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+        text-shadow:
+            0 0 10px #00ff00,
+            0 0 20px #00ff00,
+            0 0 30px #00ff00,
+            0 0 50px #00ff00,
+            0 0 100px #00ff00;
     }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Glitch Effect for Profile Header */
+@keyframes glitch {
+    0% {
+        clip: rect(42px, 9999px, 44px, 0);
+        transform: skew(0.5deg);
+    }
+    5% {
+        clip: rect(12px, 9999px, 18px, 0);
+        transform: skew(0.5deg);
+    }
+    10% {
+        clip: rect(85px, 9999px, 90px, 0);
+        transform: skew(0.5deg);
+    }
+    15% {
+        clip: rect(35px, 9999px, 45px, 0);
+        transform: skew(0.5deg);
+    }
+    20% {
+        clip: rect(10px, 9999px, 15px, 0);
+        transform: skew(0.5deg);
+    }
+    /* Repeat or add more keyframes for a stronger glitch effect */
+    100% {
+        clip: rect(42px, 9999px, 44px, 0);
+        transform: skew(0.5deg);
+    }
 }
 
-@keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(20px, -20px) rotate(180deg); }
-    100% { transform: translate(0, 0) rotate(360deg); }
+/* Binary Rain Animation */
+.binary-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none; /* Allows clicks to pass through */
+    z-index: 0; /* Positioned behind all other elements */
+    background: transparent;
 }
 
+.binary-rain .binary-stream {
+    position: absolute;
+    top: -100%;
+    width: 2%; /* Adjust width for density */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: binaryRain 15s linear infinite;
+    opacity: 0.5;
+}
+
+.binary-rain .binary-stream span {
+    display: block;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace; /* Monospace font for binary */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    animation: blink 1.5s step-start infinite;
+}
+
+/* Positioning multiple streams with varying delays */
+.binary-rain .binary-stream:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.binary-rain .binary-stream:nth-child(2) {
+    left: 18%;
+    animation-delay: 3s;
+}
+
+.binary-rain .binary-stream:nth-child(3) {
+    left: 26%;
+    animation-delay: 6s;
+}
+
+.binary-rain .binary-stream:nth-child(4) {
+    left: 34%;
+    animation-delay: 9s;
+}
+
+.binary-rain .binary-stream:nth-child(5) {
+    left: 42%;
+    animation-delay: 12s;
+}
+
+.binary-rain .binary-stream:nth-child(6) {
+    left: 50%;
+    animation-delay: 15s;
+}
+
+.binary-rain .binary-stream:nth-child(7) {
+    left: 58%;
+    animation-delay: 18s;
+}
+
+.binary-rain .binary-stream:nth-child(8) {
+    left: 66%;
+    animation-delay: 21s;
+}
+
+.binary-rain .binary-stream:nth-child(9) {
+    left: 74%;
+    animation-delay: 24s;
+}
+
+.binary-rain .binary-stream:nth-child(10) {
+    left: 82%;
+    animation-delay: 27s;
+}
+
+/* Binary Rain Movement */
+@keyframes binaryRain {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+/* Blinking Animation for Binary Digits */
+@keyframes blink {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
+
+/* Scan Lines Overlay */
+.scan-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 0, 0.1),
+        rgba(0, 255, 0, 0.1) 2px,
+        rgba(0, 255, 0, 0.2) 2px,
+        rgba(0, 255, 0, 0.2) 4px
+    );
+    pointer-events: none; /* Allows clicks to pass through */
+    z-index: 2; /* Positioned above binary rain but below content */
+    animation: scan 5s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes scan {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 0 100%;
+    }
+}
+
+/* Binary Rain Overlay (Optional for Depth) */
+.binary-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 255, 0, 0.05);
+    pointer-events: none;
+    z-index: 1; /* Positioned above binary rain but below scan lines and content */
+    animation: binaryOverlay 15s ease-in-out infinite;
+}
+
+@keyframes binaryOverlay {
+    0%, 100% {
+        opacity: 0.05;
+    }
+    50% {
+        opacity: 0.1;
+    }
+}
+
+/* Neon Glow and Glitch Effects are retained */
+
+/* Loading Indicator */
 .loading {
     font-size: 1.5rem;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
     animation: pulse 2s infinite;
+    z-index: 4; /* Above all animated elements */
 }
 
+/* Pulse Animation for Loading */
 @keyframes pulse {
     0% { opacity: 0.7; }
     50% { opacity: 1; }
     100% { opacity: 0.7; }
 }
 
+/* Fade In Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Queries for Responsiveness */
 @media (max-width: 600px) {
     .profile-header h1 {
         font-size: 2.5rem;
@@ -126,4 +326,15 @@ body {
     .user-info p {
         font-size: 0.9rem;
     }
+
+    .binary-rain .binary-stream span {
+        font-size: 0.8rem;
+        line-height: 1.2rem;
+    }
+
+    .binary-rain .binary-stream {
+        animation-duration: 20s;
+    }
+
+    /* Adjust number of streams for smaller screens if necessary */
 }
