@@ -151,7 +151,7 @@ router.post("/sendRequest", async (req, res) => {
 
   });
 
-  router.get("/sendRequest/:userId", auth.ensureLoggedIn, async (req, res) => {
+  router.get("/sendRequest/:userId", async (req, res) => {
     const { userId } = req.params;
     try {
       const requests = await Request.find({ to: userId, status: "pending" });
