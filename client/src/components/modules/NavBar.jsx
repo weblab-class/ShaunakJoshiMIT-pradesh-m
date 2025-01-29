@@ -1,6 +1,7 @@
 // NavBar.jsx
 import React from "react";
 import "../styles/NavBar.css";
+import siteLogo from "../assets/images/assets/site-logo.png";
 
 const NavBar = ({ currentPage }) => {
   // Capitalize the current page for display
@@ -9,14 +10,19 @@ const NavBar = ({ currentPage }) => {
 
   return (
     <div className="navbar">
-      <div className="navbar-logo">RETRO LOGO</div>
+      {/* Logo Section */}
+      <div className="navbar-logo">
+        <img src={siteLogo} alt="Site Logo" className="navbar-icon" />
+        {/* Optional: Add logo text next to the icon */}
+        {/* <span className="navbar-logo-text">Hacker</span> */}
+      </div>
 
-      {/* Display the current page in a simple, static manner */}
+      {/* Centered Current Page Display */}
       <div className="navbar-current-page">
         Currently on: <span className="navbar-page-highlight">{pageName}</span>
       </div>
 
-      {/* Animated hint bar with marquee effect */}
+      {/* Animated Hint Bar */}
       <div className="navbar-hint-animated">
         <span className="marquee">
           HINT: TYPE "HELP" IN THE TERMINAL FOR INSTRUCTIONS
