@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-  const socket = io("https://find-the-moles.onrender.com/");
+  const socket = io("https://find-the-moles.onrender.com");
 
   useEffect(() => {
     console.log("Socket connected:", socket.id);

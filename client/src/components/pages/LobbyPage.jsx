@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Layout from "../Layout.jsx"
-import { io } from "socket.io-client"
 import { UserContext } from "../App"
 import "../styles/LobbyPage.css"
+import { SocketContext } from "../modules/SocketContext.jsx";
 
-const socket = io("http://localhost:3000")
 
 const LobbyPage = () => {
   const { lobbyCode } = useParams()
   const navigate = useNavigate()
+  const socket = useContext(SocketContext);
   const [lobby, setLobby] = useState(null)
   const { decoded } = useContext(UserContext)
   const nickname = decoded?.nickname || "anonymous"
