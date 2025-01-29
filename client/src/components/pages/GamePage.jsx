@@ -49,7 +49,14 @@ const GamePage = () => {
     }
 
     console.log("Joining lobby:", lobbyCode, "userId:", userId);
-    socket.emit("joinLobby", lobbyCode, userId);
+    // socket.emit("joinLobby", lobbyCode, userId);
+    // socket.emit("joinLobby", lobbyCode, user);
+    get("/api/user", { userid: userId }).then((userObj) => {
+      setUser(userObj);
+      const userNickname = userObj.nickname;
+      socket.emit("joinLobby", lobbyCode, userNickname);
+    });
+
 
     socket.emit("getGameData", lobbyCode);
 
@@ -88,7 +95,7 @@ const GamePage = () => {
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  }, );
+  },[lobbyCode, userId, socket] );
 
   // Stable onClose function using useCallback
   const handleCloseModal = useCallback(() => {

@@ -69,10 +69,10 @@ const Terminal = () => {
             navigate("/settings");
             playDing();
             return "Navigating to the settings page";
-          // case "login":
-          //   navigate("/");
-          //   playDing();
-          //   return "Navigating to the login page";
+          case "rules":
+            navigate("/rules");
+            playDing();
+            return "Navigating to the login page";
           default:
             return "Command does not exist";
         }

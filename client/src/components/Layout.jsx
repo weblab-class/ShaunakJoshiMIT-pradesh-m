@@ -20,7 +20,7 @@ const Layout = ({ children, currentPage }) => {
         style={{
           flex: 1,
           overflow: "auto",          // Enable scrolling within the main area
-          paddingBottom: "220px",    // Space reserved for the Terminal
+          paddingBottom: "0px",    // Space reserved for the Terminal
         }}
       >
         {children}

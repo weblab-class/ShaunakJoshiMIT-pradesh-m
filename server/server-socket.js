@@ -39,21 +39,21 @@ module.exports = {
     io.on("connection", (socket) => {
       console.log(`Socket connected: ${socket.id}`);
 
-      socket.on("joinLobby", async (lobbyCode, user) => {
+      socket.on("joinLobby", async (lobbyCode, nickname) => {
         socket.join(lobbyCode);
-        console.log(`Socket ${socket.id} joined lobby ${lobbyCode} as ${user}`);
-        addUser(user, socket);
+        console.log(`Socket ${socket.id} joined lobby ${lobbyCode} as ${nickname}`);
+        addUser(nickname, socket);
         try {
           const lobby = await Lobby.findOne({ lobbyCode });
           if (lobby) {
-            if (!lobby.user_ids.includes(user)) {
-              lobby.user_ids.push(user);
+            if (!lobby.user_ids.includes(nickname)) {
+              lobby.user_ids.push(nickname);
               await lobby.save();
-              console.log(`User ${user} added to lobby ${lobbyCode}`);
+              console.log(`User ${nickname} added to lobby ${lobbyCode}`);
             }
             io.to(lobbyCode).emit("updateUsers", {
               action: "join",
-              user,
+              user: nickname, 
               users: lobby.user_ids,
             });
           } else {
