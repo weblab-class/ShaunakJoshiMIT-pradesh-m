@@ -23,7 +23,7 @@ const socketManager = require("./server-socket");
 // Environment Variables
 const mongoConnectionURL = process.env.MONGO_SRV;
 const databaseName = "findthemoles";
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:3000"; // Add your Render app URL in .env
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://find-the-moles.onrender.com/"; // Add your Render app URL in .env
 const SESSION_SECRET = process.env.SESSION_SECRET || "session-secret";
 
 // Connect to MongoDB
