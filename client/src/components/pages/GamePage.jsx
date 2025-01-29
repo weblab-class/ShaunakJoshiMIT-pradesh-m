@@ -69,7 +69,7 @@ const GamePage = () => {
     get("/api/user", { userid: userId }).then((userObj) => {
       setUser(userObj);
       const userNickname = userObj.nickname;
-      socket.emit("joinLobby", lobbyCode, userNickname);
+      socket.emit("joinLobby", lobbyCode, userId);
 
       get("/api/game/role", { lobbyCode, user_id: userId }).then((data) => {
         setRole(data.role);
@@ -248,7 +248,7 @@ const GamePage = () => {
           isOpen={isModalOpen}
           title={modalContent.title}
           content={modalContent.content}
-          duration={5000} 
+          duration={5000}
           onClose={handleCloseModal}
         />
       </div>

@@ -40,9 +40,14 @@ mongoose
 const app = express();
 
 // CORS Configuration
+const allowedOrigins = [
+  "http://localhost:5173",        // local frontend
+  "https://find-the-moles.onrender.com", // your production domain
+];
+
 app.use(
   cors({
-    origin: CLIENT_ORIGIN,      // e.g., "https://yourapp.onrender.com"
+    origin: allowedOrigins,      // e.g., "https://yourapp.onrender.com"
     credentials: true,          // Allow cookies to be sent
   })
 );
@@ -104,7 +109,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 10000; // Use environment PORT
+const port = process.env.PORT || 3000; // Use environment PORT
 const server = http.Server(app);
 socketManager.init(server);
 

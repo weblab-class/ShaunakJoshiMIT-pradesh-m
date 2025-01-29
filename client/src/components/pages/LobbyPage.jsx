@@ -11,11 +11,11 @@ const LobbyPage = () => {
   const navigate = useNavigate()
   const socket = useContext(SocketContext);
   const [lobby, setLobby] = useState(null)
-  const { decoded } = useContext(UserContext)
+  const { userId, decoded } = useContext(UserContext)
   const nickname = decoded?.nickname || "anonymous"
 
   useEffect(() => {
-    socket.emit("joinLobby", lobbyCode, nickname)
+    socket.emit("joinLobby", lobbyCode, userId)
     socket.on("updateUsers", (data) => {
       setLobby((prevLobby) => ({
         ...prevLobby,
