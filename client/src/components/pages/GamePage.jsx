@@ -88,7 +88,7 @@ const GamePage = () => {
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  }, [socket, lobbyCode, userId, navigate]);
+  }, );
 
   // Stable onClose function using useCallback
   const handleCloseModal = useCallback(() => {
