@@ -1,4 +1,3 @@
-// src/api.js
 
 const BASE_URL = process.env.NODE_ENV === "production"
   ? "https://find-the-moles.onrender.com/api"  // Replace with your Render app URL

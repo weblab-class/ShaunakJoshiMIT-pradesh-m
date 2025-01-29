@@ -98,7 +98,6 @@ const ProfilePage = () => {
         <section className="user-info-section">
           <h2>Basic Information</h2>
           <div className="user-info">
-            <p><strong>User ID:</strong> {user.id}</p>
             <p><strong>Nickname:</strong> {user.nickname || 'N/A'}</p>
             <p><strong>Wins:</strong> {user.wins || 0}</p>
             <p><strong>Losses:</strong> {user.losses || 0}</p>
