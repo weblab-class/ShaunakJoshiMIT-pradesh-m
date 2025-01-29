@@ -281,14 +281,13 @@ router.post("/move", async (req, res) => {
     game.phase = "TRIVIA";
     await game.save();
 
-    const io = getIo();
-    console.log("Emitting Game Data after MOVE")
-    io.to(lobbyCode).emit("gameData", game);
-
-
+    
     try {
+      const io = getIo();
       const realQ = await fetchOpenTDBQuestion();
       game.triviaQuestion = realQ;
+      await game.save();
+      io.to(lobbyCode).emit("gameData", game);
     } catch (err) {
       game.triviaQuestion = {
         question: "Fallback question: capital of France?",
@@ -523,7 +522,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       if (adjacentNodes.length > 0) {
         game.nextLocation = adjacentNodes[Math.floor(Math.random() * adjacentNodes.length)];
       }
-      await game.save();
       game.triviaQuestion = generateTriviaQuestion();
       game.phaseEndTime = Date.now() + PHASE_DURATIONS.TRIVIA;
       await game.save();
