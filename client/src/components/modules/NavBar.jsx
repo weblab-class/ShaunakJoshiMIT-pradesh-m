@@ -1,4 +1,3 @@
-// NavBar.jsx
 import React from "react";
 import "../styles/NavBar.css";
 import siteLogo from "../assets/images/site-logo.png";

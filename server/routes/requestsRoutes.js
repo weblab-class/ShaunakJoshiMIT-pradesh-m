@@ -4,7 +4,6 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const auth = require("../auth");
-// const io = require("../server-socket").getIo();
 const { getSocketFromUserID, getIo } = require("../server-socket");
 
 
@@ -23,8 +22,6 @@ function generateRandomString() {
   return randomString;
 }
 
-
-/* FRIEND REQUESTS ROUTING */
 router.post("/sendRequest", auth.ensureLoggedIn, async (req, res) => {
 
 

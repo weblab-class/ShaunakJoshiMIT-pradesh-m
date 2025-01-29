@@ -1,16 +1,12 @@
-// lobbyRoutes.js
-
 const express = require("express");
 const router = express.Router();
 const Lobby = require("../models/lobby.js");
 const Game = require("../models/game.js");
 const User = require("../models/user.js");
 
-// import your socket manager
 const socketManager = require("../server-socket");
 const { setPhaseTimeout, clearPhaseTimeout } = require("../utils/phaseTimeouts.js");
 
-/** Utility to generate a random 5-letter lobby code */
 function generateLobbyCode(existingCodes) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let code;
@@ -22,7 +18,6 @@ function generateLobbyCode(existingCodes) {
   return code;
 }
 
-/** Shuffle an array (used for turnOrder, imposters, etc.) */
 function shuffleArray(array) {
   const shuffled = array.slice();
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -32,7 +27,6 @@ function shuffleArray(array) {
   return shuffled;
 }
 
-/** Grab N random elements from an array (like picking N imposters, etc.) */
 function getRandomElements(array, n) {
   if (n > array.length) {
     throw new Error("n cannot be larger than the array size");
@@ -45,7 +39,6 @@ function getRandomElements(array, n) {
   return shuffled.slice(0, n);
 }
 
-/** Generate grid nodes for a rows x cols game */
 function generateGridNodes(rows, cols) {
   const nodes = [];
   for (let row = 0; row < rows; row++) {
@@ -54,7 +47,6 @@ function generateGridNodes(rows, cols) {
       const xPos = col * 100;
       const yPos = row * 100;
 
-      // 10% chance rigged for example
       const isRigged = Math.random() < 0.1;
       const challenge = isRigged
         ? { question: "Impossible question!", isImpossible: true }
@@ -72,13 +64,11 @@ function generateGridNodes(rows, cols) {
   return nodes;
 }
 
-/** Generate edges for a rows x cols grid (4-direction adjacency) */
 function generateGridEdges(rows, cols) {
   const edges = [];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const sourceId = `${row}-${col}`;
-      // Right neighbor
       if (col + 1 < cols) {
         const targetId = `${row}-${col + 1}`;
         edges.push({
@@ -91,7 +81,6 @@ function generateGridEdges(rows, cols) {
           style: { stroke: "#00ff00", strokeWidth: 2 },
         });
       }
-      // Down neighbor
       if (row + 1 < rows) {
         const targetId = `${row + 1}-${col}`;
         edges.push({
@@ -109,9 +98,6 @@ function generateGridEdges(rows, cols) {
   return edges;
 }
 
-/** ----------------------------------------------------------------
-    CREATE LOBBY
-------------------------------------------------------------------*/
 router.post("/create", async (req, res) => {
   const { host_id } = req.body;
   try {
@@ -127,8 +113,6 @@ router.post("/create", async (req, res) => {
       user_ids: [host_id],
       in_game: false,
       host_id,
-      // timeLimit default is in the schema (maybe 10)
-      // gridSize default is in the schema (maybe 3)
     });
     await lobby.save();
 
@@ -138,9 +122,6 @@ router.post("/create", async (req, res) => {
   }
 });
 
-/** ----------------------------------------------------------------
-    JOIN LOBBY
-------------------------------------------------------------------*/
 router.post("/join", async (req, res) => {
   const { lobbyCode, user_id } = req.body;
   try {
@@ -168,9 +149,6 @@ router.post("/join", async (req, res) => {
   }
 });
 
-/** ----------------------------------------------------------------
-    LEAVE LOBBY
-------------------------------------------------------------------*/
 router.post("/leave", async (req, res) => {
   const { lobbyCode, user_id } = req.body;
   try {
@@ -201,9 +179,6 @@ router.post("/leave", async (req, res) => {
   }
 });
 
-/** ----------------------------------------------------------------
-    CREATE GAME
-------------------------------------------------------------------*/
 router.post("/:lobbyCode/createGame", async (req, res) => {
   const { lobbyCode } = req.params;
   const { user_id } = req.body;
@@ -221,7 +196,6 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
       return res.status(403).json({ message: "Only the host can start the game." });
     }
 
-    // For demonstration: requiring at least 2 players
     if (!lobby.user_ids || lobby.user_ids.length < 2) {
       return res.status(400).json({ message: "Need at least 2 players to start the game." });
     }
@@ -229,19 +203,16 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
     lobby.in_game = true;
     await lobby.save();
 
-    // Use the lobby's timeLimit and gridSize to build the game
     const chosenRows = lobby.gridSize || 3;
     const chosenCols = chosenRows;
-    const chosenTimeLimit = lobby.timeLimit || 10; // in minutes
+    const chosenTimeLimit = lobby.timeLimit || 10;
 
     const nodes = generateGridNodes(chosenRows, chosenCols);
     const edges = generateGridEdges(chosenRows, chosenCols);
 
-    // Example: 1 random imposter
     const imposters = getRandomElements(lobby.user_ids, 1);
     const turnOrder = shuffleArray(lobby.user_ids);
 
-    // Make the new game
     const game = new Game({
       lobbyCode,
       user_ids: lobby.user_ids,
@@ -255,7 +226,7 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
       currTurn: 0,
       phase: "APPOINT",
       location: "0-0",
-      timeLimit: chosenTimeLimit * 60, // converting minutes to seconds, or store as is
+      timeLimit: chosenTimeLimit * 60,
       startTime: new Date(),
       endTime: new Date(Date.now() + chosenTimeLimit * 60 * 1000),
     });
@@ -263,29 +234,24 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
     await game.save();
 
     
-    // Broadcast to all players
     socketManager.getIo().to(lobbyCode).emit("gameStarted", { lobbyCode, game });
 
-    // We optionally set a phaseEndTime for the APPOINT phase
-    const APPOINT_DURATION = 25000; // 25 seconds
+    const APPOINT_DURATION = 25000;
     game.phaseEndTime = Date.now() + APPOINT_DURATION;
     await game.save();
     socketManager.getIo().to(lobbyCode).emit("gameData", game);
 
-    // Set up the timed APPOINT -> next logic
     clearPhaseTimeout(lobbyCode);
     setPhaseTimeout(lobbyCode, "APPOINT", APPOINT_DURATION, async () => {
       const updatedGame = await Game.findOne({ lobbyCode });
       if (!updatedGame || updatedGame.phase !== "APPOINT") return;
 
-      // forced pass to next president
       updatedGame.currTurn = (updatedGame.currTurn + 1) % updatedGame.user_ids.length;
       updatedGame.phaseEndTime = Date.now() + APPOINT_DURATION;
       await updatedGame.save();
 
       socketManager.getIo().to(lobbyCode).emit("gameData", updatedGame);
 
-      // re-schedule if you want repeated forced pass...
     });
 
     return res.status(200).json({ message: "Game successfully started", game });
@@ -295,9 +261,6 @@ router.post("/:lobbyCode/createGame", async (req, res) => {
   }
 });
 
-/** ----------------------------------------------------------------
-    UPDATE SETTINGS (TIME + GRID)
-------------------------------------------------------------------*/
 router.post("/updateSettings", async (req, res) => {
   const { lobbyCode, userNickname, timeLimit, gridSize } = req.body;
 
@@ -307,12 +270,10 @@ router.post("/updateSettings", async (req, res) => {
       return res.status(404).json({ error: "Lobby not found" });
     }
 
-    // Only host can update
     if (lobby.host_id !== userNickname) {
       return res.status(403).json({ error: "Only the lobby host can update settings" });
     }
 
-    // Validate timeLimit, if provided
     if (timeLimit !== undefined) {
       const t = Number(timeLimit);
       if (isNaN(t) || t < 1 || t > 60) {
@@ -321,7 +282,6 @@ router.post("/updateSettings", async (req, res) => {
       lobby.timeLimit = t;
     }
 
-    // Validate gridSize, if provided
     if (gridSize !== undefined) {
       const g = Number(gridSize);
       if (![3, 9].includes(g)) {
@@ -332,7 +292,6 @@ router.post("/updateSettings", async (req, res) => {
 
     await lobby.save();
 
-    // broadcast updated lobby to everyone
     socketManager.getIo().to(lobbyCode).emit("lobbyData", lobby);
 
     res.status(200).json({ message: "Lobby settings updated", lobby });

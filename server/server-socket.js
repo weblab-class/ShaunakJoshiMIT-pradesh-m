@@ -72,21 +72,18 @@ module.exports = {
         removeUser(user, socket);
 
         try {
-          // Atomic update: Remove the user from user_ids
           const lobby = await Lobby.findOneAndUpdate(
             { lobbyCode },
             { $pull: { user_ids: user } },
-            { new: true } // Return the updated document
+            { new: true }
           );
 
           if (lobby) {
             if (lobby.user_ids.length === 0) {
-              // If no users left, delete the lobby
               await Lobby.deleteOne({ lobbyCode });
               io.to(lobbyCode).emit("updateUsers", { action: "empty", users: [] });
               console.log(`Lobby ${lobbyCode} deleted as it became empty.`);
             } else {
-              // Emit updated user list
               io.to(lobbyCode).emit("updateUsers", {
                 action: "leave",
                 user,
@@ -101,7 +98,6 @@ module.exports = {
           console.error("Error in leaveLobby:", error);
           if (error.name === 'VersionError') {
             console.warn(`VersionError while leaving lobby ${lobbyCode}:`, error.message);
-            // Optionally, refetch the lobby or inform the user
           }
         }
       });

@@ -84,20 +84,19 @@ const Terminal = () => {
       case "create":
         if (tokens[1]?.toLowerCase() === "lobby") {
           const nickname = getNickname();
-          if (!nickname)
+          if (!nickname) {
             return "Please set your nickname first with: nickname <your nickname>";
+          }
           try {
             const lobby = await createLobby(nickname);
             navigate(`/lobby/${lobby.lobbyCode}`);
             playDing();
             return `Lobby created: ${lobby.lobbyCode}. Navigating to the lobby.`;
           } catch (error) {
-            return `Failed to create lobby: ${error.message}`;
+            return `Mission aborted: ${error.message}`;
           }
         }
         if (tokens[1]?.toLowerCase() === "game") {
-          const pathParts = window.location.pathname.split("/");
-          const lobbyCode = pathParts[2];
           if (!lobbyCode) {
             return "You are not currently in a lobby.";
           }
@@ -107,7 +106,7 @@ const Terminal = () => {
             playDing();
             return "Game created. Navigating to the game page.";
           } catch (error) {
-            return `Failed to create game: ${error.message}`;
+            return `Unable to initialize infiltration: ${error.message}`;
           }
         }
         return "Invalid create command. Try 'create lobby' or 'create game'.";
@@ -128,7 +127,7 @@ const Terminal = () => {
           });
           return `Successfully appointed ${appointee} as the hacker.`;
         } catch (error) {
-          return `Failed to appoint: ${error.message}`;
+          return `Appointment failed: ${error.message}`;
         }
 
       case "move":
@@ -147,7 +146,7 @@ const Terminal = () => {
           });
           return `Proposed move to ${targetNode}.`;
         } catch (error) {
-          return `Failed to move: ${error.message}`;
+          return `Move operation failed: ${error.message}`;
         }
 
       case "vote":
@@ -169,7 +168,7 @@ const Terminal = () => {
           });
           return `Your vote has been cast: ${decision}.`;
         } catch (error) {
-          return `Failed to cast vote: ${error.message}`;
+          return `Voting disrupted: ${error.message}`;
         }
 
       case "answer":
@@ -188,7 +187,7 @@ const Terminal = () => {
           });
           return `Your answer has been submitted: ${answer}.`;
         } catch (error) {
-          return `Failed to submit answer: ${error.message}`;
+          return `Your infiltration code glitched: ${error.message}`;
         }
 
       case "role":
@@ -202,7 +201,7 @@ const Terminal = () => {
           const response = await get("/api/game/role", { lobbyCode, user_id: userId });
           return `Your role is: ${response.role}.`;
         } catch (error) {
-          return `Failed to get your role: ${error.message}`;
+          return `Could not retrieve your infiltration status: ${error.message}`;
         }
 
       case "next":
@@ -217,24 +216,25 @@ const Terminal = () => {
             lobbyCode,
             user_id: userId,
           });
-          return `The game result is: ${response.result}.`;
+          return `The outcome was processed. ${response.result ? response.result : ""}`;
         } catch (error) {
-          return `Failed to get game result: ${error.message}`;
+          return `Data extraction failed: ${error.message}`;
         }
 
       case "join":
         if (tokens[1]?.toLowerCase() === "lobby" && tokens.length === 3) {
           const joinCode = tokens[2].toUpperCase();
           const nickname = getNickname();
-          if (!nickname)
+          if (!nickname) {
             return "Please set your nickname first with: nickname <your nickname>";
+          }
           try {
             const lobby = await joinLobby(joinCode, nickname);
             navigate(`/lobby/${joinCode}`);
             playDing();
             return `Joined lobby: ${joinCode}. Navigating to the lobby.`;
           } catch (error) {
-            return `Failed to join lobby: ${error.message}`;
+            return `Unable to join operation: ${error.message}`;
           }
         }
         return "Invalid join command. Usage: join lobby <lobbyCode>";
@@ -249,19 +249,14 @@ const Terminal = () => {
             playDing();
             return `Successfully left the lobby: ${leaveCode}. ${response.message}`;
           } catch (error) {
-            return `Failed to leave lobby: ${error.message}`;
+            return `Retreat unsuccessful: ${error.message}`;
           }
         }
         return "Invalid leave command. Usage: leave lobby <lobbyCode>";
 
       case "nickname": {
         const newNick = tokens.slice(1).join(" ").trim();
-        if (
-          !newNick ||
-          newNick.length > 16 ||
-          newNick.length < 4 ||
-          newNick.indexOf(" ") >= 0
-        ) {
+        if (!newNick || newNick.length > 16 || newNick.length < 4 || newNick.indexOf(" ") >= 0) {
           return "Nickname must be between 4 and 16 characters and cannot have spaces. Usage: nickname <your-nickname>";
         }
         try {
@@ -277,7 +272,7 @@ const Terminal = () => {
           return `Nickname set to: ${response.nickname}`;
         } catch (error) {
           console.error("Error setting nickname:", error);
-          return "That nickname is already in use, please try again.";
+          return "Codename is compromised. Try a different identity.";
         }
       }
 
@@ -296,7 +291,7 @@ const Terminal = () => {
               playDing();
               return `Successfully sent a friend request to ${reqNickName}`;
             } catch (error) {
-              return `Error sending friend request: ${error.message}`;
+              return `Request infiltration to friend denied: ${error.message}`;
             }
 
           case "accept":
@@ -312,7 +307,7 @@ const Terminal = () => {
               playDing();
               return `Successfully accepted ${reqNickName}'s friend request.`;
             } catch (error) {
-              return `Error accepting friend request: ${error.message}`;
+              return `Couldn't accept friend infiltration: ${error.message}`;
             }
 
           case "reject":
@@ -328,13 +323,12 @@ const Terminal = () => {
               playDing();
               return `Successfully rejected ${reqNickName}'s friend request.`;
             } catch (error) {
-              return `Error rejecting friend request: ${error.message}`;
+              return `Failed to reject infiltration attempt: ${error.message}`;
             }
 
           default:
             return "Invalid friend subcommand. Try: friend request <username>";
         }
-
 
       case "time": {
         if (!lobbyCode) {
@@ -359,7 +353,6 @@ const Terminal = () => {
           return `Failed to set time limit: ${error.message}`;
         }
       }
-
 
       case "grid": {
         if (!lobbyCode) {

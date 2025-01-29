@@ -1,4 +1,3 @@
-// GameTimer.jsx
 import React, { useEffect, useState } from "react";
 import "../styles/GameTimer.css";
 

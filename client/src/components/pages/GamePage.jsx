@@ -1,4 +1,3 @@
-// GamePage.jsx
 import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -231,7 +230,6 @@ const GamePage = () => {
               <strong>Your Role:</strong> {role}
             </div>
           )}
-          <h1>Lobby Code: {lobbyCode}</h1>
         </header>
 
         <div className="game-main">

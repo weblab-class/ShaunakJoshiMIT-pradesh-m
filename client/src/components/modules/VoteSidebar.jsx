@@ -1,5 +1,3 @@
-// VoteSidebar.jsx
-
 import React, {useContext, useState, useEffect} from "react";
 import "../styles/VoteSidebar.css";
 import voteIcon from "../assets/images/votingIcon.png";

@@ -7,7 +7,6 @@ import { SocketContext } from "./modules/SocketContext.jsx";
 import { AudioProvider } from "./modules/AudioContext";
 
 export const UserContext = createContext(null);
-// change again
 const App = () => {
   const [userId, setUserId] = useState(undefined);
   const [decoded, setDecoded] = useState(() => {

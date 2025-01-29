@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React from "react";
 import "../../utilities.css";
 import "../styles/HomePage.css";
