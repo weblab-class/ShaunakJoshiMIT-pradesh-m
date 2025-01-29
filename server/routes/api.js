@@ -1,24 +1,9 @@
 // api.js
 
-/*
-|--------------------------------------------------------------------------
-| api.js -- server routes
-|--------------------------------------------------------------------------
-|
-| This file defines the routes for your server.
-|
-*/
-
 const express = require("express");
-
-// Import models so we can interact with the database
-const User = require("../models/user");
-
-// Import authentication library
 const auth = require("../auth");
-
-// Import socket manager
 const socketManager = require("../server-socket");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -34,7 +19,7 @@ router.get("/whoami", (req, res) => {
     // Not logged in
     return res.send({});
   }
-
+  // If logged in, send the user doc
   res.send(req.user);
 });
 
@@ -44,7 +29,6 @@ router.get("/user", (req, res) => {
   if (!userid) {
     return res.status(400).send("User ID is required");
   }
-
   User.findById(userid)
     .then((user) => {
       if (!user) {
@@ -60,7 +44,6 @@ router.get("/user", (req, res) => {
 
 // POST /api/initsocket
 router.post("/initsocket", (req, res) => {
-  // Do nothing if user not logged in
   if (req.user) {
     socketManager.addUser(
       req.user,
@@ -70,7 +53,7 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
-// Fallback for undefined routes
+// fallback for undefined routes
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);
   res.status(404).send({ msg: "API route not found" });

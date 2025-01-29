@@ -14,17 +14,22 @@ const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes");
 const requestRoutes = require("./routes/requestsRoutes");
-const lobbyRoutes = require("./routes/lobbyRoutes.js"); // <== important
-const gameRoutes = require("./routes/gameRoutes.js");
-const api = require("./routes/api.js");
+const lobbyRoutes = require("./routes/lobbyRoutes");
+const gameRoutes = require("./routes/gameRoutes");
+const api = require("./routes/api");
 const auth = require("./auth");
 const socketManager = require("./server-socket");
 
 // Environment Variables
 const mongoConnectionURL = process.env.MONGO_SRV;
 const databaseName = "findthemoles";
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://find-the-moles.onrender.com"; // Add your Render app URL in .env
 const SESSION_SECRET = process.env.SESSION_SECRET || "session-secret";
+
+// If you want to allow both dev (localhost) + production:
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://find-the-moles.onrender.com",
+];
 
 // Connect to MongoDB
 mongoose.set("strictQuery", false);
@@ -39,39 +44,45 @@ mongoose
 
 const app = express();
 
-// CORS Configuration
+// CORS Setup
 app.use(
   cors({
-    origin: CLIENT_ORIGIN,      // e.g., "https://yourapp.onrender.com"
-    credentials: true,          // Allow cookies to be sent
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow mobile apps, curl, etc.
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // allow cookies
   })
 );
 
-// Middleware
 app.use(validator.checkRoutes);
 app.use(express.json());
 
 // Session Configuration
 app.use(
   session({
-    secret: SESSION_SECRET,     // Use a strong secret in production
+    secret: SESSION_SECRET, // use a strong secret in production
     resave: false,
     saveUninitialized: false,
     cookie: {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+      secure: process.env.NODE_ENV === "production", // true if production (HTTPS)
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
   })
 );
 
-// Populate req.user if logged in
+// Populate req.user if logged in (auth.populateCurrentUser sets req.user = req.session.user)
 app.use(auth.populateCurrentUser);
 
 // Mount Routes
-app.use("/api/user", userRoutes);        // e.g. /api/user/setNickname
+app.use("/api/user", userRoutes);
 app.use("/api/requests", requestRoutes);
-app.use("/api/lobby", lobbyRoutes);      // includes /updateSettings
+app.use("/api/lobby", lobbyRoutes);
 app.use("/api/game", gameRoutes);
 app.use("/api", api);
 
