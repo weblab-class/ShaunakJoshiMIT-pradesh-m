@@ -16,6 +16,7 @@ import IntermediateModal from "../modules/IntermediateModal.jsx";
 import { get } from "../../utilities";
 import PhaseTimer from "../modules/PhaseTimer.jsx";
 import "../styles/GamePage.css";
+import CommandHints from "../components/CommandHints.jsx"; // Added import
 
 export default function GamePage() {
   const { lobbyCode } = useParams();
@@ -166,6 +167,15 @@ export default function GamePage() {
   } else {
     sidebar = <DefaultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   }
+
+  const commands = [
+    "start game",
+    "pause game",
+    "end game",
+    "cd lobby",
+    "cd profile",
+    "cd settings"
+  ];
 
   return (
     <Layout currentPage="game">

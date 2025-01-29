@@ -5,6 +5,7 @@ import "../styles/ProfilePage.css";
 import { UserContext } from "../App.jsx";
 import { get } from "../../utilities";
 import { SocketContext } from "../modules/SocketContext.jsx";
+import CommandHints from "../components/CommandHints.jsx";
 
 const ProfilePage = () => {
   const { userId } = useContext(UserContext);
@@ -60,6 +61,12 @@ const ProfilePage = () => {
   const numberOfStreams = 10;
   const digitsPerStream = 50;
 
+  const commands = [
+    "cd home",
+    "cd friends",
+    "cd settings"
+  ];
+
   if (!user) {
     return (
       <Layout currentPage="profile">
@@ -74,6 +81,7 @@ const ProfilePage = () => {
 
           <div className="loading">Loading...</div>
         </div>
+        <CommandHints commands={commands} />
       </Layout>
     );
   }
@@ -104,14 +112,7 @@ const ProfilePage = () => {
           </div>
         </section>
       </div>
-      <div className="command-hints">
-        <h3>Terminal Commands</h3>
-        <ul>
-          <li>cd home</li>
-          <li>cd friends</li>
-          <li>cd settings</li>
-        </ul>
-      </div>
+      <CommandHints commands={commands} />
     </Layout>
   );
 };

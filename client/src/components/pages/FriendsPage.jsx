@@ -6,6 +6,7 @@ import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../../utilities";
 import { SocketContext } from "../modules/SocketContext.jsx";
+import CommandHints from "../components/CommandHints.jsx";
 
 const FriendsPage = (props) => {
   const { userId } = useContext(UserContext);
@@ -117,6 +118,15 @@ const FriendsPage = (props) => {
     );
   });
 
+  const commands = [
+    "friend request <nickname>",
+    "friend accept <nickname>",
+    "friend reject <nickname>",
+    "cd home",
+    "cd profile",
+    "cd settings"
+  ];
+
   return (
     <Layout currentPage="friends">
       <div className="Friends-Page">
@@ -157,17 +167,7 @@ const FriendsPage = (props) => {
           )}
         </div>
       </div>
-      <div className="command-hints">
-        <h3>Terminal Commands</h3>
-        <ul>
-          <li>friend request &lt;nickname&gt;</li>
-          <li>friend accept &lt;nickname&gt;</li>
-          <li>friend reject &lt;nickname&gt;</li>
-          <li>cd home</li>
-          <li>cd profile</li>
-          <li>cd settings</li>
-        </ul>
-      </div>
+      <CommandHints commands={commands} />
     </Layout>
   );
 };

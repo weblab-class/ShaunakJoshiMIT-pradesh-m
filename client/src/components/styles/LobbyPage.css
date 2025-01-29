@@ -118,34 +118,3 @@
   color: #ff5722;
   font-weight: bold;
 }
-
-.command-hints {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.85);
-    border: 2px solid #00ff00;
-    border-radius: 10px;
-    padding: 1rem;
-    color: #00ff00;
-    font-family: 'Press Start 2P', monospace;
-    box-shadow: 0 0 10px #00ff00;
-    z-index: 5;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.command-hints h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    text-shadow: 0 0 5px #00ff00;
-}
-
-.command-hints ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.command-hints li {
-    margin: 0.25rem 0;
-}

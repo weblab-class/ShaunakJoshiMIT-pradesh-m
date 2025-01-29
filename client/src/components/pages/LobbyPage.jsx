@@ -1,44 +1,52 @@
-import React, { useEffect, useState, useContext } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import Layout from "../Layout.jsx"
-import { UserContext } from "../App"
-import "../styles/LobbyPage.css"
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Layout from "../Layout.jsx";
+import { UserContext } from "../App";
+import "../styles/LobbyPage.css";
 import { SocketContext } from "../modules/SocketContext.jsx";
+import CommandHints from "../components/CommandHints.jsx";
 
 const LobbyPage = () => {
-  const { lobbyCode } = useParams()
-  const navigate = useNavigate()
+  const { lobbyCode } = useParams();
+  const navigate = useNavigate();
   const socket = useContext(SocketContext);
-  const [lobby, setLobby] = useState(null)
-  const { decoded } = useContext(UserContext)
-  const nickname = decoded?.nickname || "anonymous"
+  const [lobby, setLobby] = useState(null);
+  const { decoded } = useContext(UserContext);
+  const nickname = decoded?.nickname || "anonymous";
 
   useEffect(() => {
-    socket.emit("joinLobby", lobbyCode, nickname)
+    socket.emit("joinLobby", lobbyCode, nickname);
     socket.on("updateUsers", (data) => {
       setLobby((prevLobby) => ({
         ...prevLobby,
         user_ids: data.users || (prevLobby ? prevLobby.user_ids : []),
         host_id: data.host_id || (prevLobby ? prevLobby.host_id : null),
-      }))
-    })
+      }));
+    });
     socket.on("lobbyData", (lobbyData) => {
-      setLobby(lobbyData)
-    })
-    socket.on("gameStarted", ({lobbyCode, game}) => {
-      console.log(lobbyCode)
+      setLobby(lobbyData);
+    });
+    socket.on("gameStarted", ({ lobbyCode, game }) => {
+      console.log(lobbyCode);
       navigate(`/game/${lobbyCode}`);
-    })
+    });
     return () => {
-      socket.emit("leaveLobby", lobbyCode, nickname)
-      socket.off("updateUsers")
-      socket.off("lobbyData")
-      socket.off("gameStarted")
-    }
-  }, [lobbyCode, nickname, navigate, socket])
+      socket.emit("leaveLobby", lobbyCode, nickname);
+      socket.off("updateUsers");
+      socket.off("lobbyData");
+      socket.off("gameStarted");
+    };
+  }, [lobbyCode, nickname, navigate, socket]);
 
-  const users = lobby?.user_ids || []
-  const host = lobby?.host_id || (users.length ? users[0] : null)
+  const users = lobby?.user_ids || [];
+  const host = lobby?.host_id || (users.length ? users[0] : null);
+
+  // Define the commands specific to LobbyPage
+  const commands = [
+    "leave lobby <code>",
+    "time <minutes>",
+    "grid <3|9>"
+  ];
 
   return (
     <Layout currentPage="lobby">
@@ -74,16 +82,9 @@ const LobbyPage = () => {
           )}
         </div>
       </div>
-      <div className="command-hints">
-        <h3>Terminal Commands</h3>
-        <ul>
-          <li>leave lobby &lt;code&gt;</li>
-          <li>time &lt;minutes&gt;</li>
-          <li>grid &lt;3|9&gt;</li>
-        </ul>
-      </div>
+      <CommandHints commands={commands} />
     </Layout>
-  )
-}
+  );
+};
 
 export default LobbyPage;

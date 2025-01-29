@@ -4,6 +4,7 @@ import "../styles/SettingsPage.css";
 import { UserContext } from "../App.jsx";
 import { SocketContext } from "../modules/SocketContext.jsx";
 import { AudioContext } from "../modules/AudioContext";
+import CommandHints from "../components/CommandHints.jsx";
 
 const SettingsPage = () => {
     const { userId } = useContext(UserContext);
@@ -41,6 +42,13 @@ const SettingsPage = () => {
     const handleFxChange = (e) => {
         setFxVolume(Number(e.target.value));
     };
+
+    // Define the commands specific to SettingsPage
+    const commands = [
+        "cd home",
+        "cd profile",
+        "cd friends"
+    ];
 
     return (
         <Layout currentPage="settings">
@@ -84,14 +92,7 @@ const SettingsPage = () => {
                     </div>
                 </section>
             </div>
-            <div className="command-hints">
-                <h3>Terminal Commands</h3>
-                <ul>
-                    <li>cd home</li>
-                    <li>cd profile</li>
-                    <li>cd friends</li>
-                </ul>
-            </div>
+            <CommandHints commands={commands} />
         </Layout>
     );
 };

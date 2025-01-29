@@ -2,8 +2,16 @@ import React from "react";
 import "../../utilities.css";
 import "../styles/HomePage.css";
 import Layout from "../Layout.jsx";
+import CommandHints from "../components/CommandHints.jsx";
 
 const HomePage = () => {
+  const commands = [
+    "create lobby",
+    "cd profile",
+    "cd friends",
+    "cd settings"
+  ];
+
   return (
     <Layout currentPage="home">
       <div className="homepage">
@@ -33,15 +41,7 @@ const HomePage = () => {
 
         <div className="animation-bg"></div>
       </div>
-      <div className="command-hints">
-        <h3>Terminal Commands</h3>
-        <ul>
-          <li>create lobby</li>
-          <li>cd profile</li>
-          <li>cd friends</li>
-          <li>cd settings</li>
-        </ul>
-      </div>
+      <CommandHints commands={commands} />
     </Layout>
   );
 };
