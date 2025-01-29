@@ -9,7 +9,7 @@
   font-family: monospace;
   padding: 10px;
   width: 100%;
-  max-height: 400px; /* Optional: Limit the maximum height */
+  max-height: 300px; /* Optional: Limit the maximum height */
   box-sizing: border-box;
   resize: vertical;
   opacity: 1; /* Fully opaque */
@@ -31,7 +31,7 @@
 .terminal-display {
   background-color: #000; /* Solid black background */
   color: #fff; /* White text */
-  height: 200px;
+  height: 125px;
   overflow-y: auto;
   margin: 10px 0;
   min-height: 50px;

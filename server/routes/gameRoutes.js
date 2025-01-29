@@ -222,11 +222,12 @@ router.post("/vote", async (req, res) => {
     if (!game.votes) game.votes = {};
 
     // Prevent double voting
-    if (game.votes[user_id]) {
+    const user = await User.findById(user_id);
+
+    if (game.votes[user.nickname]) {
       return res.status(400).json({ error: "You have already cast your vote" });
     }
 
-    const user = await User.findById(user_id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -323,6 +324,7 @@ router.post("/move", async (req, res) => {
     await game.save();
 
     const io = getIo();
+    console.log("Emitting Game Data after MOVE")
     io.to(lobbyCode).emit("gameData", game);
 
     // Timeout => forced transition to RESULT
@@ -432,8 +434,12 @@ router.post("/result", async (req, res) => {
         game.phase = "APPOINT";
       }
     } else {
-      // Wrong => remove that node from the graph
-      const nodeIdToDelete = game.nextLocation;
+      // Wrong => remove that node from the graph unless node is goal node
+      let nodeIdToDelete = game.nextLocation;
+      if (game.nextLocation === `${game.rows - 1}-${game.cols - 1}`) {
+        nodeIdToDelete = null;
+      }
+
       if (!game.nodes.some((n) => n.id === nodeIdToDelete)) {
         return res
           .status(400)
@@ -485,6 +491,30 @@ router.post("/result", async (req, res) => {
   } catch (error) {
     console.error("Error in /result:", error);
     return res.status(500).json({ error: "An internal server error occurred during result." });
+  }
+});
+
+router.post("/rig", async (req, res) => {
+  const {lobbyCode, user_id, target} = req.body;
+  try {
+    const game = await Game.findOne({ lobbyCode });
+    const user = await Game.findById(user_id);
+
+    if (!game) {
+      return res.status(404).json({ error: "Game not found"})
+    }
+    if (!user || !game.imposters.includes(user.nickname)) {
+      return res.status(400).json({error: "You are unable to do this"})
+    }
+
+    if (game.phase !== "VOTE") {
+      return res.status(400).json({error: "You cannot rig in this phase"})
+    }
+
+
+  } catch (error) {
+    console.error("Error in /rig:", error);
+    return res.status(500).json({ error: "An internal server error occurred." });
   }
 });
 
