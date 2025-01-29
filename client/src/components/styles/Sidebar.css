@@ -1,0 +1,79 @@
+.sidebar {
+    width: 260px;
+    padding: 20px;
+    margin-right: 20px;
+    overflow-y: auto;
+    background-color: #1a1a1a;
+    border: 2px solid #66cc66;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(102, 204, 102, 0.2);
+    color: #66cc66;
+    font-family: 'Press Start 2P', monospace;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar h2,
+  .sidebar h3 {
+    text-align: center;
+    margin: 0 0 15px;
+    color: #66cc66;
+    font-size: 1em;
+  }
+  
+  .sidebar p {
+    font-size: 0.8em;
+    line-height: 1.4;
+    margin: 0 0 10px;
+  }
+  
+  .sidebar code {
+    background-color: #333;
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.8em;
+  }
+  
+  .sidebar table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+  
+  .sidebar table th,
+  .sidebar table td {
+    border: 1px solid #66cc66;
+    padding: 6px;
+    text-align: center;
+    background-color: #2c2c2c;
+  }
+  
+  .sidebar table th {
+    background-color: #333;
+    color: #66cc66;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+  }
+  
+  .sidebar li {
+    margin-bottom: 5px;
+  }
+  
+  .sidebar .highlight {
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  
+  .sidebar .role-badge {
+    margin-left: 5px;
+    background-color: #999;
+    color: #000;
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 0.6em;
+  }
