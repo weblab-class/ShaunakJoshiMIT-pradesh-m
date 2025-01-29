@@ -4,7 +4,7 @@ import Layout from "../Layout.jsx";
 import { UserContext } from "../App";
 import "../styles/LobbyPage.css";
 import { SocketContext } from "../modules/SocketContext.jsx";
-import CommandHints from "../components/CommandHints.jsx";
+import CommandHints from "../modules/CommandHints.jsx";
 
 const LobbyPage = () => {
   const { lobbyCode } = useParams();

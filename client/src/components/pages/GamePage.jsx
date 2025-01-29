@@ -16,7 +16,6 @@ import IntermediateModal from "../modules/IntermediateModal.jsx";
 import { get } from "../../utilities";
 import PhaseTimer from "../modules/PhaseTimer.jsx";
 import "../styles/GamePage.css";
-import CommandHints from "../components/CommandHints.jsx"; // Added import
 
 export default function GamePage() {
   const { lobbyCode } = useParams();

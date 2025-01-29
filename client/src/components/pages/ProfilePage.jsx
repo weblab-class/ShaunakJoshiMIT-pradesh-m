@@ -5,7 +5,7 @@ import "../styles/ProfilePage.css";
 import { UserContext } from "../App.jsx";
 import { get } from "../../utilities";
 import { SocketContext } from "../modules/SocketContext.jsx";
-import CommandHints from "../components/CommandHints.jsx";
+import CommandHints from "../modules/CommandHints.jsx";
 
 const ProfilePage = () => {
   const { userId } = useContext(UserContext);

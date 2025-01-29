@@ -2,7 +2,7 @@ import React from "react";
 import "../../utilities.css";
 import "../styles/HomePage.css";
 import Layout from "../Layout.jsx";
-import CommandHints from "../components/CommandHints.jsx";
+import CommandHints from "../modules/CommandHints.jsx";
 
 const HomePage = () => {
   const commands = [

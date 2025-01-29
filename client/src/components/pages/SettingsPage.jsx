@@ -4,7 +4,7 @@ import "../styles/SettingsPage.css";
 import { UserContext } from "../App.jsx";
 import { SocketContext } from "../modules/SocketContext.jsx";
 import { AudioContext } from "../modules/AudioContext";
-import CommandHints from "../components/CommandHints.jsx";
+import CommandHints from "../modules/CommandHints.jsx";
 
 const SettingsPage = () => {
     const { userId } = useContext(UserContext);

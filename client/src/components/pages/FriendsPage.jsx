@@ -6,7 +6,7 @@ import "../styles/FriendsPage.css";
 import { UserContext } from "../App.jsx";
 import { get, post } from "../../utilities";
 import { SocketContext } from "../modules/SocketContext.jsx";
-import CommandHints from "../components/CommandHints.jsx";
+import CommandHints from "../modules/CommandHints.jsx";
 
 const FriendsPage = (props) => {
   const { userId } = useContext(UserContext);
