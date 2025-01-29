@@ -2,7 +2,6 @@
 
 import React from "react";
 import "../styles/AppointmentSidebar.css";
-// import siteLogo from "../assets/images/assets/site-logo.png";
 import siteLogo from "../assets/images/site-logo.png";
 
 const AppointmentSidebar = ({ gameObj }) => {
