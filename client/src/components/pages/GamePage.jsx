@@ -101,7 +101,7 @@ const GamePage = () => {
     return () => {
       console.log("Cleaning up socket listeners...");
 
-      socket.off("gameData");
+      // socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };

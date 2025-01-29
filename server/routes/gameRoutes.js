@@ -523,6 +523,8 @@ async function handleTimeoutForPhase(lobbyCode) {
       if (adjacentNodes.length > 0) {
         game.nextLocation = adjacentNodes[Math.floor(Math.random() * adjacentNodes.length)];
       }
+      await game.save();
+      io.to(lobbyCode).emit("gameData", game);
       game.phase = "TRIVIA";
       game.triviaQuestion = generateTriviaQuestion();
       game.phaseEndTime = Date.now() + PHASE_DURATIONS.TRIVIA;
