@@ -7,7 +7,6 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
   const { triviaQuestion, hackerAnswer, nextLocation } = gameObj;
   const outcome = Number(hackerAnswer) - 1 === triviaQuestion.correctChoice;
 
-  // Handle cases where necessary data might be missing
   if (!triviaQuestion || hackerAnswer === undefined ) {
     return (
       <div className="result-sidebar">
@@ -16,10 +15,8 @@ const ResultSidebar = ({ gameObj, currentUserNickname }) => {
       </div>
     );
   }
-  // Determine if the current user is the hacker
   const isHacker = currentUserNickname === gameObj.hacker;
 
-  // Extract the selected and correct answers
   const selectedAnswer = triviaQuestion.choices[Number(hackerAnswer) - 1];
   const correctAnswer = triviaQuestion.choices[triviaQuestion.correctChoice];
 
@@ -63,8 +60,8 @@ ResultSidebar.propTypes = {
       correctChoice: PropTypes.number.isRequired,
     }),
     hacker: PropTypes.string.isRequired,
-    hackerAnswer: PropTypes.number, // Index of the hacker's selected choice
-    outcome: PropTypes.oneOf(["success", "failure"]).isRequired, // Indicates the result
+    hackerAnswer: PropTypes.number,
+    outcome: PropTypes.oneOf(["success", "failure"]).isRequired,
     nextLocation: PropTypes.string.isRequired,
   }).isRequired,
   currentUserNickname: PropTypes.string.isRequired,

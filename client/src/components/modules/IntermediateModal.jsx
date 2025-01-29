@@ -1,6 +1,6 @@
 // IntermediateModal.jsx
 import React, { useEffect } from "react";
-import "../styles/IntermediateModal.css"; // Ensure the path is correct
+import "../styles/IntermediateModal.css"; 
 
 const IntermediateModal = ({ isOpen, title, content, duration, onClose }) => {
   useEffect(() => {

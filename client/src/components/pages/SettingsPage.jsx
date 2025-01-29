@@ -45,10 +45,8 @@ const SettingsPage = () => {
 
     return (
         <Layout currentPage="settings">
-            {/* The outer container is now position: relative so we can place the background behind */}
             <div className="settings-container">
 
-                {/* Retro Animated Background */}
                 <div className="retro-bg"></div>
 
                 <header className="settings-header">

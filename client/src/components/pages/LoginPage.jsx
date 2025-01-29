@@ -9,14 +9,11 @@ import "../styles/LoginPage.css";
 const LoginPage = () => {
   return (
     <div className="login-container">
-      {/* MatrixRain background */}
       <MatrixRain />
 
-      {/* Centered retro-styled login box */}
       <div className="login-box">
         <h1 className="login-title">ACCESS PANEL</h1>
 
-        {/* Glitching WordSwitcher */}
         <WordSwitcher
           words={[
             "HACKER",
@@ -24,13 +21,10 @@ const LoginPage = () => {
           ]}
         />
 
-        {/* Login/Logout Button */}
         <LoginLogoutButton className="login-button" />
       </div>
 
-      {/* Terminal area */}
       <div className="terminal-wrapper">
-        {/* <Terminal /> */}
       </div>
     </div>
   );

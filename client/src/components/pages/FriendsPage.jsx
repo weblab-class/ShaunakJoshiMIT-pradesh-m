@@ -126,7 +126,6 @@ const FriendsPage = (props) => {
   return (
     <Layout currentPage="friends">
       <div className="Friends-Page">
-        {/* NEW: Animated background behind everything */}
         <div className="friends-bg" />
 
         <div className="Friends-Header">

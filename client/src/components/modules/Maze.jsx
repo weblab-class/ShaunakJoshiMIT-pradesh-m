@@ -6,7 +6,6 @@ import FileNode from './FileNode';
 export default function Maze({ gameObj }) {
   const [displayNodes, setDisplayNodes] = useState([]);
 
-  // Build adjacency to figure out which nodes are connected
   const buildAdjacencyMap = (nodes, edges) => {
     const map = {};
     nodes.forEach(n => { map[n.id] = []; });
@@ -24,14 +23,12 @@ export default function Maze({ gameObj }) {
     const currentLocation = gameObj.location || '0-0';
     const isMovePhase = (gameObj.phase || '').toUpperCase() === 'MOVE';
 
-    // The goal is the bottom-right node
     const goalId = `${gameObj.rows - 1}-${gameObj.cols - 1}`;
 
     const newNodes = gameObj.nodes.map((node) => {
       const isCurrent = node.id === currentLocation;
       const isGoal = node.id === goalId;
 
-      // If we're in the MOVE phase, highlight adjacent nodes
       let isAllowedMove = false;
       if (isMovePhase && !isCurrent) {
         const neighbors = adjacencyMap[currentLocation] || [];
@@ -53,7 +50,6 @@ export default function Maze({ gameObj }) {
     setDisplayNodes(newNodes);
   }, [gameObj]);
 
-  // Optionally display a question if the node has a challenge
   const onNodeClick = useCallback((evt, node) => {
     if (!node?.data?.challenge) return;
     const { question, isImpossible } = node.data.challenge;

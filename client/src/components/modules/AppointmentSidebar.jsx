@@ -2,8 +2,8 @@
 
 import React from "react";
 import "../styles/AppointmentSidebar.css";
-// import hackerIcon from "../../assets/hacker.png";
-import hackerIcon from "../assets/images/hacker.png"
+// import siteLogo from "../assets/images/assets/site-logo.png";
+import siteLogo from "../assets/images/site-logo.png";
 
 const AppointmentSidebar = ({ gameObj }) => {
   const currentPresident = gameObj?.turnOrder[gameObj.currTurn] || "Unknown";
@@ -17,7 +17,7 @@ const AppointmentSidebar = ({ gameObj }) => {
   return (
     <aside className="appointment-sidebar" aria-label="Appointment Sidebar">
       <div className="appointment-header">
-        <img src={hackerIcon} alt="Hacker Icon" className="appointment-icon" />
+        <img src={siteLogo} alt="Site Logo" className="appointment-icon" />
         <h2>
           Current President: <span className="president-name">{currentPresident}</span>
         </h2>

@@ -4,10 +4,8 @@ import PropTypes from "prop-types";
 import "../styles/HackerSidebar.css";
 
 const HackerSidebar = ({ gameObj }) => {
-  // Extract hacker's current location
   const currentLocation = gameObj.location || "0-0";
 
-  // Find all edges connected to the current location
   const adjacentNodes = gameObj.edges
     .filter(
       (edge) =>
@@ -17,7 +15,6 @@ const HackerSidebar = ({ gameObj }) => {
       edge.source === currentLocation ? edge.target : edge.source
     );
 
-  // Remove duplicates if any
   const uniqueAdjacentNodes = [...new Set(adjacentNodes)];
 
   return (

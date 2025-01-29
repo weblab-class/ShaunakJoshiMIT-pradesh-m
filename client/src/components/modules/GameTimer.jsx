@@ -1,10 +1,10 @@
 // GameTimer.jsx
 import React, { useEffect, useState } from "react";
-import "../styles/GameTimer.css"; // Ensure this path is correct
+import "../styles/GameTimer.css";
 
 const GameTimer = ({ gameObj }) => {
   const [timeLeft, setTimeLeft] = useState(0);
-  const [warning, setWarning] = useState(false); // State to handle warning
+  const [warning, setWarning] = useState(false); 
 
   useEffect(() => {
     const endTime = new Date(gameObj.endTime).getTime();
