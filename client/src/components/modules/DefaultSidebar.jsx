@@ -29,7 +29,7 @@ export default function DefaultSidebar({ gameObj, currentUserNickname }) {
       </section>
       <section className="instructions">
         <h3>Instructions</h3>
-        <p>Please wait for the current president to appoint a hacker. Use the terminal to interact.</p>
+        <p>Please wait for the current president to appoint a hacker.</p>
       </section>
     </div>
   );

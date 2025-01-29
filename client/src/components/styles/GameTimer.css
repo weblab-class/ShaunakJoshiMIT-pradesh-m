@@ -1,5 +1,3 @@
-/* GameTimer.css */
-
 .game-timer {
     display: flex;
     align-items: center;
@@ -15,7 +13,7 @@
   }
 
   .game-timer.warning {
-    background-color: #8b0000; /* Dark red */
+    background-color: #8b0000;
     color: #fff;
     box-shadow: 0 0 15px #ff0000;
   }

@@ -1,9 +1,5 @@
-/* LoginPage.css */
-
-/* Import retro pixel font */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* Main container with flex properties for centering */
 .login-container {
   position: relative;
   height: 100vh;
@@ -12,14 +8,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center vertically */
+  justify-content: center;
   font-family: 'Press Start 2P', monospace;
   color: #00ff00;
   overflow: hidden;
   z-index: 0;
 }
 
-/* The MatrixRain canvas is absolutely positioned, so it's behind everything */
 .login-box {
   position: relative;
   z-index: 2;
@@ -30,30 +25,25 @@
   box-shadow: 0 0 25px rgba(0, 255, 0, 0.5);
   text-align: center;
   width: 350px;
-  /* Removed margin-top and margin-bottom for proper centering */
   margin: 0;
 
-  /* Flexbox for inner content alignment */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem; /* Space between elements */
+  gap: 1rem;
 }
 
-/* Adjusted title size for better fit */
 .login-title {
-  font-size: 2rem; /* Reduced from 3rem */
+  font-size: 2rem;
   margin: 0;
   text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
   animation: flickerStatic 3s infinite;
 }
 
-/* Blue word styling for WordSwitcher */
 .blue-word {
   color: #0000FF;
 }
 
-/* Login button styling */
 .login-button {
   padding: 0.5rem 1.2rem;
   font-size: 0.9rem;
@@ -71,7 +61,6 @@
   background-color: rgba(0, 255, 0, 0.2);
 }
 
-/* Terminal area below the login box */
 .terminal-wrapper {
   width: 100%;
   max-width: 100%;
@@ -89,7 +78,6 @@
   margin: 0 auto;
 }
 
-/* Flicker animation for the .login-title */
 @keyframes flickerStatic {
   0% { opacity: 1; }
   20% { opacity: 0.95; }
@@ -99,10 +87,9 @@
   100% { opacity: 1; }
 }
 
-/* Responsive Design for smaller screens */
 @media (max-width: 600px) {
   .login-box {
-    width: 90%; /* Adjust width for smaller screens */
+    width: 90%;
     padding: 1.5rem 2rem;
   }
 

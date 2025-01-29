@@ -1,11 +1,10 @@
-/* General Sidebar Styling */
 .sidebar {
   width: 260px;
   padding: 20px;
   margin-right: 20px;
   overflow-y: auto;
-  background-color: #2c2c2c; /* Slightly lighter gray for better coverage */
-  border: 2px solid #66cc66; /* Green outline */
+  background-color: #2c2c2c;
+  border: 2px solid #66cc66;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(102, 204, 102, 0.2);
   color: #66cc66;
@@ -13,32 +12,30 @@
   display: flex;
   flex-direction: column;
   opacity: 1;
-  position: relative; /* For z-index stacking */
-  z-index: 10; /* Ensure sidebar is above other elements */
-  box-sizing: border-box; /* Include padding and border in width */
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
 }
 
-/* Headings */
 .sidebar h2,
 .sidebar h3 {
   text-align: center;
   margin: 0 0 15px;
   color: #66cc66;
   font-size: 1em;
-  background-color: #2c2c2c; /* Ensure headings have the same background */
-  padding: 5px; /* Optional padding for better coverage */
-  border-radius: 5px; /* Smooth edges */
+  background-color: #2c2c2c; 
+  padding: 5px;
+  border-radius: 5px;
 }
 
-/* Paragraphs and Code */
 .sidebar p,
 .sidebar code,
 .sidebar table,
 .sidebar ul,
 .sidebar li {
-  background-color: #2c2c2c; /* Consistent gray background */
-  padding: 5px; /* Ensure text is covered */
-  border-radius: 5px; /* Smooth edges */
+  background-color: #2c2c2c;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .sidebar code {
@@ -49,7 +46,6 @@
   font-size: 0.8em;
 }
 
-/* Tables */
 .sidebar table {
   width: 100%;
   border-collapse: collapse;
@@ -61,7 +57,7 @@
   border: 1px solid #66cc66;
   padding: 6px;
   text-align: center;
-  background-color: #2c2c2c; /* Ensure table cells have consistent background */
+  background-color: #2c2c2c;
 }
 
 .sidebar table th {
@@ -69,7 +65,6 @@
   color: #66cc66;
 }
 
-/* Lists */
 .sidebar ul {
   list-style: none;
   padding: 0;
@@ -80,13 +75,11 @@
   margin-bottom: 5px;
 }
 
-/* Highlighted Text */
 .sidebar .highlight {
   color: #ffcc00;
   font-weight: bold;
 }
 
-/* Role Badges */
 .sidebar .role-badge {
   margin-left: 5px;
   background-color: #999;
@@ -97,8 +90,7 @@
 }
 
 
-/* Ensure overlapping elements are hidden or covered */
 .green-dots, .files {
   position: relative;
-  z-index: 5; /* Lower than sidebar's z-index */
+  z-index: 5;
 }

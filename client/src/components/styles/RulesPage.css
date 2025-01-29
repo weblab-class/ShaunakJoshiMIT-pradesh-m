@@ -1,27 +1,21 @@
-/* RulesPage.css */
-
-/* Importing the Retro Font */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
-
-/* General Layout */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); 
 .Rules-Page {
     padding: 20px;
-    background-color: #0d0d0d; /* Dark background */
-    color: #00ff00; /* Neon green text */
-    font-family: 'Press Start 2P', sans-serif; /* Retro font */
+    background-color: #0d0d0d;
+    color: #00ff00;
+    font-family: 'Press Start 2P', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 40px;
 }
 
-/* Header Styles */
 .Rules-Header {
     text-align: center;
     color: #00ff00;
     background-color: #0d0d0d;
     padding: 20px;
-    border-bottom: 2px solid #00ff00; /* Neon green border */
+    border-bottom: 2px solid #00ff00;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
     width: 90%;
 }
@@ -31,18 +25,17 @@
     margin: 0;
 }
 
-/* Rules Sections */
 .Rules-Section {
     width: 90%;
-    background-color: #1a1a1a; /* Slightly lighter dark background for sections */
+    background-color: #1a1a1a;
     padding: 20px;
-    border: 1px solid #00ff00; /* Neon green border */
+    border: 1px solid #00ff00;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
     border-radius: 8px;
 }
 
 .Rules-Section h2 {
-    color: #ffff00; /* Neon yellow for section titles */
+    color: #ffff00;
     font-size: 1em;
     margin-bottom: 10px;
     text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
@@ -66,9 +59,8 @@
     margin-bottom: 8px;
 }
 
-/* Conclusion Section */
 .conclusion h3 {
-    color: #ff6347; /* Tomato color for emphasis */
+    color: #ff6347;
     font-size: 0.8em;
     margin-bottom: 10px;
     text-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
@@ -81,7 +73,6 @@
     text-shadow: 0 0 3px rgba(0, 255, 0, 0.3);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .Rules-Page {
         padding: 10px;

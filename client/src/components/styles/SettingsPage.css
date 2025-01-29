@@ -1,6 +1,3 @@
-/* SettingsPage.css */
-
-/* Main container with position: relative to hold the background behind it */
 .settings-container {
     display: flex;
     flex-direction: column;
@@ -12,7 +9,6 @@
     overflow: hidden;
 }
 
-/* NEW: Retro Animated Background */
 .retro-bg {
     position: absolute;
     top: 0;
