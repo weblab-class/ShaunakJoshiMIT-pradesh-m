@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/sidebar.css";
+import "../styles/Sidebar.css";
 import "../styles/ResultSidebar.css";
 
 export default function ResultSidebar({ gameObj, currentUserNickname }) {

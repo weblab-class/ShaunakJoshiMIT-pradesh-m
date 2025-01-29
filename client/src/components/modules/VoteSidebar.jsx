@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import "../styles/sidebar.css";
+import "../styles/Sidebar.css";
 import "../styles/VoteSidebar.css";
 import voteIcon from "../assets/images/votingIcon.png";
 import clockIcon from "../assets/images/clock.png";

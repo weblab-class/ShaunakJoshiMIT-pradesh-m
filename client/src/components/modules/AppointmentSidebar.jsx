@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/sidebar.css";
+import "../styles/Sidebar.css";
 import "../styles/AppointmentSidebar.css";
 import siteLogo from "../assets/images/site-logo.png";
 
