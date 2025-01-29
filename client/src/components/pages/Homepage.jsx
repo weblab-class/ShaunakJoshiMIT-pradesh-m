@@ -33,6 +33,15 @@ const HomePage = () => {
 
         <div className="animation-bg"></div>
       </div>
+      <div className="command-hints">
+        <h3>Terminal Commands</h3>
+        <ul>
+          <li>create lobby</li>
+          <li>cd profile</li>
+          <li>cd friends</li>
+          <li>cd settings</li>
+        </ul>
+      </div>
     </Layout>
   );
 };

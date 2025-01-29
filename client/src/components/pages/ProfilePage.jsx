@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../Layout.jsx";
 import "../styles/ProfilePage.css";
 import { UserContext } from "../App.jsx";
@@ -102,6 +103,14 @@ const ProfilePage = () => {
             <p><strong>Win Rate:</strong> {winRate}%</p>
           </div>
         </section>
+      </div>
+      <div className="command-hints">
+        <h3>Terminal Commands</h3>
+        <ul>
+          <li>cd home</li>
+          <li>cd friends</li>
+          <li>cd settings</li>
+        </ul>
       </div>
     </Layout>
   );

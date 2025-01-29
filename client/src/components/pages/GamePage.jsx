@@ -41,7 +41,6 @@ const GamePage = () => {
   const prevPhaseRef = useRef(null);
 
   useEffect(() => {
-
     const handleGameCreated = (data) => {
       console.log("Game created:", data.game);
       setGameObj(data.game);
@@ -53,18 +52,14 @@ const GamePage = () => {
     return () => {
       socket.off("gameStarted", handleGameCreated);
     };
-  }, []);
-
+  }, [socket]);
 
   useEffect(() => {
-    console.log("Setting up socket listeners for gameData, errorMessage, gameStarted...");
-
     if (!lobbyCode) {
       console.error("No lobby code provided, redirecting to home");
       navigate("/home");
       return;
     }
-    console.log("JOINING LOBBY", lobbyCode, userId)
     get("/api/user", { userid: userId }).then((userObj) => {
       setUser(userObj);
       const userNickname = userObj.nickname;
@@ -74,8 +69,6 @@ const GamePage = () => {
         setRole(data.role);
       }).catch(console.error);
     }).catch(console.error);
-
-
 
     socket.emit("getGameData", lobbyCode);
 
@@ -96,15 +89,12 @@ const GamePage = () => {
       setError(null);
     });
 
-
     return () => {
-      console.log("Cleaning up socket listeners...");
-
       socket.off("gameData");
       socket.off("errorMessage");
       socket.off("gameStarted");
     };
-  },[lobbyCode, userId, socket] );
+  }, [lobbyCode, userId, socket, navigate]);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
@@ -187,7 +177,6 @@ const GamePage = () => {
 
   const currentPhase = gameObj.phase.toUpperCase();
   const isHacker = userNickname === gameObj.hacker;
-  console.log(userNickname, currentPresidentNickname);
 
   let sidebar;
   if (currentPhase === "END") {
@@ -207,12 +196,7 @@ const GamePage = () => {
   } else if (currentPhase === "RESULT") {
     sidebar = <ResultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   } else {
-    sidebar = (
-      <DefaultSidebar
-        gameObj={gameObj}
-        currentUserNickname={userNickname}
-      />
-    );
+    sidebar = <DefaultSidebar gameObj={gameObj} currentUserNickname={userNickname} />;
   }
 
   return (
@@ -246,9 +230,20 @@ const GamePage = () => {
           isOpen={isModalOpen}
           title={modalContent.title}
           content={modalContent.content}
-          duration={3000} 
+          duration={3000}
           onClose={handleCloseModal}
         />
+      </div>
+      <div className="command-hints">
+        <h3>Terminal Commands</h3>
+        <ul>
+          <li>appoint &lt;player&gt;</li>
+          <li>vote yes | no</li>
+          <li>move &lt;node&gt;</li>
+          <li>answer &lt;option&gt;</li>
+          <li>role</li>
+          <li>next</li>
+        </ul>
       </div>
     </Layout>
   );

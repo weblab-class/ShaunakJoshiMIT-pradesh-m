@@ -24,7 +24,6 @@ const FriendsPage = (props) => {
     });
   }, [userId]);
 
-
   useEffect(() => {
     if (requests.length > 0) {
       Promise.all(
@@ -85,10 +84,6 @@ const FriendsPage = (props) => {
       setFriendsData([]);
     }
   }, [friends]);
-
-
-
-
 
   const friendRows = friendsData.map((friendObj, index) => {
     return (
@@ -161,6 +156,17 @@ const FriendsPage = (props) => {
             </table>
           )}
         </div>
+      </div>
+      <div className="command-hints">
+        <h3>Terminal Commands</h3>
+        <ul>
+          <li>friend request &lt;nickname&gt;</li>
+          <li>friend accept &lt;nickname&gt;</li>
+          <li>friend reject &lt;nickname&gt;</li>
+          <li>cd home</li>
+          <li>cd profile</li>
+          <li>cd settings</li>
+        </ul>
       </div>
     </Layout>
   );

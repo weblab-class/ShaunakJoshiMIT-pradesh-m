@@ -5,7 +5,6 @@ import { UserContext } from "../App"
 import "../styles/LobbyPage.css"
 import { SocketContext } from "../modules/SocketContext.jsx";
 
-
 const LobbyPage = () => {
   const { lobbyCode } = useParams()
   const navigate = useNavigate()
@@ -36,7 +35,7 @@ const LobbyPage = () => {
       socket.off("lobbyData")
       socket.off("gameStarted")
     }
-  }, [lobbyCode, nickname, navigate])
+  }, [lobbyCode, nickname, navigate, socket])
 
   const users = lobby?.user_ids || []
   const host = lobby?.host_id || (users.length ? users[0] : null)
@@ -75,8 +74,16 @@ const LobbyPage = () => {
           )}
         </div>
       </div>
+      <div className="command-hints">
+        <h3>Terminal Commands</h3>
+        <ul>
+          <li>leave lobby &lt;code&gt;</li>
+          <li>time &lt;minutes&gt;</li>
+          <li>grid &lt;3|9&gt;</li>
+        </ul>
+      </div>
     </Layout>
   )
 }
 
-export default LobbyPage
+export default LobbyPage;

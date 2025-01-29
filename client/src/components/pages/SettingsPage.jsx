@@ -84,6 +84,14 @@ const SettingsPage = () => {
                     </div>
                 </section>
             </div>
+            <div className="command-hints">
+                <h3>Terminal Commands</h3>
+                <ul>
+                    <li>cd home</li>
+                    <li>cd profile</li>
+                    <li>cd friends</li>
+                </ul>
+            </div>
         </Layout>
     );
 };
