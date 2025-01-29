@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const User = require("./user");
+const User = require("./user.js");
 
 const RequestSchema = new mongoose.Schema({
     _id: String,
