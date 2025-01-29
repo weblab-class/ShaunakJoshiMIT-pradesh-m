@@ -1,7 +1,7 @@
 // NavBar.jsx
 import React from "react";
 import "../styles/NavBar.css";
-import siteLogo from "../assets/images/assets/site-logo.png";
+import siteLogo from "../assets/images/site-logo.png";
 
 const NavBar = ({ currentPage }) => {
   // Capitalize the current page for display
