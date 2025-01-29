@@ -1,16 +1,12 @@
-// TriviaSidebar.jsx
-
 import React from "react";
 import PropTypes from "prop-types";
 import "../styles/TriviaSidebar.css";
-
 
 function scrambleString(str) {
   const characters = str.split('');
 
   for (let i = characters.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-
     [characters[i], characters[j]] = [characters[j], characters[i]];
   }
 
@@ -24,12 +20,6 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
   const nextLocation = gameObj.nextLocation;
   const triviaQuestion = gameObj.triviaQuestion;
 
-  const isImposter = gameObj.imposters.includes(currentUserNickname);
-
-  const displayedQuestion = isImposter
-    ? scrambleString(triviaQuestion.question)
-    : triviaQuestion.question;
-
   if (!triviaQuestion) {
     return (
       <div className="trivia-sidebar">
@@ -38,6 +28,11 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
       </div>
     );
   }
+
+  const isImposter = gameObj.imposters.includes(currentUserNickname);
+  const displayedQuestion = isImposter
+    ? scrambleString(triviaQuestion.question)
+    : triviaQuestion.question;
 
   let header;
   if (currentUserNickname === hacker) {
