@@ -13,7 +13,7 @@ const RulesPage = () => {
       <section className="Rules-Section">
         <h2>Premise</h2>
         <p>
-          A group of <strong>Hackers</strong> is racing to reach the bottom-rightmost folder of a grid. However, among their ranks lurk <strong>FBI Impostors</strong> whose mission is to sabotage the Hackers from within. The impostors aim to block the path, delete critical folders, and frame innocent players to prevent the Hackers from succeeding.
+          A group of <strong>Hackers</strong> is racing to reach the bottom-rightmost folder of a grid. However, among their ranks lurk <strong>FBI Impostors</strong> whose mission is to sabotage the Hackers from within. The FBI aim to block the path, delete critical folders, and frame innocent players to prevent the Hackers from succeeding.
         </p>
       </section>
 
@@ -55,10 +55,7 @@ const RulesPage = () => {
         <h2>FBI Impostor Mechanics</h2>
         <ul>
           <li>
-            <strong>Sabotage:</strong> Impostors can intentionally answer trivia questions incorrectly to delete folders or frame other players.
-          </li>
-          <li>
-            <strong>Rigging Hacks:</strong> Impostors have a limited number of opportunities to rig appointed Hackers, forcing them to fail trivia questions and potentially drawing suspicion onto themselves.
+            <strong>Suspicion:</strong> Impostors cannot see the question and must struggle through the challenges.
           </li>
         </ul>
       </section>

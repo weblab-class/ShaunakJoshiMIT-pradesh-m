@@ -12,7 +12,7 @@ const EndGameScreen = ({ gameObj }) => {
         <strong>Winner:</strong> {winner}
       </p>
       <p>
-        <strong>Imposters:</strong>{" "}
+        <strong>FBI:</strong>{" "}
         {imposters.length ? imposters.join(", ") : "None"}
       </p>
     </div>
