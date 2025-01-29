@@ -25,7 +25,7 @@ function generateRandomString() {
 
 
 /* FRIEND REQUESTS ROUTING */
-router.post("/sendRequest", async (req, res) => {
+router.post("/sendRequest", auth.ensureLoggedIn,async (req, res) => {
 
 
     console.log(req.body)
@@ -71,7 +71,7 @@ router.post("/sendRequest", async (req, res) => {
 
 
 
-  router.post("/sendRequest/accept", async (req, res) => {
+  router.post("/sendRequest/accept", auth.ensureLoggedIn, async(req, res) => {
     const { from, to } = req.body;
 
     const fromUserObj = await User.findOne({nickname: from})
@@ -117,7 +117,7 @@ router.post("/sendRequest", async (req, res) => {
 
   });
 
-  router.post("/sendRequest/reject", async (req, res) => {
+  router.post("/sendRequest/reject", auth.ensureLoggedIn, async (req, res) => {
     const { from, to } = req.body;
     const fromUserObj = await User.findOne({nickname: from})
     const toUserObj = await User.findById(to)
@@ -151,7 +151,7 @@ router.post("/sendRequest", async (req, res) => {
 
   });
 
-  router.get("/sendRequest/:userId", async (req, res) => {
+  router.get("/sendRequest/:userId", auth.ensureLoggedIn, async (req, res) => {
     const { userId } = req.params;
     try {
       const requests = await Request.find({ to: userId, status: "pending" });
