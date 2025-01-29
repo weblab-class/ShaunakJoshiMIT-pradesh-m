@@ -11,7 +11,7 @@ function Trivia() {
 
   const fetchQuestion = async () => {
     try {
-      const res = await fetch("https://opentdb.com/api.php?amount=1&encode=url3986");
+      const res = await fetch("https://opentdb.com/api.php?amount=1&category=19&difficulty=easy&type=multiple");
       const data = await res.json();
       if (data.results && data.results.length > 0) {
         const q = data.results[0];
