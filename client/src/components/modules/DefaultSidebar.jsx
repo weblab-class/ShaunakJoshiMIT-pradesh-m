@@ -5,7 +5,7 @@ import "../styles/DefaultSidebar.css";
 
 const DefaultSidebar = ({ gameObj, currentUserNickname }) => {
   const currentPresidentNickname = gameObj.turnOrder[gameObj.currTurn];
-  const players = gameObj.user_ids; // Assuming user_ids contains nicknames
+  const players = gameObj.user_ids; 
 
   return (
     <div className="default-sidebar">

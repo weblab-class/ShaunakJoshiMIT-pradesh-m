@@ -42,20 +42,16 @@ const GamePage = () => {
   const prevPhaseRef = useRef(null);
 
   useEffect(() => {
-    // Existing socket event listeners
 
     const handleGameCreated = (data) => {
       console.log("Game created:", data.game);
       setGameObj(data.game);
       setError(null);
-      // Optionally, navigate to the game page if not already there
-      // navigate(`/game/${data.game.lobbyCode}`);
     };
 
     socket.on("gameStarted", handleGameCreated);
 
     return () => {
-      // Existing cleanup
       socket.off("gameStarted", handleGameCreated);
     };
   }, []);
@@ -75,7 +71,6 @@ const GamePage = () => {
       const userNickname = userObj.nickname;
       socket.emit("joinLobby", lobbyCode, userNickname);
 
-      // then also fetch role
       get("/api/game/role", { lobbyCode, user_id: userId }).then((data) => {
         setRole(data.role);
       }).catch(console.error);
@@ -112,12 +107,10 @@ const GamePage = () => {
     };
   },[lobbyCode, userId, socket] );
 
-  // Stable onClose function using useCallback
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
 
-  // useEffect to handle phase changes
   useEffect(() => {
     if (!gameObj || !gameObj.phase) return;
 
@@ -164,11 +157,9 @@ const GamePage = () => {
       }
     }
 
-    // Update prevPhaseRef.current after handling
     prevPhaseRef.current = gameObj.phase.toUpperCase();
   }, [gameObj]);
 
-  // If there's an error, display it
   if (error) {
     return (
       <Layout currentPage="game">
@@ -181,7 +172,6 @@ const GamePage = () => {
     );
   }
 
-  // If we haven't received gameObj yet, show a loading message
   if (!gameObj) {
     return (
       <Layout currentPage="game">
@@ -254,12 +244,11 @@ const GamePage = () => {
           </main>
         </div>
 
-        {/* Intermediate Modal */}
         <IntermediateModal
           isOpen={isModalOpen}
           title={modalContent.title}
           content={modalContent.content}
-          duration={5000} // Modal will close after 5 seconds (5000ms)
+          duration={5000} 
           onClose={handleCloseModal}
         />
       </div>

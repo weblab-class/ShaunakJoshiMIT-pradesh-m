@@ -9,14 +9,11 @@ const WordSwitcher = ({ words = [] }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // Trigger the glitch animation
       setGlitch(true);
 
-      // Switch the word
       setCurrWord(words[indexRef.current]);
       indexRef.current = (indexRef.current + 1) % words.length;
 
-      // Remove glitch class after 300ms (length of glitch animation)
       setTimeout(() => {
         setGlitch(false);
       }, 300);
