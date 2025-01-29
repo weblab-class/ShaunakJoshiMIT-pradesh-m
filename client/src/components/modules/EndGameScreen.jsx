@@ -1,6 +1,6 @@
 // EndGameScreen.jsx
 import React from "react";
-import "../styles/EndGameScreen.css"; // Ensure this path is correct
+import "../styles/EndGameScreen.css"; 
 
 const EndGameScreen = ({ gameObj }) => {
   const winner = gameObj.winner || "No winner specified";

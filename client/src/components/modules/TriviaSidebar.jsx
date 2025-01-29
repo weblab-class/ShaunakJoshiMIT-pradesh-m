@@ -4,12 +4,31 @@ import React from "react";
 import PropTypes from "prop-types";
 import "../styles/TriviaSidebar.css";
 
+
+function scrambleString(str) {
+  const characters = str.split('');
+
+  for (let i = characters.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [characters[i], characters[j]] = [characters[j], characters[i]];
+  }
+
+  return characters.join('');
+}
+
 const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
   const currentPresidentNickname = gameObj.turnOrder[gameObj.currTurn];
   const players = gameObj.user_ids;
   const hacker = gameObj.hacker;
   const nextLocation = gameObj.nextLocation;
   const triviaQuestion = gameObj.triviaQuestion;
+
+  const isImposter = gameObj.imposters.includes(currentUserNickname);
+
+  const displayedQuestion = isImposter
+    ? scrambleString(triviaQuestion.question)
+    : triviaQuestion.question;
 
   if (!triviaQuestion) {
     return (
@@ -20,7 +39,6 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
     );
   }
 
-  // The heading changes if you are the hacker vs. a bystander
   let header;
   if (currentUserNickname === hacker) {
     header = (
@@ -42,7 +60,6 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
     );
   }
 
-  // Build the answer table rows
   const answerChoices = triviaQuestion.choices.map((choice, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
@@ -59,7 +76,9 @@ const TriviaSidebar = ({ gameObj, currentUserNickname }) => {
       </section>
 
       <section className="trivia-question">
-        <h3>{triviaQuestion.question}</h3>
+        <h3 className={isImposter ? "glitch" : ""} data-text={displayedQuestion}>
+          {displayedQuestion}
+        </h3>
         <table className="answer-choices">
           <thead>
             <tr>
@@ -98,6 +117,7 @@ TriviaSidebar.propTypes = {
       choices: PropTypes.arrayOf(PropTypes.string).isRequired,
       correctChoice: PropTypes.number.isRequired,
     }),
+    imposters: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   currentUserNickname: PropTypes.string.isRequired,
 };

@@ -5,17 +5,14 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const auth = require("../auth");
 const { getSocketFromUserID, getIo } = require("../server-socket");
-const fetch = require("node-fetch"); // <-- ensure 'node-fetch' is installed
+const fetch = require("node-fetch");
 const Game = require("../models/game");
 const Lobby = require("../models/lobby");
 const User = require("../models/user");
 const { setPhaseTimeout, clearPhaseTimeout } = require("../utils/phaseTimeouts.js");
 
-/**
- * Update user wins/losses after a finished game
- */
+
 async function updateWinsLosses(game) {
-  // Only update if game ended with a known winner
   if (!game || game.phase !== "END" || !game.winner) return;
 
   const isHackersWin = game.winner === "HACKERS";
@@ -41,7 +38,6 @@ async function updateWinsLosses(game) {
   }
 }
 
-// --- We keep your existing PHASE_DURATIONS
 const PHASE_DURATIONS = {
   APPOINT: 25000,
   VOTE: 25000,
@@ -50,9 +46,7 @@ const PHASE_DURATIONS = {
   RESULT: 10000,
 };
 
-/**
- * Fetch a random question from OpenTDB, parse it into { question, choices[], correctChoice } format.
- */
+
 async function fetchOpenTDBQuestion() {
   try {
     const resp = await fetch("https://opentdb.com/api.php?amount=1&encode=url3986");
@@ -74,7 +68,6 @@ async function fetchOpenTDBQuestion() {
       [all[i], all[j]] = [all[j], all[i]];
     }
 
-    // find index of correct in the shuffled array
     const correctIndex = all.indexOf(correct);
 
     return {
@@ -92,7 +85,6 @@ async function fetchOpenTDBQuestion() {
   }
 }
 
-// existing helper: check if bottom-right node reachable
 function endReachable(game) {
   const start = game.location;
   const goal = `${game.rows - 1}-${game.cols - 1}`;
@@ -127,11 +119,7 @@ function buildAdjacencyMap(nodes, edges) {
   return adjacencyMap;
 }
 
-/* ------------------------------------------------------------------
-   ROUTES
-------------------------------------------------------------------*/
 
-// ... APPOINT, VOTE, etc. remain the same
 router.post("/appoint", async (req, res) => {
   const { user_id, lobbyCode, appointee } = req.body;
   try {
@@ -161,10 +149,8 @@ router.post("/appoint", async (req, res) => {
     if (!isAppointeeInGame) {
       return res.status(400).json({ error: "Appointee is not in the game" });
     }
-    // Move to VOTE phase
     game.appointedHacker = appointeeUser.nickname;
     game.phase = "VOTE";
-    // Set VOTE timer
     clearPhaseTimeout(lobbyCode);
     const phaseDuration = PHASE_DURATIONS.VOTE;
     game.phaseEndTime = Date.now() + phaseDuration;
@@ -172,7 +158,6 @@ router.post("/appoint", async (req, res) => {
     const io = getIo();
     console.log("Emitting Game Data after APPOINT")
     io.to(lobbyCode).emit("gameData", game);
-    // If we time out in VOTE
     setPhaseTimeout(lobbyCode, "VOTE", phaseDuration, async () => {
       const updatedGame = await Game.findOne({ lobbyCode });
       if (!updatedGame || updatedGame.phase !== "VOTE") return;
@@ -209,7 +194,6 @@ router.post("/appoint", async (req, res) => {
     return res.status(500).json({ error: "Failed to appoint hacker" });
   }
 });
-// --- Cast a vote
 router.post("/vote", async (req, res) => {
   const { user_id, lobbyCode, decision } = req.body;
   try {
@@ -221,7 +205,6 @@ router.post("/vote", async (req, res) => {
       return res.status(400).json({ error: "No hacker appointed" });
     }
     if (!game.votes) game.votes = {};
-    // Prevent double voting
     const user = await User.findById(user_id);
 
     if (game.votes[user.nickname]) {
@@ -233,7 +216,6 @@ router.post("/vote", async (req, res) => {
     game.votes[user.nickname] = decision;
     await game.save();
     const io = getIo();
-    // If everyone has voted, tally up
     if (Object.keys(game.votes).length === game.user_ids.length) {
       const votes = Object.values(game.votes);
       const approve = votes.filter((v) => v === "yes").length;
@@ -259,7 +241,6 @@ router.post("/vote", async (req, res) => {
       });
       return res.status(200).json({ message: "Vote cast successfully, final result tallied" });
     } else {
-      // Partial results
       io.to(lobbyCode).emit("gameData", game);
       return res.status(200).json({ message: "Vote cast successfully" });
     }
@@ -268,7 +249,6 @@ router.post("/vote", async (req, res) => {
     return res.status(500).json({ error: "Failed to cast vote" });
   }
 });
-// --- Hacker chooses a node to move to
 router.post("/move", async (req, res) => {
   const { user_id, lobbyCode, targetNode } = req.body;
   try {
@@ -285,7 +265,6 @@ router.post("/move", async (req, res) => {
       return res.status(403).json({ error: "Only the hacker can move" });
     }
 
-    // adjacency check
     function isAdjacent(g, current, tgt) {
       return g.edges.some(({ source, target }) =>
         (source === current && target === tgt) ||
@@ -306,14 +285,11 @@ router.post("/move", async (req, res) => {
     console.log("Emitting Game Data after MOVE")
     io.to(lobbyCode).emit("gameData", game);
 
-    // Switch to TRIVIA phase
 
-    // -------- NEW: fetch from OpenTDB instead of dummy question
     try {
       const realQ = await fetchOpenTDBQuestion();
       game.triviaQuestion = realQ;
     } catch (err) {
-      // fallback if something fails
       game.triviaQuestion = {
         question: "Fallback question: capital of France?",
         choices: ["Berlin","London","Paris","Rome"],
@@ -327,7 +303,6 @@ router.post("/move", async (req, res) => {
     await game.save();
 
 
-    // schedule forced transition to RESULT after TRIVIA time
     setPhaseTimeout(lobbyCode, "TRIVIA", triviaPhaseDuration, async () => {
       const updatedGame = await Game.findOne({ lobbyCode });
       if (!updatedGame || updatedGame.phase !== "TRIVIA") return;
@@ -360,7 +335,6 @@ router.post("/answer", async (req, res) => {
     if (!game) {
       return res.status(404).json({ error: "Lobby not found" });
     }
-// ... the rest of your routes remain the same (answer, result, role, etc.)
 
     const user = await User.findById(user_id);
     if (!user) {
@@ -372,7 +346,6 @@ router.post("/answer", async (req, res) => {
     if (game.phase !== "TRIVIA") {
       return res.status(403).json({ error: "Cannot answer in this phase" });
     }
-    // Move to RESULT
     clearPhaseTimeout(lobbyCode);
     game.phase = "RESULT";
     game.hackerAnswer = answer;
@@ -382,7 +355,6 @@ router.post("/answer", async (req, res) => {
     const io = getIo();
     console.log("Emitting Game Data after ANSWER")
     io.to(lobbyCode).emit("gameData", game);
-    // If forced time-out => finalize
     setPhaseTimeout(lobbyCode, "RESULT", resultPhaseDuration, async () => {
       await handleTimeoutForPhase(lobbyCode);
     });
@@ -392,7 +364,6 @@ router.post("/answer", async (req, res) => {
     return res.status(500).json({ error: "An error occurred while answering" });
   }
 });
-// --- Hacker finalizes the result
 router.post("/result", async (req, res) => {
   const { lobbyCode, user_id } = req.body;
   try {
@@ -407,13 +378,10 @@ router.post("/result", async (req, res) => {
     if (!user || user.nickname !== game.hacker) {
       return res.status(403).json({ error: "Only the hacker can submit the result" });
     }
-    // Was the answer correct?
     const answerRight = Number(game.hackerAnswer) - 1 === game.triviaQuestion.correctChoice;
     if (answerRight) {
-      // Move hacker to chosen node
       game.location = game.nextLocation;
       game.nextLocation = null;
-      // Did we reach last node?
       const [row, col] = game.location.split("-").map(Number);
       if (row === game.rows - 1 && col === game.cols - 1) {
         game.phase = "END";
@@ -422,7 +390,6 @@ router.post("/result", async (req, res) => {
         game.phase = "APPOINT";
       }
     } else {
-      // Wrong => remove that node from the graph unless node is goal node
       let nodeIdToDelete = game.nextLocation;
       if (game.nextLocation === `${game.rows - 1}-${game.cols - 1}`) {
         nodeIdToDelete = null;
@@ -439,28 +406,23 @@ router.post("/result", async (req, res) => {
       game.nextLocation = null;
       game.phase = "APPOINT";
     }
-    // Next president
     game.currTurn = (game.currTurn + 1) % game.user_ids.length;
-    // If unreachable => FBI wins
     if (!endReachable(game) && game.phase !== "END") {
       game.phase = "END";
       game.winner = "FBI";
     }
     clearPhaseTimeout(lobbyCode);
-    // If game ended => update user wins/losses
     if (game.phase === "END") {
       game.phaseEndTime = null;
       await game.save();
       await updateWinsLosses(game);
     } else {
-      // Or set next APPOINT timer
       const appointPhaseDuration = PHASE_DURATIONS.APPOINT;
       game.phaseEndTime = Date.now() + appointPhaseDuration;
       await game.save();
     }
     const io = getIo();
     io.to(lobbyCode).emit("gameData", game);
-    // If we moved back to APPOINT, set a new timer
     if (game.phase === "APPOINT") {
       setPhaseTimeout(lobbyCode, "APPOINT", PHASE_DURATIONS.APPOINT, async () => {
         await handleTimeoutForPhase(lobbyCode);
@@ -491,7 +453,6 @@ router.post("/rig", async (req, res) => {
     return res.status(500).json({ error: "An internal server error occurred." });
   }
 });
-// --- Return the role (FBI or Hacker)
 router.get("/role", async (req, res) => {
   const { lobbyCode, user_id } = req.query;
   try {
@@ -510,19 +471,15 @@ router.get("/role", async (req, res) => {
     return res.status(500).json({ error: "An internal server error occurred." });
   }
 });
-// TIMEOUT HANDLER remains the same
 
 module.exports = router;
-/* ------------------------------------------------------
-   TIMEOUT HANDLER
-------------------------------------------------------*/
+
 async function handleTimeoutForPhase(lobbyCode) {
   const io = getIo();
   const game = await Game.findOne({ lobbyCode });
   if (!game) return;
   switch (game.phase) {
     case "APPOINT": {
-      // If president never appointed => pass presidency
       game.currTurn = (game.currTurn + 1) % game.user_ids.length;
       game.phase = "APPOINT";
       game.phaseEndTime = Date.now() + PHASE_DURATIONS.APPOINT;
@@ -535,7 +492,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       break;
     }
     case "VOTE": {
-      // Force a pass/fail
       const votes = Object.values(game.votes || {});
       const approve = votes.filter((v) => v === "yes").length;
       const reject = votes.filter((v) => v === "no").length;
@@ -560,7 +516,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       break;
     }
     case "MOVE": {
-      // Hacker never moved => pick random adjacency
       const currentLocation = game.location || "0-0";
       const adjacentNodes = game.edges
         .filter((e) => e.source === currentLocation || e.target === currentLocation)
@@ -580,7 +535,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       break;
     }
     case "TRIVIA": {
-      // Hacker never answered => forced failure
       game.phase = "RESULT";
       game.hackerAnswer = null;
       game.phaseEndTime = Date.now() + PHASE_DURATIONS.RESULT;
@@ -593,7 +547,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       break;
     }
     case "RESULT": {
-      // Forcibly finalize
       const answerRight =
         game.hackerAnswer &&
         Number(game.hackerAnswer) - 1 === game.triviaQuestion.correctChoice;
@@ -630,7 +583,6 @@ async function handleTimeoutForPhase(lobbyCode) {
       }
       await game.save();
       io.to(lobbyCode).emit("gameData", game);
-      // If ended => update user stats
       if (game.phase === "END") {
         await updateWinsLosses(game);
       }
@@ -644,13 +596,10 @@ async function handleTimeoutForPhase(lobbyCode) {
     }
     case "END":
     default:
-      // No more timers if the game ended
       break;
   }
 }
 
-// ... the rest of your routes remain the same (answer, result, role, etc.)
 
-// TIMEOUT HANDLER remains the same
 
 module.exports = router;

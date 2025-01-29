@@ -48,7 +48,7 @@ const Terminal = () => {
     const primary = tokens[0]?.toLowerCase();
 
     const pathParts = window.location.pathname.split("/");
-    const lobbyCode = pathParts[2]; // e.g. /lobby/XXXX => 'XXXX'
+    const lobbyCode = pathParts[2];
 
     switch (primary) {
       case "cd":
@@ -331,11 +331,8 @@ const Terminal = () => {
             return "Invalid friend subcommand. Try: friend request <username>";
         }
 
-      // ---------------------------------------------------
-      // NEW: "time" <minutes> => sets timeLimit in the lobby
-      // ---------------------------------------------------
+
       case "time": {
-        // usage: time <minutes>
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }
@@ -359,11 +356,8 @@ const Terminal = () => {
         }
       }
 
-      // ---------------------------------------------------
-      // NEW: "grid" <3|9> => sets gridSize in the lobby
-      // ---------------------------------------------------
+
       case "grid": {
-        // usage: grid <3|9>
         if (!lobbyCode) {
           return "You are not currently in a lobby.";
         }

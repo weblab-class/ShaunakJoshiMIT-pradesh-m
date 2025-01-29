@@ -5,22 +5,17 @@ import FolderIcon from '../assets/images/foldericon.png';
 export default function FileNode({ data }) {
   const { label, isCurrent, isAllowedMove, isGoal } = data || {};
 
-  // Basic border style
   let border = '2px solid transparent';
   let boxShadow = 'none';
 
-  // If it's the current node => use a bright/cyan border and label "CURRENT" on top
   if (isCurrent) {
-    border = '2px solid #00ffff';  // retro blue/cyan
+    border = '2px solid #00ffff';
   }
-  // If it's the goal => use bright green border and label "GOAL" at the bottom
   else if (isGoal) {
-    border = '2px solid #00ff00';  // retro green
+    border = '2px solid #00ff00';  
   }
-  // If it's an allowed move => highlight with a neon green effect
   else if (isAllowedMove) {
     border = '2px dashed #00ff00';
-    // Add a neon glow effect
     boxShadow = `
       0 0 5px #00ff00,
       0 0 10px #00ff00,
@@ -38,7 +33,6 @@ export default function FileNode({ data }) {
         boxShadow,
       }}
     >
-      {/* Target Handle on the Left */}
       <Handle
         type="target"
         position="left"
@@ -46,7 +40,6 @@ export default function FileNode({ data }) {
         style={{ background: '#00ff00' }}
       />
 
-      {/* Source Handle on the Right */}
       <Handle
         type="source"
         position="right"
@@ -54,14 +47,12 @@ export default function FileNode({ data }) {
         style={{ background: '#00ff00' }}
       />
 
-      {/* Folder Icon */}
       <img
         src={FolderIcon}
         alt="Folder Icon"
         style={{ width: '100%', height: '100%' }}
       />
 
-      {/* If current, label above */}
       {isCurrent && (
         <div
           style={{
@@ -79,7 +70,6 @@ export default function FileNode({ data }) {
         </div>
       )}
 
-      {/* Node ID in the middle/bottom */}
       <div
         style={{
           position: 'absolute',
@@ -94,7 +84,6 @@ export default function FileNode({ data }) {
         {label}
       </div>
 
-      {/* If goal, label “GOAL” below */}
       {isGoal && (
         <div
           style={{

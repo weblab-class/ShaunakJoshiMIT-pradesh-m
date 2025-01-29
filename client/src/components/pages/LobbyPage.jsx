@@ -66,7 +66,6 @@ const LobbyPage = () => {
             )}
           </div>
 
-          {/* NEW: Show timeLimit and gridSize if lobby is loaded */}
           {lobby && (
             <div className="lobby-settings">
               <h3>Current Lobby Settings</h3>

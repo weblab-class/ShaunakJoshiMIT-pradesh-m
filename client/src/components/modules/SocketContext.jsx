@@ -5,12 +5,11 @@ import { io } from "socket.io-client";
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-  const socket = io("http://localhost:3000"); // Update the URL if your server is hosted elsewhere
+  const socket = io("http://localhost:3000");
 
   useEffect(() => {
     console.log("Socket connected:", socket.id);
 
-    // Optional: Handle global socket events here
 
     return () => {
       console.log("Socket disconnected:", socket.id);

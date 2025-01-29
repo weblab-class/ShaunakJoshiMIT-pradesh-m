@@ -1,6 +1,5 @@
-/* TriviaSidebar.css
-   Matches your other sidebars' width, color, fonts, etc.
-*/
+/* TriviaSidebar.css */
+/* Matches your other sidebars' width, color, fonts, etc. */
 
 .trivia-sidebar {
   width: 220px; /* unified width */
@@ -26,6 +25,9 @@
 .trivia-sidebar h3 {
   margin-bottom: 10px;
   text-shadow: 0 0 5px #00ff00;
+  position: relative;
+  /* Prevent text from overflowing during glitch */
+  overflow: hidden;
 }
 
 .trivia-sidebar .trivia-question {
@@ -36,6 +38,276 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
+}
+
+.trivia-sidebar table.answer-choices th,
+.trivia-sidebar table.answer-choices td {
+  border: 1px solid #00ff00;
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.trivia-sidebar table.answer-choices th {
+  background-color: #1a1a1a;
+}
+
+.trivia-sidebar table.answer-choices td {
+  background-color: #333;
+}
+
+.trivia-sidebar .instructions {
+  margin-top: 10px;
+}
+
+.trivia-sidebar .instructions code {
+  background-color: #333;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+  color: #00ff00;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 blue;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {
+    clip: rect(42px, 9999px, 44px, 0);
+    transform: skew(0.5deg);
+  }
+  5% {
+    clip: rect(12px, 9999px, 18px, 0);
+    transform: skew(0.5deg);
+  }
+  10% {
+    clip: rect(85px, 9999px, 90px, 0);
+    transform: skew(0.5deg);
+  }
+  15% {
+    clip: rect(35px, 9999px, 45px, 0);
+    transform: skew(0.5deg);
+  }
+  20% {
+    clip: rect(10px, 9999px, 15px, 0);
+    transform: skew(0.5deg);
+  }
+  25% {
+    clip: rect(50px, 9999px, 55px, 0);
+    transform: skew(0.5deg);
+  }
+  30% {
+    clip: rect(20px, 9999px, 25px, 0);
+    transform: skew(0.5deg);
+  }
+  35% {
+    clip: rect(70px, 9999px, 75px, 0);
+    transform: skew(0.5deg);
+  }
+  40% {
+    clip: rect(30px, 9999px, 35px, 0);
+    transform: skew(0.5deg);
+  }
+  45% {
+    clip: rect(90px, 9999px, 95px, 0);
+    transform: skew(0.5deg);
+  }
+  50% {
+    clip: rect(40px, 9999px, 45px, 0);
+    transform: skew(0.5deg);
+  }
+  55% {
+    clip: rect(15px, 9999px, 20px, 0);
+    transform: skew(0.5deg);
+  }
+  60% {
+    clip: rect(60px, 9999px, 65px, 0);
+    transform: skew(0.5deg);
+  }
+  65% {
+    clip: rect(25px, 9999px, 30px, 0);
+    transform: skew(0.5deg);
+  }
+  70% {
+    clip: rect(80px, 9999px, 85px, 0);
+    transform: skew(0.5deg);
+  }
+  75% {
+    clip: rect(35px, 9999px, 40px, 0);
+    transform: skew(0.5deg);
+  }
+  80% {
+    clip: rect(10px, 9999px, 15px, 0);
+    transform: skew(0.5deg);
+  }
+  85% {
+    clip: rect(55px, 9999px, 60px, 0);
+    transform: skew(0.5deg);
+  }
+  90% {
+    clip: rect(20px, 9999px, 25px, 0);
+    transform: skew(0.5deg);
+  }
+  95% {
+    clip: rect(65px, 9999px, 70px, 0);
+    transform: skew(0.5deg);
+  }
+  100% {
+    clip: rect(30px, 9999px, 35px, 0);
+    transform: skew(0.5deg);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip: rect(30px, 9999px, 35px, 0);
+    transform: skew(-0.5deg);
+  }
+  5% {
+    clip: rect(50px, 9999px, 55px, 0);
+    transform: skew(-0.5deg);
+  }
+  10% {
+    clip: rect(10px, 9999px, 15px, 0);
+    transform: skew(-0.5deg);
+  }
+  15% {
+    clip: rect(70px, 9999px, 75px, 0);
+    transform: skew(-0.5deg);
+  }
+  20% {
+    clip: rect(25px, 9999px, 30px, 0);
+    transform: skew(-0.5deg);
+  }
+  25% {
+    clip: rect(80px, 9999px, 85px, 0);
+    transform: skew(-0.5deg);
+  }
+  30% {
+    clip: rect(35px, 9999px, 40px, 0);
+    transform: skew(-0.5deg);
+  }
+  35% {
+    clip: rect(15px, 9999px, 20px, 0);
+    transform: skew(-0.5deg);
+  }
+  40% {
+    clip: rect(60px, 9999px, 65px, 0);
+    transform: skew(-0.5deg);
+  }
+  45% {
+    clip: rect(25px, 9999px, 30px, 0);
+    transform: skew(-0.5deg);
+  }
+  50% {
+    clip: rect(75px, 9999px, 80px, 0);
+    transform: skew(-0.5deg);
+  }
+  55% {
+    clip: rect(40px, 9999px, 45px, 0);
+    transform: skew(-0.5deg);
+  }
+  60% {
+    clip: rect(20px, 9999px, 25px, 0);
+    transform: skew(-0.5deg);
+  }
+  65% {
+    clip: rect(85px, 9999px, 90px, 0);
+    transform: skew(-0.5deg);
+  }
+  70% {
+    clip: rect(45px, 9999px, 50px, 0);
+    transform: skew(-0.5deg);
+  }
+  75% {
+    clip: rect(10px, 9999px, 15px, 0);
+    transform: skew(-0.5deg);
+  }
+  80% {
+    clip: rect(65px, 9999px, 70px, 0);
+    transform: skew(-0.5deg);
+  }
+  85% {
+    clip: rect(30px, 9999px, 35px, 0);
+    transform: skew(-0.5deg);
+  }
+  90% {
+    clip: rect(70px, 9999px, 75px, 0);
+    transform: skew(-0.5deg);
+  }
+  95% {
+    clip: rect(15px, 9999px, 20px, 0);
+    transform: skew(-0.5deg);
+  }
+  100% {
+    clip: rect(50px, 9999px, 55px, 0);
+    transform: skew(-0.5deg);
+  }
+}
+
+/* Optional: Adjust glitch colors and intensity */
+.glitch {
+  color: #00ff00;
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  /* Add specific colors for before and after */
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 blue;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+/* Additional Styles to Ensure Proper Layout */
+
+.trivia-sidebar h3.glitch {
+  /* Ensure the glitch effect doesn't affect layout */
+  position: relative;
+  display: inline-block;
 }
 
 .trivia-sidebar table.answer-choices th,

@@ -1,14 +1,13 @@
 // HomePage.jsx
 import React from "react";
 import "../../utilities.css";
-import "../styles/HomePage.css"; // Ensure this file is in the same folder
+import "../styles/HomePage.css";
 import Layout from "../Layout.jsx";
 
 const HomePage = () => {
   return (
     <Layout currentPage="home">
       <div className="homepage">
-        {/* Main content container */}
         <div className="homepage-content">
           <h1 className="title">WELCOME TO FIND THE MOLES!</h1>
           <p className="tagline">
@@ -16,7 +15,6 @@ const HomePage = () => {
           </p>
         </div>
 
-        {/* New Game Info / Retro Section */}
         <div className="game-info">
           <pre className="ascii-mole">
 {String.raw`   __
@@ -34,7 +32,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Existing background animation */}
         <div className="animation-bg"></div>
       </div>
     </Layout>
