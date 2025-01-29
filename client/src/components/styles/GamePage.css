@@ -1,22 +1,30 @@
-/* GamePage.css */
 .game-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #111;
-  color: #fff;
 }
 
 .game-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: #1a1a1a;
+  border-bottom: 2px solid #66cc66;
+  box-shadow: 0 2px 8px rgba(102, 204, 102, 0.2);
   padding: 20px;
-  border-bottom: 2px solid #00ff00;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #66cc66;
+  font-family: 'Press Start 2P', monospace;
 }
 
-/* Remove or comment out the old width. We’ll let each sidebar's CSS handle the width. */
+.game-header h1 {
+  margin: 0;
+  font-size: 1.4em;
+}
+
+.game-header .user-role {
+  margin: 10px 0;
+  font-size: 0.9em;
+}
+
 .game-main {
   display: flex;
   flex: 1;
@@ -24,33 +32,24 @@
 }
 
 .game-sidebar {
-  /* Remove or override the old width: 250px; */
-  width: auto !important; /* Now each sidebar’s own width property will apply */
-  /* You can still keep these if you want scroll behavior in the sidebar */
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-  overflow-y: auto;
-  overflow-x: hidden;
+  width: 260px;
   flex-shrink: 0;
 }
 
 .maze-container {
   flex: 1;
-  background-color: #000;
   position: relative;
   overflow: hidden;
 }
 
-.phase-timer {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #ff6347;
+.error-page,
+.loading-page {
+  text-align: center;
+  margin-top: 50px;
 }
 
-.user-role {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  color: #ff6347;
+.error-page h2,
+.loading-page h2 {
+  margin-bottom: 20px;
+  color: #66cc66;
 }

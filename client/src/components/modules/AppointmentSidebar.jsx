@@ -1,18 +1,17 @@
 import React from "react";
+import "../styles/sidebar.css";
 import "../styles/AppointmentSidebar.css";
 import siteLogo from "../assets/images/site-logo.png";
 
-const AppointmentSidebar = ({ gameObj }) => {
-  const currentPresident = gameObj?.turnOrder[gameObj.currTurn] || "Unknown";
-
-  const players = gameObj.user_ids.map((nickname) => (
+export default function AppointmentSidebar({ gameObj }) {
+  const currentPresident = gameObj.turnOrder[gameObj.currTurn] || "Unknown";
+  const players = gameObj.user_ids.map(nickname => (
     <tr key={nickname} className={nickname === currentPresident ? "current-president" : ""}>
       <td>{nickname}</td>
     </tr>
   ));
-
   return (
-    <aside className="appointment-sidebar" aria-label="Appointment Sidebar">
+    <aside className="sidebar appointment-sidebar">
       <div className="appointment-header">
         <img src={siteLogo} alt="Site Logo" className="appointment-icon" />
         <h2>
@@ -27,7 +26,6 @@ const AppointmentSidebar = ({ gameObj }) => {
         </p>
         <p>Awaiting appointment...</p>
       </div>
-
       <div className="player-section">
         <h3>Players</h3>
         <table className="player-table">
@@ -41,6 +39,4 @@ const AppointmentSidebar = ({ gameObj }) => {
       </div>
     </aside>
   );
-};
-
-export default AppointmentSidebar;
+}

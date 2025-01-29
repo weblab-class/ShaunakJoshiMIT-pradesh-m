@@ -91,7 +91,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 3000;
 const server = http.Server(app);
 socketManager.init(server);
 
